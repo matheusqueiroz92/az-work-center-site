@@ -1,0 +1,102 @@
+:root {
+  color-scheme: light;
+
+  --az-red-500: #ef233c;
+  --az-red-600: #e21d2f;
+  --az-red-700: #c9182b;
+  --az-ink-950: #090a0c;
+  --az-carbon-900: #111317;
+  --az-graphite-800: #1a1d22;
+  --az-steel-700: #2b3038;
+  --az-mist-400: #a9b0ba;
+  --az-paper-50: #f4f1eb;
+  --az-chalk-0: #ffffff;
+
+  --background: var(--az-paper-50);
+  --foreground: var(--az-carbon-900);
+  --surface: var(--az-chalk-0);
+  --surface-foreground: var(--az-carbon-900);
+  --muted: #e7e3dc;
+  --muted-foreground: #535861;
+  --border: #c8c5bf;
+  --primary: var(--az-red-600);
+  --primary-hover: var(--az-red-700);
+  --primary-foreground: var(--az-chalk-0);
+  --ring: var(--az-red-700);
+  --success: #2f9e62;
+  --warning: #d97706;
+  --error: #d9363e;
+  --info: #2563eb;
+
+  --font-sans: "Manrope", sans-serif;
+  --font-editorial: "Newsreader", serif;
+  --font-mono: "IBM Plex Mono", monospace;
+
+  --radius-xs: 0.25rem;
+  --radius-sm: 0.5rem;
+  --radius-md: 0.75rem;
+  --radius-lg: 1.25rem;
+  --radius-pill: 999rem;
+
+  --duration-instant: 80ms;
+  --duration-fast: 160ms;
+  --duration-base: 240ms;
+  --duration-slow: 420ms;
+  --duration-deliberate: 650ms;
+  --duration-narrative: 900ms;
+  --ease-standard: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-emphasized: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-exit: cubic-bezier(0.4, 0, 1, 1);
+
+  --container-max: 80rem;
+  --content-max: 47.5rem;
+  --text-max: 42rem;
+  --touch-target: 2.75rem;
+  --header-height: 5rem;
+}
+
+[data-surface="dark"] {
+  color-scheme: dark;
+  --background: var(--az-ink-950);
+  --foreground: var(--az-paper-50);
+  --surface: var(--az-carbon-900);
+  --surface-foreground: var(--az-paper-50);
+  --muted: var(--az-graphite-800);
+  --muted-foreground: var(--az-mist-400);
+  --border: var(--az-steel-700);
+  --primary: var(--az-red-500);
+  --primary-hover: #ff4056;
+  --primary-foreground: var(--az-ink-950);
+  --ring: var(--az-red-500);
+}
+
+[data-surface="brand"] {
+  color-scheme: dark;
+  --background: var(--az-red-600);
+  --foreground: var(--az-chalk-0);
+  --surface: var(--az-red-700);
+  --surface-foreground: var(--az-chalk-0);
+  --muted: rgba(9, 10, 12, 0.16);
+  --muted-foreground: var(--az-chalk-0);
+  --border: rgba(255, 255, 255, 0.38);
+  --primary: var(--az-chalk-0);
+  --primary-hover: var(--az-paper-50);
+  --primary-foreground: var(--az-carbon-900);
+  --ring: var(--az-chalk-0);
+}
+
+html {
+  scroll-padding-top: var(--header-height);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
