@@ -1,0 +1,69 @@
+# Dependencies
+node_modules/
+
+# Next.js build output
+.next/
+out/
+
+# Production and tooling output
+build/
+dist/
+coverage/
+.turbo/
+*.tsbuildinfo
+next-env.d.ts
+
+# Environment variables and secrets
+.env
+.env.*
+!.env.example
+
+# Vercel local state
+.vercel/
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Test artifacts
+playwright-report/
+test-results/
+blob-report/
+
+# Local databases and temporary files
+*.sqlite
+*.sqlite3
+*.db
+tmp/
+temp/
+.cache/
+
+# Editor-local files
+.idea/
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+*.code-workspace
+
+# Cursor local state — keep project rules under .cursor/rules versioned
+.cursor/worktrees/
+.cursor/*.local.*
+
+# Operating system files
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Certificates and private keys
+*.pem
+*.key
+*.p12
+*.pfx
+
+# Local AI/tooling state; keep .agents/skills and skills-lock.json versioned
+.claude/settings.local.json
+.codex/
