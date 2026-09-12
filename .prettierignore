@@ -1,0 +1,14 @@
+node_modules
+.next
+out
+coverage
+pnpm-lock.yaml
+README.md
+AGENTS.md
+docs
+agent-prompts
+design-system
+.agents
+skills-lock.json
+.gitignore
+.gitattributes
