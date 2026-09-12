@@ -5,6 +5,7 @@ import { allowIndexing, readIndexingEnv } from "./src/lib/seo";
 const indexingAllowed = allowIndexing(readIndexingEnv());
 
 const nextConfig: NextConfig = {
+  agentRules: false,
   async headers() {
     if (indexingAllowed) {
       return [];

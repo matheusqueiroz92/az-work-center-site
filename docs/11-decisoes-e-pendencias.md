@@ -57,6 +57,22 @@ Implementação na branch `feat/design-system`, sem commit nesta passagem.
 - `--error-foreground` aponta para `--az-chalk-0`, para o destructive não herdar o foreground da superfície. Contraste esperado de `#D9363E` sobre branco: aproximadamente 4.62:1 (AA para texto normal). A primitiva Error não foi alterada.
 - Links em nova aba passam por `mergeLinkRel`: `noopener` e `noreferrer` são obrigatórios e tokens extras do consumidor são preservados sem duplicação.
 
+## Registro — Épico 3, shell e navegação
+
+Implementação na branch `feat/site-shell`, sem commit nesta passagem.
+
+- Header e DesktopNav permanecem Server Components. Só MobileNav/Sheet e Accordion são Client Components.
+- A navegação é validada com Zod no servidor. O Header passa `items` e `cta` ao MobileNav por props serializáveis; o bundle do menu não importa Zod.
+- `aria-current` da página atual no Header foi adiado para não criar um Client Component global.
+- Wordmark textual “AZ Work Center” até P-001. Nenhum símbolo novo foi desenhado.
+- Preferências de cookies não são apresentadas no Footer público enquanto P-008 não tiver um gerenciador funcional.
+- O Footer usa grupos explícitos Atuação, Empresa e Legal, sem destinos duplicados. O Header continua com Soluções, Projetos, Como trabalhamos e Sobre.
+- Accordion usa `forceMount` e IDs estáveis (`aria-controls` + `id` do painel) para manter pergunta, resposta e o elemento controlado no HTML inicial. Com JavaScript, o fechado some só visualmente (`data-[state=closed]:hidden`). Sem scripting, `@media (scripting: none)` reexibe o mesmo markup, sem segunda cópia.
+- O CLI do shadcn não foi executado para não sobrescrever `globals.css` nem o Button existente. `components.json` foi criado manualmente; Dialog/Sheet e Accordion usam Radix com estilos da AZ.
+- Rotas `/solucoes`, `/projetos`, `/como-trabalhamos`, `/sobre`, `/contato`, `/privacidade` e `/cookies` entram no contrato de navegação e ainda retornam 404 até o épico de páginas internas.
+- AZ News, comunicação visual, telefone, e-mail, endereço e CNPJ continuam fora do Footer.
+- `agentRules: false` em `next.config.ts` desativa a geração automática de regras do Next para preservar o `AGENTS.md` normativo do repositório.
+
 ## Decisões que agentes não podem tomar sozinhos
 
 - renomear a empresa;

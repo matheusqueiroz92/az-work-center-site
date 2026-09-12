@@ -3,10 +3,12 @@ import { describe, expect, it } from "vitest";
 import { company } from "@/content/company";
 
 describe("company", () => {
-  it("expõe somente o nome e o descritor já aprovados", () => {
+  it("expõe somente dados institucionais já aprovados", () => {
     expect(company).toEqual({
       name: "AZ Work Center",
       descriptor: "Tecnologia & Growth",
+      tagline: "Tecnologia para operar melhor. Estratégia para crescer.",
+      regionLabel: "Vitória da Conquista — Bahia",
     });
   });
 

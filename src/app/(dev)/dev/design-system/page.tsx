@@ -1,10 +1,19 @@
 import { Container } from "@/components/layout/container";
+import { DesktopNav } from "@/components/layout/desktop-nav";
+import { MobileNav } from "@/components/layout/mobile-nav";
 import { Section } from "@/components/layout/section";
 import { SectionHeading } from "@/components/layout/section-heading";
+import { SiteFooter } from "@/components/layout/site-footer";
+import { SiteHeader } from "@/components/layout/site-header";
+import { SiteWordmark } from "@/components/layout/site-wordmark";
+import { AccordionList } from "@/components/ui/accordion";
+import { Breadcrumb } from "@/components/ui/breadcrumb";
 import { Button } from "@/components/ui/button";
 import { ButtonLink } from "@/components/ui/button-link";
 import { Eyebrow } from "@/components/ui/eyebrow";
 import { TextLink } from "@/components/ui/text-link";
+import { navigation } from "@/content/navigation";
+import { showcaseFaqItems } from "@/content/showcase-faq";
 
 const typeScale = [
   { token: "display-xl", className: "text-display-xl font-bold", sample: "Sistemas" },
@@ -308,6 +317,149 @@ export default function DesignSystemPage() {
             description="A centralização é variante, não padrão. O nível semântico continua h3, mesmo com tamanho visual de h2."
           />
         </Container>
+      </Section>
+
+      <Section surface="dark" spacing="compact" aria-labelledby="ds-header">
+        <Container>
+          <SectionHeading
+            id="ds-header"
+            eyebrow="Navegação"
+            title="Cabeçalho"
+            description="Amostra isolada do shell público. Nesta página o header do showcase não é sticky para não cobrir o restante da inspeção."
+          />
+        </Container>
+        <div className="mt-10">
+          <SiteHeader className="relative top-auto z-0" />
+        </div>
+        <Container className="mt-10">
+          <Eyebrow>navegação desktop isolada</Eyebrow>
+          <div className="border-border mt-4 overflow-x-auto border p-4">
+            <DesktopNav />
+          </div>
+        </Container>
+      </Section>
+
+      <Section surface="light" spacing="compact" aria-labelledby="ds-mobile-nav">
+        <Container>
+          <SectionHeading
+            id="ds-mobile-nav"
+            eyebrow="Menu"
+            title="Navegação mobile"
+            description="O disparador abre um Sheet lateral. Escape fecha, o foco retorna ao botão e o overlay impede interação com o conteúdo atrás."
+          />
+          <div className="border-border mt-8 flex items-center justify-between gap-4 border p-4">
+            <SiteWordmark />
+            <MobileNav items={navigation.primary} cta={navigation.cta} />
+          </div>
+          <div
+            data-surface="dark"
+            className="bg-background text-foreground border-border mt-8 max-w-sm border"
+            aria-label="Amostra visual do menu aberto"
+          >
+            <p className="border-border text-body border-b px-5 py-4 font-semibold">
+              Menu de navegação
+            </p>
+            <ul className="px-5 py-2">
+              {navigation.primary.map((item) => (
+                <li key={item.href} className="border-border border-b">
+                  <span className="flex min-h-touch items-center py-4 text-body-lg font-semibold">
+                    {item.label}
+                  </span>
+                </li>
+              ))}
+            </ul>
+            <p className="text-small text-muted-foreground px-5 py-4">
+              Amostra estática do estado aberto, sem prender o foco.
+            </p>
+          </div>
+        </Container>
+      </Section>
+
+      <Section surface="light" spacing="compact" aria-labelledby="ds-breadcrumb">
+        <Container>
+          <SectionHeading
+            id="ds-breadcrumb"
+            eyebrow="Páginas internas"
+            title="Breadcrumb"
+            description="Não entra na Home. Dois e três níveis, com a página atual em aria-current."
+          />
+          <div className="mt-8 space-y-6">
+            <Breadcrumb
+              items={[{ label: "Início", href: "/" }]}
+              current="Soluções"
+            />
+            <Breadcrumb
+              items={[
+                { label: "Início", href: "/" },
+                { label: "Soluções", href: "/solucoes" },
+              ]}
+              current="Sistemas sob medida"
+            />
+          </div>
+        </Container>
+      </Section>
+
+      <Section surface="dark" spacing="compact" aria-labelledby="ds-breadcrumb-dark">
+        <Container>
+          <SectionHeading
+            id="ds-breadcrumb-dark"
+            eyebrow="data-surface=dark"
+            title="Breadcrumb em superfície escura"
+            description="Os mesmos tokens semânticos acompanham a superfície."
+          />
+          <div className="mt-8">
+            <Breadcrumb
+              items={[{ label: "Início", href: "/" }]}
+              current="Como trabalhamos"
+            />
+          </div>
+        </Container>
+      </Section>
+
+      <Section surface="light" spacing="compact" aria-labelledby="ds-accordion">
+        <Container width="editorial">
+          <SectionHeading
+            id="ds-accordion"
+            eyebrow="Perguntas de exemplo"
+            title="Accordion"
+            description="As perguntas abaixo identificam-se como amostra de interface. Não são o FAQ público da empresa."
+          />
+          <AccordionList
+            items={showcaseFaqItems}
+            className="mt-10"
+            idPrefix="ds-faq"
+          />
+        </Container>
+      </Section>
+
+      <Section surface="dark" spacing="compact" aria-labelledby="ds-accordion-dark">
+        <Container width="editorial">
+          <SectionHeading
+            id="ds-accordion-dark"
+            eyebrow="data-surface=dark"
+            title="Accordion em superfície escura"
+            description="Linhas editoriais no lugar de cards. Amostra para contraste e foco."
+          />
+          <AccordionList
+            items={showcaseFaqItems}
+            className="mt-10"
+            idPrefix="ds-faq-dark"
+          />
+        </Container>
+      </Section>
+
+      <Section surface="light" spacing="compact" aria-labelledby="ds-footer">
+        <Container>
+          <SectionHeading
+            id="ds-footer"
+            eyebrow="Rodapé"
+            title="SiteFooter"
+            description="Amostra isolada do rodapé público. Dados pendentes de telefone, e-mail e CNPJ não aparecem."
+          />
+        </Container>
+        <div className="mt-10">
+          <SiteFooter />
+        </div>
       </Section>
     </main>
   );
