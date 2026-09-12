@@ -73,6 +73,21 @@ Implementação na branch `feat/site-shell`, sem commit nesta passagem.
 - AZ News, comunicação visual, telefone, e-mail, endereço e CNPJ continuam fora do Footer.
 - `agentRules: false` em `next.config.ts` desativa a geração automática de regras do Next para preservar o `AGENTS.md` normativo do repositório.
 
+## Registro — Épico 3, Home estrutural
+
+Implementação na branch `feat/home-structure`, sem commit nesta passagem.
+
+- A Home permanece Server Component. Nenhuma seção em `src/components/home` usa `"use client"`. A única ilha cliente da página é o `AccordionList` do FAQ.
+- Motion, hide-on-scroll, accordion de soluções e sticky controlado por JavaScript ficaram de fora. Há no máximo um sticky CSS no mapa decorativo de Soluções, desligado em mobile e em `max-height: 40rem`.
+- IBM Plex Mono continua fora do carregamento. Coordenadas e números do método usam Manrope/`text-label`.
+- `SectionHeading` ganhou o tamanho `display-lg` com o token já existente. Nenhum token novo foi criado.
+- Conteúdo estático usa `as const` + `satisfies`. Zod não valida literais da Home.
+- `projects` permanece vazio. `getPublishedProjects()` fica reservado à segunda fase e não controla a Home.
+- `EngagementSection` é renderizada incondicionalmente em `#capacidades` enquanto `FeaturedCases` não existir. `#projetos` não existe.
+- A troca entre `EngagementSection` e `FeaturedCases` será atômica no Épico 9, sem estado intermediário que renderize `null`.
+- Metadata da Home usa título absoluto `AZ Work Center | Tecnologia & Growth`. A description raiz deixou de mencionar site em desenvolvimento.
+- Fotos dos fundadores, logos, depoimentos, CNPJ e prazo de resposta continuam pendentes (P-003, P-004, P-006, P-009). Nenhum placeholder visual foi publicado.
+
 ## Decisões que agentes não podem tomar sozinhos
 
 - renomear a empresa;

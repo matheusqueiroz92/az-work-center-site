@@ -1,21 +1,28 @@
-import { company } from "@/content/company";
+import { EngagementSection } from "@/components/home/engagement-section";
+import { FAQSection } from "@/components/home/faq-section";
+import { FinalCtaSection } from "@/components/home/final-cta-section";
+import { FoundersSection } from "@/components/home/founders-section";
+import { HeroSection } from "@/components/home/hero-section";
+import { ProblemSection } from "@/components/home/problem-section";
+import { ProcessSection } from "@/components/home/process-section";
+import { ServicesSection } from "@/components/home/services-section";
+import { TrustSection } from "@/components/home/trust-section";
+import { createHomeMetadata } from "@/lib/metadata";
+
+export const metadata = createHomeMetadata();
 
 export default function HomePage() {
   return (
-    <main
-      id="conteudo"
-      tabIndex={-1}
-      className="bg-background text-foreground min-h-svh"
-    >
-      <div className="max-w-text mx-auto px-5 py-16">
-        <p className="text-muted-foreground text-sm">{company.descriptor}</p>
-        <h1 className="text-foreground mt-4 text-4xl font-semibold tracking-tight">
-          {company.name}
-        </h1>
-        <p className="text-foreground mt-6 max-w-prose text-base leading-relaxed">
-          O novo site está em desenvolvimento.
-        </p>
-      </div>
+    <main id="conteudo" tabIndex={-1}>
+      <HeroSection />
+      <ProblemSection />
+      <ServicesSection />
+      <ProcessSection />
+      <EngagementSection />
+      <FoundersSection />
+      <TrustSection />
+      <FAQSection />
+      <FinalCtaSection />
     </main>
   );
 }

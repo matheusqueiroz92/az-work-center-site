@@ -232,4 +232,14 @@ describe("SectionHeading", () => {
     );
     expect(container.querySelector("h2")).toBeNull();
   });
+
+  it("aceita o tamanho display-lg do hero", () => {
+    const { container } = render(
+      <SectionHeading as="h1" size="display-lg" title="Headline de exemplo" />,
+    );
+    const heading = container.querySelector("h1");
+
+    expect(heading?.className).toContain("text-display-lg");
+    expect(heading?.textContent).toBe("Headline de exemplo");
+  });
 });

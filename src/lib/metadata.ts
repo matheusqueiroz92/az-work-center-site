@@ -4,6 +4,11 @@ import { company } from "@/content/company";
 import { resolveSiteUrlFromEnv } from "@/lib/env";
 import { getRobotsDirective, readIndexingEnv } from "@/lib/seo";
 
+export const siteDescription =
+  "Sistemas sob medida, automações com IA e estruturas digitais para empresas de Vitória da Conquista e região.";
+
+export const homeTitle = `${company.name} | ${company.descriptor}`;
+
 export function createRootMetadata(): Metadata {
   return {
     metadataBase: resolveSiteUrlFromEnv(),
@@ -11,7 +16,16 @@ export function createRootMetadata(): Metadata {
       default: company.name,
       template: `%s | ${company.name}`,
     },
-    description: `${company.name}. ${company.descriptor}. Novo site em desenvolvimento.`,
+    description: siteDescription,
     robots: getRobotsDirective(readIndexingEnv()),
+  };
+}
+
+export function createHomeMetadata(): Metadata {
+  return {
+    title: {
+      absolute: homeTitle,
+    },
+    description: siteDescription,
   };
 }

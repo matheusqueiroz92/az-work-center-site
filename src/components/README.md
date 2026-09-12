@@ -248,3 +248,9 @@ Todos os componentes deste diretório são universais: sem `"use client"`, sem e
 ## Showcase interno
 
 Rota `/dev/design-system`. `noindex, nofollow`. Em `VERCEL_ENV=production` responde `notFound()`. Não entra na navegação pública. Não usa o layout de Header/Footer do site.
+
+## Home (`src/components/home`)
+
+Seções da Home estrutural. Todas são Server Components. A única ilha cliente da página é o `AccordionList` já existente, usado no FAQ.
+
+Não adicionar `"use client"`, Motion, listeners de scroll ou tabs nesta pasta. O SVG do hero é o estado final previsto para o Épico 5. A Home renderiza `EngagementSection` incondicionalmente em `#capacidades` até o Épico 9; não cria `#projetos`.
