@@ -12,6 +12,15 @@ export type Service = {
   };
 };
 
+export type ServicePreview = {
+  slug: string;
+  href: string;
+  title: string;
+  outcome: string;
+  summary: string;
+  capabilities: readonly [string, string, string];
+};
+
 export type CaseStudy = {
   slug: string;
   client: string;

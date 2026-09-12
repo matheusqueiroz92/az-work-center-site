@@ -5,6 +5,7 @@ import { cn } from "@/lib/utils";
 
 export const headingLevels = ["h1", "h2", "h3", "h4"] as const;
 export const headingSizes = {
+  "display-lg": "text-display-lg font-bold",
   "display-md": "text-display-md font-bold",
   h1: "text-h1 font-bold",
   h2: "text-h2 font-semibold",
