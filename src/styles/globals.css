@@ -16,9 +16,10 @@
   --color-success: var(--success);
   --color-warning: var(--warning);
   --color-error: var(--error);
+  --color-error-foreground: var(--error-foreground);
   --color-info: var(--info);
-  --font-sans: var(--font-sans);
-  --font-editorial: var(--font-editorial);
+  --font-sans: var(--font-manrope), sans-serif;
+  --font-editorial: var(--font-newsreader), serif;
   --font-mono: var(--font-mono);
   --radius-xs: var(--radius-xs);
   --radius-sm: var(--radius-sm);
@@ -26,12 +27,83 @@
   --radius-lg: var(--radius-lg);
   --radius-pill: var(--radius-pill);
   --max-width-text: var(--text-max);
+  --max-width-content: var(--content-max);
   --max-width-container: var(--container-max);
+  --spacing-gutter: var(--layout-gutter);
+  --spacing-touch: var(--touch-target);
+  --spacing-section-compact: var(--section-space-compact);
+  --spacing-section-default: var(--section-space-default);
+  --spacing-section-narrative: var(--section-space-narrative);
+  --text-display-xl: var(--type-display-xl);
+  --text-display-xl--line-height: var(--type-display-xl-leading);
+  --text-display-xl--letter-spacing: var(--type-display-xl-tracking);
+  --text-display-lg: var(--type-display-lg);
+  --text-display-lg--line-height: var(--type-display-lg-leading);
+  --text-display-lg--letter-spacing: var(--type-display-lg-tracking);
+  --text-display-md: var(--type-display-md);
+  --text-display-md--line-height: var(--type-display-md-leading);
+  --text-display-md--letter-spacing: var(--type-display-md-tracking);
+  --text-h1: var(--type-h1);
+  --text-h1--line-height: var(--type-h1-leading);
+  --text-h1--letter-spacing: var(--type-h1-tracking);
+  --text-h2: var(--type-h2);
+  --text-h2--line-height: var(--type-h2-leading);
+  --text-h2--letter-spacing: var(--type-h2-tracking);
+  --text-h3: var(--type-h3);
+  --text-h3--line-height: var(--type-h3-leading);
+  --text-h3--letter-spacing: var(--type-h3-tracking);
+  --text-lead: var(--type-lead);
+  --text-lead--line-height: var(--type-lead-leading);
+  --text-body-lg: var(--type-body-lg);
+  --text-body-lg--line-height: var(--type-body-lg-leading);
+  --text-body: var(--type-body);
+  --text-body--line-height: var(--type-body-leading);
+  --text-small: var(--type-small);
+  --text-small--line-height: var(--type-small-leading);
+  --text-label: var(--type-label);
+  --text-label--line-height: var(--type-label-leading);
+  --text-label--letter-spacing: var(--type-label-tracking);
 }
 
 html {
   --font-sans: var(--font-manrope), sans-serif;
   --font-editorial: var(--font-newsreader), serif;
+}
+
+@utility duration-instant {
+  transition-duration: var(--duration-instant);
+}
+
+@utility duration-fast {
+  transition-duration: var(--duration-fast);
+}
+
+@utility duration-base {
+  transition-duration: var(--duration-base);
+}
+
+@utility duration-slow {
+  transition-duration: var(--duration-slow);
+}
+
+@utility duration-deliberate {
+  transition-duration: var(--duration-deliberate);
+}
+
+@utility duration-narrative {
+  transition-duration: var(--duration-narrative);
+}
+
+@utility ease-standard {
+  transition-timing-function: var(--ease-standard);
+}
+
+@utility ease-emphasized {
+  transition-timing-function: var(--ease-emphasized);
+}
+
+@utility ease-exit {
+  transition-timing-function: var(--ease-exit);
 }
 
 :focus-visible {
@@ -58,4 +130,20 @@ html {
 .skip-link:focus,
 .skip-link:focus-visible {
   transform: translateY(0);
+}
+
+.text-display-xl,
+.text-display-lg,
+.text-display-md,
+.text-h1,
+.text-h2,
+.text-h3 {
+  text-wrap: balance;
+}
+
+.text-lead,
+.text-body-lg,
+.text-body,
+.text-small {
+  text-wrap: pretty;
 }

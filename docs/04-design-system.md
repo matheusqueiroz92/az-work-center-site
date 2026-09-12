@@ -42,6 +42,8 @@ Usar tokens semânticos em componentes:
 - `border-border`;
 - `bg-primary`;
 - `text-primary-foreground`;
+- `bg-error`;
+- `text-error-foreground`;
 - `ring-focus`.
 
 Tokens primitivos só devem aparecer na camada de configuração.
@@ -170,9 +172,11 @@ Variantes:
 | text | link com ação clara |
 | destructive | exclusão/ação irreversível, rara no site |
 
+O destructive usa `bg-error` e `text-error-foreground` (`--az-chalk-0`). O contraste esperado entre `#D9363E` e branco é aproximadamente 4.62:1, suficiente para texto normal AA. A cor primitiva Error não muda sem decisão humana.
+
 Tamanhos:
 
-- `sm`: 40 px, apenas desktop e ações secundárias;
+- `sm`: mínimo 44 × 44 px (`--touch-target`), recomendado só para ações secundárias;
 - `md`: 48 px padrão;
 - `lg`: 56 px hero;
 - ícone: mínimo 44 × 44 px.
@@ -192,6 +196,7 @@ Comportamento:
 - Underline visível ou affordance por seta/linha.
 - Estado visitado pode ser omitido em navegação, mas deve existir em artigos.
 - Link externo sinalizado quando necessário, sem abrir nova aba por padrão.
+- Nova aba só com `openInNewTab`. O `rel` final deve incluir `noopener` e `noreferrer`, sem duplicar tokens adicionais do consumidor.
 
 ### 9.3 Header
 

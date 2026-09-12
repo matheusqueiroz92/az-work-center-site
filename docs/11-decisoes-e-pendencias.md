@@ -45,6 +45,18 @@
 - View Transitions;
 - GSAP/WebGL.
 
+## Registro — Épico 2, primitives estáticas
+
+Implementação na branch `feat/design-system`, sem commit nesta passagem.
+
+- Superfície `quiet` não foi criada: não há tokens correspondentes em `design-system/tokens.css`.
+- `class-variance-authority` não foi instalada. Variantes tipadas com records cobrem Button e ButtonLink.
+- Eyebrow usa Manrope (`font-sans`) com o token `text-label`. IBM Plex Mono continua fora do carregamento.
+- Botão `sm` usa `--touch-target` (44 px) em todos os breakpoints. Continua recomendado só para ações secundárias.
+- `[data-surface="light"]` foi adicionado para que seções claras aninhadas em escuras restabeleçam os tokens semânticos. Os valores da paleta provisória não mudaram.
+- `--error-foreground` aponta para `--az-chalk-0`, para o destructive não herdar o foreground da superfície. Contraste esperado de `#D9363E` sobre branco: aproximadamente 4.62:1 (AA para texto normal). A primitiva Error não foi alterada.
+- Links em nova aba passam por `mergeLinkRel`: `noopener` e `noreferrer` são obrigatórios e tokens extras do consumidor são preservados sem duplicação.
+
 ## Decisões que agentes não podem tomar sozinhos
 
 - renomear a empresa;

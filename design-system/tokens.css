@@ -26,6 +26,7 @@
   --success: #2f9e62;
   --warning: #d97706;
   --error: #d9363e;
+  --error-foreground: var(--az-chalk-0);
   --info: #2563eb;
 
   --font-sans: "Manrope", sans-serif;
@@ -53,6 +54,55 @@
   --text-max: 42rem;
   --touch-target: 2.75rem;
   --header-height: 5rem;
+  --layout-gutter: clamp(1.25rem, 0.35rem + 3.8vw, 4rem);
+  --section-space-compact: clamp(4rem, 6vw, 5rem);
+  --section-space-default: clamp(6rem, 8vw, 8rem);
+  --section-space-narrative: clamp(8rem, 10vw, 11rem);
+
+  --type-display-xl: clamp(3.5rem, 8vw, 8.5rem);
+  --type-display-xl-leading: 0.92;
+  --type-display-xl-tracking: -0.04em;
+  --type-display-lg: clamp(3rem, 6.5vw, 6.75rem);
+  --type-display-lg-leading: 0.94;
+  --type-display-lg-tracking: -0.035em;
+  --type-display-md: clamp(2.5rem, 5vw, 5rem);
+  --type-display-md-leading: 0.96;
+  --type-display-md-tracking: -0.03em;
+  --type-h1: clamp(2.25rem, 4vw, 4rem);
+  --type-h1-leading: 1;
+  --type-h1-tracking: -0.025em;
+  --type-h2: clamp(1.875rem, 3vw, 3.25rem);
+  --type-h2-leading: 1.05;
+  --type-h2-tracking: -0.02em;
+  --type-h3: clamp(1.375rem, 2vw, 2rem);
+  --type-h3-leading: 1.1;
+  --type-h3-tracking: -0.015em;
+  --type-lead: clamp(1.125rem, 1.6vw, 1.375rem);
+  --type-lead-leading: 1.5;
+  --type-body-lg: 1.125rem;
+  --type-body-lg-leading: 1.6;
+  --type-body: 1rem;
+  --type-body-leading: 1.65;
+  --type-small: 0.875rem;
+  --type-small-leading: 1.5;
+  --type-label: 0.8125rem;
+  --type-label-leading: 1.4;
+  --type-label-tracking: 0.1em;
+}
+
+[data-surface="light"] {
+  color-scheme: light;
+  --background: var(--az-paper-50);
+  --foreground: var(--az-carbon-900);
+  --surface: var(--az-chalk-0);
+  --surface-foreground: var(--az-carbon-900);
+  --muted: #e7e3dc;
+  --muted-foreground: #535861;
+  --border: #c8c5bf;
+  --primary: var(--az-red-600);
+  --primary-hover: var(--az-red-700);
+  --primary-foreground: var(--az-chalk-0);
+  --ring: var(--az-red-700);
 }
 
 [data-surface="dark"] {
