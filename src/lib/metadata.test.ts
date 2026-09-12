@@ -2,7 +2,9 @@ import { describe, expect, it } from "vitest";
 
 import {
   createHomeMetadata,
+  createPageMetadata,
   createRootMetadata,
+  createUnpublishedMetadata,
   homeTitle,
   siteDescription,
 } from "@/lib/metadata";
@@ -31,5 +33,19 @@ describe("metadata", () => {
     });
     expect(root.metadataBase).toBeInstanceOf(URL);
     expect(root.robots).toEqual({ index: false, follow: false });
+  });
+
+  it("marca páginas ainda não aprovadas como noindex", () => {
+    const page = createPageMetadata("Soluções", "Description das soluções.");
+    const unpublished = createUnpublishedMetadata(
+      "Privacidade",
+      "Política ainda não aprovada.",
+    );
+
+    expect(page).toEqual({
+      title: "Soluções",
+      description: "Description das soluções.",
+    });
+    expect(unpublished.robots).toEqual({ index: false, follow: false });
   });
 });

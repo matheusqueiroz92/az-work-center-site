@@ -16,6 +16,10 @@
 | D-010 | Server Components por padrão | SEO, performance e menor JavaScript |
 | D-011 | Design editorial tecnológico industrial | autoria, maturidade e diferenciação de template IA |
 | D-012 | Alternar light/dark | ritmo e contraste, sem repetir site atual totalmente escuro |
+| D-013 | Projetos fora da navegação até o Épico 9 | conteúdo de cases ainda não aprovado |
+| D-014 | Soluções em `/solucoes/[slug]` com composição própria | metadata, params e visual distintos por oferta |
+| D-015 | Privacidade e Cookies fora do Footer e sem rotas públicas até P-008 | texto jurídico ainda não aprovado |
+| D-016 | `/contato` sem formulário no Épico 4, com WhatsApp e e-mail reais | canais confirmados por Matheus; envio pelo site fica no Épico 6 |
 
 ## Pendências bloqueadoras antes do desenvolvimento visual final
 
@@ -24,7 +28,7 @@
 | P-001 | vetor oficial e variações do logo | Matheus/design | alto |
 | P-002 | confirmar vermelho oficial | design | alto |
 | P-003 | nome empresarial/razão social pública | Matheus/contábil | médio |
-| P-004 | telefone, e-mail e endereço oficiais | Matheus | alto |
+| P-004 | WhatsApp e e-mail confirmados; endereço oficial ainda pendente | Matheus | alto |
 | P-005 | destino do formulário/CRM | Matheus/Lucas | alto |
 | P-006 | prazo de resposta prometido | comercial | médio |
 | P-007 | ferramenta de analytics | Matheus/Lucas | médio |
@@ -87,6 +91,60 @@ Implementação na branch `feat/home-structure`, sem commit nesta passagem.
 - A troca entre `EngagementSection` e `FeaturedCases` será atômica no Épico 9, sem estado intermediário que renderize `null`.
 - Metadata da Home usa título absoluto `AZ Work Center | Tecnologia & Growth`. A description raiz deixou de mencionar site em desenvolvimento.
 - Fotos dos fundadores, logos, depoimentos, CNPJ e prazo de resposta continuam pendentes (P-003, P-004, P-006, P-009). Nenhum placeholder visual foi publicado.
+
+## Registro — Épico 4, planejamento e implementação estrutural
+
+Implementação na branch `feat/internal-pages`. D-013 a D-016 foram aceitas por Matheus em 12 de setembro de 2026. WhatsApp `(77) 98833-4370` / `https://wa.me/5577988334370` e e-mail `contato@azworkcenter.com.br` / `mailto:contato@azworkcenter.com.br` foram confirmados. Endereço oficial, CNPJ, prazo de resposta e formulário/CRM continuam pendentes.
+
+### D-013 — Remover “Projetos” da navegação até o Épico 9
+
+- Data: 2026-09-12
+- Status: aceita
+- Contexto: `/projetos` não tem conteúdo aprovado (D-009). Header, menu mobile e Footer já exibiam o destino, que retornava 404.
+- Decisão: remover o item da navegação; não criar página vazia; não redirecionar para a Home nem para `#capacidades`; reintroduzir no Épico 9 com cases reais.
+- Alternativas rejeitadas: página “em breve”; teaser que duplica `/solucoes`; manter o link morto.
+- Consequências: testes de nav/shell deixam de exigir `/projetos`. A URL digitada continua 404 até o Épico 7/9.
+- Responsável: Matheus
+
+### D-014 — Rotas de solução via `[slug]` com composição por oferta
+
+- Data: 2026-09-12
+- Status: aceita
+- Contexto: `docs/06` listava quatro `page.tsx` individuais. O plano do Épico 4 recomenda uma rota tipada para metadata, `generateStaticParams` e `notFound`, com layout visual distinto por slug.
+- Decisão: `src/app/(marketing)/solucoes/[slug]/page.tsx` + arquivos de composição privados + conteúdo estático por oferta.
+- Alternativas: quatro páginas irmãs (docs/06).
+- Consequências: slug inválido chama `notFound()`. As quatro páginas não podem compartilhar um único template visual.
+- Responsável: Matheus
+
+### D-015 — Privacidade e Cookies fora do Footer até P-008
+
+- Data: 2026-09-12
+- Status: aceita
+- Contexto: o texto jurídico ainda não está aprovado. Publicar rascunho como política vigente ou manter o 404 no Footer seriam piores. Materializar as rotas com `notFound()` gerou HTML inicial incompleto (`__next_error__`, sem Header, Footer, main ou CSS).
+- Decisão: Privacidade e Cookies ficam fora do Footer até P-008. Os módulos editoriais podem permanecer preparados em `src/content/legal.ts`. As rotas públicas não são materializadas enquanto o texto jurídico não estiver aprovado. `/privacidade` e `/cookies` retornam a 404 raiz completa. As rotas serão criadas ou reativadas no Épico 6 após P-008.
+- Alternativas rejeitadas: página “em revisão” indexável; rotas com `published: false` → `notFound()`.
+- Consequências: o grupo Legal do Footer permanece vazio. P-008 continua pendente.
+- Responsável: Matheus / jurídico
+
+### D-016 — `/contato` sem formulário no Épico 4, com canais reais
+
+- Data: 2026-09-12
+- Status: aceita com evolução
+- Contexto: o formulário funcional, o destino/CRM e o consentimento continuam no Épico 6 (P-005, P-008). O prazo de resposta (P-006) permanece indefinido.
+- Decisão: `/contato` permanece sem formulário, Server Action ou CRM. Passa a oferecer ações reais pelos canais confirmados por Matheus: WhatsApp e e-mail. Endereço, CNPJ, prazo e horário de atendimento não são publicados.
+- Alternativas rejeitadas: página sem ação; botão inerte; canal provisório.
+- Consequências: CTAs “Solicitar diagnóstico” apontam para uma página com conversa possível. O Épico 6 continua responsável pelo envio pelo site.
+- Responsável: Matheus
+
+### Pendências humanas ainda abertas
+
+- P-003: razão social e CNPJ públicos; onde exibir.
+- P-004: endereço oficial ainda pendente (WhatsApp e e-mail confirmados).
+- P-005: destino do formulário/CRM — o Épico 6 não está resolvido.
+- P-006: prazo de resposta prometido.
+- P-008: estratégia de cookies/LGPD.
+- Credenciais selecionadas de Matheus para `/sobre`.
+- Fotos reais até P-009.
 
 ## Decisões que agentes não podem tomar sozinhos
 

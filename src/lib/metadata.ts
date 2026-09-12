@@ -29,3 +29,21 @@ export function createHomeMetadata(): Metadata {
     description: siteDescription,
   };
 }
+
+export function createPageMetadata(
+  title: string,
+  description: string,
+): Metadata {
+  return { title, description };
+}
+
+export function createUnpublishedMetadata(
+  title: string,
+  description: string,
+): Metadata {
+  return {
+    title,
+    description,
+    robots: { index: false, follow: false },
+  };
+}

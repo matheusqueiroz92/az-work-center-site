@@ -74,7 +74,6 @@ describe("DesktopNav", () => {
 
     expect(hrefs).toEqual([
       "/solucoes",
-      "/projetos",
       "/como-trabalhamos",
       "/sobre",
       "/contato",
@@ -110,15 +109,12 @@ describe("SiteFooter", () => {
     ).toBeNull();
   });
 
-  it("reutiliza os destinos legais", () => {
-    const { getByRole } = render(<SiteFooter />);
+  it("não expõe destinos legais enquanto as políticas não estão aprovadas", () => {
+    const { queryByRole } = render(<SiteFooter />);
 
-    expect(
-      getByRole("link", { name: "Privacidade" }).getAttribute("href"),
-    ).toBe("/privacidade");
-    expect(getByRole("link", { name: "Cookies" }).getAttribute("href")).toBe(
-      "/cookies",
-    );
+    expect(queryByRole("link", { name: "Privacidade" })).toBeNull();
+    expect(queryByRole("link", { name: "Cookies" })).toBeNull();
+    expect(queryByRole("link", { name: "Projetos" })).toBeNull();
   });
 
   it("não repete destinos nem labels de navegação", () => {

@@ -20,7 +20,7 @@ const footerGroupsSchema = z
   .object({
     work: z.array(navItemSchema).min(1),
     company: z.array(navItemSchema).min(1),
-    legal: z.array(navItemSchema).min(1),
+    legal: z.array(navItemSchema),
   })
   .superRefine((groups, context) => {
     const hrefs = [...groups.work, ...groups.company, ...groups.legal].map(
@@ -51,22 +51,19 @@ export type FooterNavigation = z.infer<typeof footerGroupsSchema>;
 export type Navigation = z.infer<typeof navigationSchema>;
 
 const solucoes = { label: "Soluções", href: "/solucoes" };
-const projetos = { label: "Projetos", href: "/projetos" };
 const comoTrabalhamos = {
   label: "Como trabalhamos",
   href: "/como-trabalhamos",
 };
 const sobre = { label: "Sobre", href: "/sobre" };
 const contato = { label: "Contato", href: "/contato" };
-const privacidade = { label: "Privacidade", href: "/privacidade" };
-const cookies = { label: "Cookies", href: "/cookies" };
 
 export const navigation = navigationSchema.parse({
-  primary: [solucoes, projetos, comoTrabalhamos, sobre],
+  primary: [solucoes, comoTrabalhamos, sobre],
   footer: {
-    work: [solucoes, projetos],
+    work: [solucoes],
     company: [comoTrabalhamos, sobre, contato],
-    legal: [privacidade, cookies],
+    legal: [],
   },
   cta: {
     label: "Solicitar diagnóstico",
