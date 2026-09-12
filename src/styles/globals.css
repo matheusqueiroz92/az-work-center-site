@@ -31,6 +31,7 @@
   --max-width-container: var(--container-max);
   --spacing-gutter: var(--layout-gutter);
   --spacing-touch: var(--touch-target);
+  --spacing-header: var(--header-height);
   --spacing-section-compact: var(--section-space-compact);
   --spacing-section-default: var(--section-space-default);
   --spacing-section-narrative: var(--section-space-narrative);
@@ -146,4 +147,20 @@ html {
 .text-body,
 .text-small {
   text-wrap: pretty;
+}
+
+.sheet-safe {
+  padding-top: env(safe-area-inset-top);
+  padding-right: env(safe-area-inset-right);
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+@media (scripting: none) {
+  [data-accordion-content],
+  [data-accordion-content][hidden],
+  [data-accordion-content][data-state="closed"] {
+    display: block !important;
+    height: auto !important;
+    overflow: visible !important;
+  }
 }

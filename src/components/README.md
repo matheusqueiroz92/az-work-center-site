@@ -197,6 +197,54 @@ Todos os componentes deste diretório são universais: sem `"use client"`, sem e
 
 **Proibido:** nova aba implícita; underline só no hover; hex de link.
 
+## SiteWordmark
+
+**Finalidade:** assinatura textual temporária até o lockup vetorial (P-001).
+
+**Semântica:** `next/link` para `/`. O nome visível é o nome acessível.
+
+**Proibido:** desenhar símbolo novo, usar imagem falsa ou o logo atual sem arquivo fornecido.
+
+## SiteHeader / DesktopNav / MobileNav
+
+**Finalidade:** chrome de navegação pública.
+
+**Comportamento:** Header e DesktopNav são Server Components. Só o Sheet do menu mobile é Client Component. O Header valida a navegação no servidor e passa `items` e `cta` por props serializáveis; MobileNav não importa o módulo de conteúdo. Sticky, sem esconder no scroll e sem `aria-current` global.
+
+**Tokens:** `bg-background`, `text-foreground`, `border-border`, `h-header`, `min-h-touch`.
+
+**Acessibilidade:** `header` + `nav aria-label="Principal"`. Menu mobile usa Dialog/Sheet com foco, Escape e botões nomeados.
+
+**Proibido:** dropdown, Motion, cursor customizado, `href="#"`.
+
+## SiteFooter
+
+**Finalidade:** rodapé institucional com dados aprovados.
+
+**Conteúdo:** nome, descritor, tagline, cidade/UF, grupos Atuação/Empresa/Legal sem destinos repetidos e copyright do ano no servidor. Preferências de cookies não aparecem enquanto P-008 estiver pendente.
+
+**Proibido:** CNPJ, telefone, e-mail, endereço, redes, selos ou clientes não confirmados.
+
+## Breadcrumb
+
+**Finalidade:** orientação em páginas internas. Não usar na Home.
+
+**Semântica:** `nav aria-label="Navegação estrutural"`, lista, `aria-current="page"` no item atual, separadores `aria-hidden`.
+
+**Proibido:** JSON-LD nesta etapa; truncar o texto de forma que o leitor de tela perca informação.
+
+## Accordion / AccordionList
+
+**Finalidade:** FAQ e listas expansíveis.
+
+**Semântica:** `button` dentro de `h3`; `aria-expanded` vem do Radix. `aria-controls` e o `id` do painel são estáveis para o HTML inicial apontar para um elemento existente.
+
+**Tokens:** bordas editoriais, sem cards. Ícone `aria-hidden`. Sem animação de `height`.
+
+**Fallback sem JavaScript:** `Accordion.Content` usa `forceMount` para manter pergunta, resposta e o painel com `id` no HTML inicial, fora dos scripts de hidratação. Com JavaScript, o estado fechado aplica `data-[state=closed]:hidden`. Sem scripting, `@media (scripting: none)` reexibe o mesmo conteúdo — sem segunda cópia.
+
+**Proibido:** tratar as perguntas do showcase como FAQ oficial.
+
 ## Showcase interno
 
-Rota `/dev/design-system`. `noindex, nofollow`. Em `VERCEL_ENV=production` responde `notFound()`. Não entra na navegação pública.
+Rota `/dev/design-system`. `noindex, nofollow`. Em `VERCEL_ENV=production` responde `notFound()`. Não entra na navegação pública. Não usa o layout de Header/Footer do site.
