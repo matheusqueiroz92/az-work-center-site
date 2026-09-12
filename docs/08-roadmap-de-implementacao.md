@@ -108,6 +108,13 @@ Primeiro entregar sem motion avançado. A narrativa e responsividade devem ser a
 - links internos;
 - sem páginas “hero + footer”.
 
+### Registro de implementação
+
+- Soluções usam `/solucoes/[slug]` com composição visual por oferta (D-014, aceita).
+- “Projetos” saiu da navegação até o Épico 9 (D-013, aceita).
+- Privacidade e Cookies ficam fora do Footer e sem rotas públicas até P-008 (D-015, aceita). O conteúdo editorial permanece em `src/content/legal.ts`; `/privacidade` e `/cookies` caem na 404 raiz.
+- `/contato` permanece sem formulário no Épico 4; WhatsApp e e-mail confirmados são as ações reais (D-016, aceita com evolução). O envio pelo site continua no Épico 6.
+
 ## Épico 5 — Motion e acabamento
 
 ### Tarefas

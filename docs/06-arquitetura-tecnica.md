@@ -35,10 +35,8 @@ src/
 │   │   ├── page.tsx
 │   │   ├── solucoes/
 │   │   │   ├── page.tsx
-│   │   │   ├── sistemas-sob-medida/page.tsx
-│   │   │   ├── automacao-inteligencia-artificial/page.tsx
-│   │   │   ├── produtos-digitais-mvp/page.tsx
-│   │   │   └── web-growth/page.tsx
+│   │   │   ├── [slug]/page.tsx
+│   │   │   └── _compositions/
 │   │   ├── projetos/
 │   │   │   ├── page.tsx
 │   │   │   └── [slug]/page.tsx

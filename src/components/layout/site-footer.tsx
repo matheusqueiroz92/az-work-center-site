@@ -59,20 +59,22 @@ export function SiteFooter() {
           <p className="text-muted-foreground text-small">
             © {year} {company.name}
           </p>
-          <nav aria-label="Informações legais">
-            <ul className="flex flex-wrap items-center gap-x-6 gap-y-2">
-              {navigation.footer.legal.map((item) => (
-                <li key={item.href}>
-                  <TextLink
-                    href={item.href}
-                    className="min-h-touch inline-flex items-center"
-                  >
-                    {item.label}
-                  </TextLink>
-                </li>
-              ))}
-            </ul>
-          </nav>
+          {navigation.footer.legal.length > 0 ? (
+            <nav aria-label="Informações legais">
+              <ul className="flex flex-wrap items-center gap-x-6 gap-y-2">
+                {navigation.footer.legal.map((item) => (
+                  <li key={item.href}>
+                    <TextLink
+                      href={item.href}
+                      className="min-h-touch inline-flex items-center"
+                    >
+                      {item.label}
+                    </TextLink>
+                  </li>
+                ))}
+              </ul>
+            </nav>
+          ) : null}
         </div>
       </Container>
     </footer>

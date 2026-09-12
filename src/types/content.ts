@@ -1,3 +1,66 @@
+export const solutionSlugs = [
+  "sistemas-sob-medida",
+  "automacao-inteligencia-artificial",
+  "produtos-digitais-mvp",
+  "web-growth",
+] as const;
+
+export type SolutionSlug = (typeof solutionSlugs)[number];
+
+export type SolutionComposition = "ledger" | "flow" | "scope" | "funnel";
+
+export type FAQItem = {
+  question: string;
+  answer: string;
+};
+
+export type EditorialItem = {
+  title: string;
+  description: string;
+};
+
+export type SolutionPreviewFields = {
+  outcome: string;
+  summary: string;
+  capabilities: readonly [string, string, string];
+};
+
+export type SolutionPage = {
+  slug: SolutionSlug;
+  title: string;
+  shortTitle: string;
+  href: `/solucoes/${SolutionSlug}`;
+  preview: SolutionPreviewFields;
+  intro: {
+    headline: string;
+    text: string;
+  };
+  symptoms: readonly EditorialItem[];
+  outcomes: readonly EditorialItem[];
+  capabilities: readonly EditorialItem[];
+  examples: readonly EditorialItem[];
+  process: {
+    title: string;
+    text: string;
+    steps: readonly EditorialItem[];
+  };
+  relatedSlugs: readonly SolutionSlug[];
+  faqs: readonly FAQItem[];
+  cta: {
+    title: string;
+    text: string;
+    action: {
+      label: string;
+      href: "/contato";
+    };
+  };
+  seo: {
+    title: string;
+    description: string;
+  };
+  composition: SolutionComposition;
+};
+
 export type Service = {
   slug: string;
   title: string;
@@ -52,11 +115,6 @@ export type TeamMember = {
   role: string;
   bio?: string;
   photo?: string;
-};
-
-export type FAQItem = {
-  question: string;
-  answer: string;
 };
 
 export function isPublishableCaseStudy(

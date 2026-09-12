@@ -6,23 +6,23 @@ import {
   navigation,
 } from "@/content/navigation";
 
-const expectedHrefs = [
-  "/solucoes",
-  "/projetos",
-  "/como-trabalhamos",
-  "/sobre",
-  "/contato",
-  "/privacidade",
-  "/cookies",
-];
+const expectedHrefs = ["/solucoes", "/como-trabalhamos", "/sobre", "/contato"];
 
 describe("navigation", () => {
-  it("contém os destinos previstos", () => {
+  it("contém os destinos públicos atuais", () => {
     const hrefs = listNavigationItems().map((item) => item.href);
 
     for (const href of expectedHrefs) {
       expect(hrefs).toContain(href);
     }
+  });
+
+  it("não aponta para Projetos nem para políticas ainda não aprovadas", () => {
+    const hrefs = listNavigationItems().map((item) => item.href);
+
+    expect(hrefs).not.toContain("/projetos");
+    expect(hrefs).not.toContain("/privacidade");
+    expect(hrefs).not.toContain("/cookies");
   });
 
   it("não usa href vazio nem âncora genérica", () => {
@@ -42,10 +42,9 @@ describe("navigation", () => {
     });
   });
 
-  it("mantém a navegação do Header com os quatro destinos principais", () => {
+  it("mantém a navegação do Header sem o destino de Projetos", () => {
     expect(navigation.primary.map((item) => item.href)).toEqual([
       "/solucoes",
-      "/projetos",
       "/como-trabalhamos",
       "/sobre",
     ]);
@@ -60,25 +59,18 @@ describe("navigation", () => {
     expect(labels).toEqual([...new Set(labels)]);
     expect(hrefs).toEqual([
       "/solucoes",
-      "/projetos",
       "/como-trabalhamos",
       "/sobre",
       "/contato",
-      "/privacidade",
-      "/cookies",
     ]);
     expect(navigation.footer.work.map((item) => item.label)).toEqual([
       "Soluções",
-      "Projetos",
     ]);
     expect(navigation.footer.company.map((item) => item.label)).toEqual([
       "Como trabalhamos",
       "Sobre",
       "Contato",
     ]);
-    expect(navigation.footer.legal.map((item) => item.label)).toEqual([
-      "Privacidade",
-      "Cookies",
-    ]);
+    expect(navigation.footer.legal).toEqual([]);
   });
 });
