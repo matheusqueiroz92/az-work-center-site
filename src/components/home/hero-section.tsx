@@ -58,9 +58,6 @@ export function HeroSection() {
               {homeHero.secondaryCta.label}
             </ButtonLink>
           </div>
-          {/* <p className="font-editorial text-lead text-foreground max-w-text text-pretty">
-            {homeHero.proof}
-          </p> */}
         </div>
       </Container>
     </Section>

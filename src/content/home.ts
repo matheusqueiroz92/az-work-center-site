@@ -21,8 +21,6 @@ export const homeHero = {
     label: "Conhecer soluções",
     href: "/solucoes",
   },
-  proof:
-    "Estratégia, desenvolvimento e evolução conduzidos diretamente pelos fundadores.",
 } as const;
 
 export const homeProblems = {
