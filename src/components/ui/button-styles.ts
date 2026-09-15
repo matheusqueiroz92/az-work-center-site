@@ -9,6 +9,8 @@ export const buttonVariants = {
   text: "border-transparent bg-transparent px-2 text-foreground underline decoration-current decoration-1 underline-offset-4 hover:decoration-2 hover:underline-offset-2",
   destructive:
     "border-transparent bg-error text-error-foreground hover:opacity-90",
+  outline:
+    "border-foreground bg-transparent text-foreground hover:bg-muted hover:border-foreground",
 } as const;
 
 export const buttonSizes = {

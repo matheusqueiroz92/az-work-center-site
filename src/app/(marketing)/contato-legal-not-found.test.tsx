@@ -14,6 +14,7 @@ import RootNotFound, {
 import { about } from "@/content/about";
 import { contact, contactChannels } from "@/content/contact";
 import { homeCta, homeHero } from "@/content/home";
+import { heroMp4Src, heroPosterSrc, heroWebmSrc } from "@/lib/hero-media";
 import { howWeWork } from "@/content/how-we-work";
 import { legalPages } from "@/content/legal";
 import { navigation } from "@/content/navigation";
@@ -110,6 +111,9 @@ describe("contato, legal e 404", () => {
     expect(text).toContain("30 a 45 minutos");
     expect(text).not.toMatch(implementationLeak);
     expect(text).not.toMatch(inventedPendingInfo);
+    expect(container.querySelector(`img[src="${heroPosterSrc}"]`)).toBeNull();
+    expect(container.querySelector(`source[src="${heroWebmSrc}"]`)).toBeNull();
+    expect(container.querySelector(`source[src="${heroMp4Src}"]`)).toBeNull();
   });
 
   it("mantém os CTAs de diagnóstico apontando para /contato", () => {
@@ -163,6 +167,9 @@ describe("contato, legal e 404", () => {
       }).getAttribute("href"),
     ).toBe("/solucoes");
     expect(container.querySelector("form")).toBeNull();
+    expect(container.querySelector(`img[src="${heroPosterSrc}"]`)).toBeNull();
+    expect(container.querySelector(`source[src="${heroWebmSrc}"]`)).toBeNull();
+    expect(container.querySelector(`source[src="${heroMp4Src}"]`)).toBeNull();
   });
 
   it("renderiza 404 do grupo sem duplicar Header ou Footer", () => {

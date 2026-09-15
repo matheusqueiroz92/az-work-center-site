@@ -2,6 +2,7 @@ import { ServiceOffer } from "@/components/home/service-offer";
 import { Container } from "@/components/layout/container";
 import { Section } from "@/components/layout/section";
 import { SectionHeading } from "@/components/layout/section-heading";
+import { ServiceStoryLoader } from "@/components/motion/service-story-loader";
 import { homeServices } from "@/content/home";
 import { servicePreviews } from "@/content/services";
 
@@ -56,10 +57,14 @@ export function ServicesSection() {
             ))}
           </div>
           <div
-            className="border-border hidden min-w-0 border p-6 lg:sticky lg:top-[calc(var(--header-height)+2rem)] lg:col-span-5 lg:block [@media(max-height:40rem)]:static"
+            className="border-border relative hidden min-w-0 border p-6 lg:sticky lg:top-[calc(var(--header-height)+2rem)] lg:col-span-5 lg:block [@media(max-height:40rem)]:static"
             aria-hidden="true"
+            data-service-story-frame=""
           >
-            <ServicesMap />
+            <div data-service-story-fallback="">
+              <ServicesMap />
+            </div>
+            <ServiceStoryLoader />
           </div>
         </div>
       </Container>

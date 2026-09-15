@@ -119,7 +119,7 @@ Todos os componentes deste diretório são universais: sem `"use client"`, sem e
 
 **Finalidade:** ação que dispara um evento, envio ou comando. Renderiza `<button>`.
 
-**Variantes:** `primary`, `secondary`, `ghost`, `text`, `destructive`.
+**Variantes:** `primary`, `secondary`, `outline`, `ghost`, `text`, `destructive`. `outline` é o CTA secundário da Hero: borda `border-foreground` sobre fundo transparente.
 
 **Tamanhos:** `sm`, `md`, `lg`, `icon`.
 
@@ -251,6 +251,6 @@ Rota `/dev/design-system`. `noindex, nofollow`. Em `VERCEL_ENV=production` respo
 
 ## Home (`src/components/home`)
 
-Seções da Home estrutural. Todas são Server Components. A única ilha cliente da página é o `AccordionList` já existente, usado no FAQ.
+Seções da Home estrutural. Todas são Server Components. As ilhas cliente da página ficam fora desta pasta: `AccordionList` no FAQ, `ServiceStoryLoader` em `src/components/motion`, o halo `HeroInteractiveGlow` e o vídeo `HeroVideoEnhancement` na mesma pasta de motion.
 
-Não adicionar `"use client"`, Motion, listeners de scroll ou tabs nesta pasta. O SVG do hero é o estado final previsto para o Épico 5. A Home renderiza `EngagementSection` incondicionalmente em `#capacidades` até o Épico 9; não cria `#projetos`.
+Não adicionar `"use client"`, Motion, listeners de scroll ou tabs nesta pasta. A Hero usa `<picture>` Server (`HeroMedia`) com poster 4:5 em retrato/celular e poster 16:9 em paisagem a partir de 768 px; o vídeo Full HD entra só como melhoria progressiva em paisagem com movimento permitido. O halo CSS é a única resposta ao ponteiro. O mapa estático de Soluções permanece Server; o Service Story entra só como melhoria progressiva. A Home renderiza `EngagementSection` incondicionalmente em `#capacidades` até o Épico 9; não cria `#projetos`.

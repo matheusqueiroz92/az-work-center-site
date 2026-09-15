@@ -170,15 +170,29 @@ describe("HomePage", () => {
     }
 
     expect(container.querySelector('a[href="#"]')).toBeNull();
+
+    for (const service of servicePreviews) {
+      expect(
+        container.querySelector(`[data-service-story-item="${service.slug}"]`),
+      ).toBeTruthy();
+    }
+
+    expect(
+      container.querySelector("[data-service-story-fallback]"),
+    ).toBeTruthy();
+    expect(container.querySelector("[data-service-story-frame]")).toBeTruthy();
   });
 
   it("renderiza problemas, método, entrega e confiança sem vazio", () => {
-    const { getByRole, getByText } = render(<HomePage />);
+    const { container, getByRole, getByText } = render(<HomePage />);
 
     for (const item of homeProblems.items) {
       expect(getByRole("heading", { name: item.title })).toBeTruthy();
       expect(getByText(item.description)).toBeTruthy();
     }
+
+    expect(container.querySelector("#metodo ol")).toBeTruthy();
+    expect(container.querySelector("#metodo ol")?.children).toHaveLength(4);
 
     for (const step of homeMethod.steps) {
       expect(getByText(step.number)).toBeTruthy();
@@ -236,12 +250,69 @@ describe("HomePage", () => {
     expect(text).not.toMatch(/\+300|%\s*de/);
   });
 
-  it("marca o diagrama do hero como decorativo", () => {
-    const { container } = render(<HomePage />);
-    const svg = container.querySelector("svg");
+  it("mantém o texto do Hero visível no HTML inicial", () => {
+    const { container, getAllByRole, getByRole } = render(<HomePage />);
+    const heading = getByRole("heading", { level: 1, name: homeHero.title });
 
-    expect(svg?.getAttribute("aria-hidden")).toBe("true");
-    expect(svg?.getAttribute("focusable")).toBe("false");
+    expect(heading.textContent).toBe(homeHero.title);
+    expect(heading.querySelectorAll("span").length).toBe(0);
+    expect(container.textContent).toContain(homeHero.eyebrow);
+    expect(container.textContent).toContain(homeHero.text);
+    const primaryCtas = getAllByRole("link", {
+      name: homeHero.primaryCta.label,
+    });
+
+    expect(primaryCtas.length).toBeGreaterThanOrEqual(1);
+    expect(primaryCtas[0]?.getAttribute("href")).toBe(homeHero.primaryCta.href);
+    expect(
+      getByRole("link", { name: homeHero.secondaryCta.label }).getAttribute(
+        "href",
+      ),
+    ).toBe(homeHero.secondaryCta.href);
+  });
+
+  it("não esconde headings, parágrafos, links ou FAQ com opacity 0", () => {
+    const { container } = render(<HomePage />);
+    const essentials = container.querySelectorAll(
+      "h1, h2, h3, p, a, [data-accordion-content]",
+    );
+
+    expect(essentials.length).toBeGreaterThan(10);
+
+    for (const node of essentials) {
+      expect(node.getAttribute("style") ?? "").not.toMatch(/opacity:\s*0/);
+      expect(node.className).not.toMatch(/\bopacity-0\b/);
+    }
+  });
+
+  it("marca a mídia da Hero como decorativa e preserva as linhas editoriais", () => {
+    const { container } = render(<HomePage />);
+    const image = container.querySelector("[data-hero] img");
+    const svgs = container.querySelectorAll("svg");
+
+    expect(container.querySelector("[data-hero] picture")).toBeTruthy();
+    expect(image).toBeTruthy();
+    expect(image?.closest("[aria-hidden='true']")).toBeTruthy();
+    expect(image?.getAttribute("alt")).toBe("");
+    expect(image?.getAttribute("aria-hidden")).toBe("true");
+    expect(container.querySelector("[data-hero] video")).toBeNull();
+    expect(container.querySelector("[data-hero-line-overlay]")).toBeNull();
+    expect(container.querySelector("[data-hero-line-base]")).toBeNull();
+    expect(svgs.length).toBeGreaterThanOrEqual(2);
+
+    for (const svg of svgs) {
+      expect(svg.getAttribute("aria-hidden")).toBe("true");
+      expect(svg.getAttribute("focusable")).toBe("false");
+    }
+
+    expect(
+      container.querySelector('[data-editorial-line="process"]'),
+    ).toBeTruthy();
+    expect(container.querySelector('[data-editorial-line="cta"]')).toBeTruthy();
+    expect(
+      container.querySelectorAll("[data-editorial-line-base]").length,
+    ).toBe(2);
+    expect(container.querySelector("[data-service-story-frame]")).toBeTruthy();
   });
 
   it("preserva Header e Footer ao redor da Home", () => {
@@ -269,5 +340,6 @@ describe("HomePage", () => {
     }
 
     expect(pageSource).not.toMatch(/getPublishedProjects/);
+    expect(pageSource).not.toMatch(/['"]use client['"]/);
   });
 });

@@ -7,6 +7,7 @@ export function ServiceOffer({ service }: { service: ServicePreview }) {
   return (
     <article
       aria-labelledby={headingId}
+      data-service-story-item={service.slug}
       className="border-border border-t py-8 first:border-t-0 first:pt-0 last:pb-0"
     >
       <h3 id={headingId} className="text-h3 text-foreground font-semibold">
