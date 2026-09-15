@@ -186,6 +186,26 @@ O universo visual combina precisão de engenharia com sinais humanos e regionais
 
 O logotipo atual será mantido provisoriamente. Antes do lançamento, obter arquivos vetoriais e avaliar legibilidade do lettering “Work Center”, especialmente em tamanhos pequenos.
 
+### Rasters oficiais recebidos
+
+Matheus disponibilizou nove PNGs em `public/media/logo/`. São ativos intencionais de identidade visual da AZ Work Center, para possível uso futuro em Header, Footer e outras assinaturas — não dumps temporários.
+
+- `LOGO-AZ-WORK-CENTER-1.png` a `LOGO-AZ-WORK-CENTER-7.png`;
+- `LOGO-AZ-WORK-CENTER-COM-SLOGAN-1.png` e `LOGO-AZ-WORK-CENTER-COM-SLOGAN-2.png`.
+
+Ficaram fora do commit do Épico 5 por ainda não possuírem consumidores no produto, não porque sejam descartáveis. Continuam untracked até uma tarefa específica de inventário/integração decidir quais arquivos entram no Git.
+
+Antes de integrar:
+
+- inventariar fundo, cor, proporção, slogan e resolução de cada arquivo;
+- selecionar somente variantes canônicas para superfícies claras, escuras e uso compacto;
+- não carregar nem publicar todas automaticamente;
+- preservar os originais;
+- preferir SVG oficial equivalente quando disponível e validado;
+- qualquer substituição no Header/Footer exige validação visual responsiva.
+
+Essa integração futura não reabre o Épico 5.
+
 ### Lockups necessários
 
 1. Principal horizontal: símbolo + “AZ Work Center”.

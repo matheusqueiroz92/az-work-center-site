@@ -1,5 +1,8 @@
 /** @vitest-environment jsdom */
 
+import { readFileSync } from "node:fs";
+import path from "node:path";
+
 import { cleanup, render } from "@testing-library/react";
 import type { ReactNode } from "react";
 import { afterEach, describe, expect, it, vi } from "vitest";
@@ -48,6 +51,10 @@ vi.mock("next/navigation", () => ({
   },
 }));
 
+vi.mock("next/server", () => ({
+  connection: () => Promise.resolve(),
+}));
+
 const implementationLeak =
   /nesta versão|enquanto o envio|não há formulário|o site não precisa fechar a venda|não são um campo de formulário/i;
 
@@ -76,19 +83,66 @@ describe("contato, legal e 404", () => {
     expect(whatsapp.href).not.toMatch(/[?&]text=/);
   });
 
-  it("oferece ações reais de contato sem formulário", () => {
-    const { getAllByRole, getByRole, container } = render(<ContactPage />);
+  it("oferece formulário acessível com canais reais de fallback", async () => {
+    const page = await ContactPage();
+    const { getAllByRole, getByRole, container, queryByRole } = render(page);
     const text = container.textContent ?? "";
     const whatsapp = getByRole("link", { name: /Conversar pelo WhatsApp/ });
     const email = getByRole("link", { name: "Enviar e-mail" });
+    const form = container.querySelector("form");
+    const pageSource = readFileSync(
+      path.join(process.cwd(), "src/app/(marketing)/contato/page.tsx"),
+      "utf8",
+    );
 
     expect(getAllByRole("heading", { level: 1 })).toHaveLength(1);
     expect(getByRole("heading", { level: 1 }).textContent).toBe(contact.title);
-    expect(container.querySelector("form")).toBeNull();
-    expect(container.querySelector("input")).toBeNull();
-    expect(container.querySelector("textarea")).toBeNull();
-    expect(container.querySelector("select")).toBeNull();
-    expect(container.querySelector("button")).toBeNull();
+    expect(form).not.toBeNull();
+    expect(form?.getAttribute("method")?.toLowerCase()).toBe("post");
+    expect(form?.getAttribute("action") ?? "").not.toMatch(
+      /[?&](name|email|phone|company|message)=/,
+    );
+    expect(form?.getAttribute("aria-labelledby")).toBe("formulario-titulo");
+    expect(container.querySelector("#contato-campo-name")).toBeTruthy();
+    expect(container.querySelector("#contato-campo-company")).toBeTruthy();
+    expect(container.querySelector("#contato-campo-email")).toBeTruthy();
+    expect(container.querySelector("#contato-campo-phone")).toBeTruthy();
+    expect(container.querySelector("#contato-campo-need")).toBeTruthy();
+    expect(container.querySelector("#contato-campo-message")).toBeTruthy();
+    expect(
+      container.querySelector("#contato-campo-phone")?.hasAttribute("required"),
+    ).toBe(false);
+    expect(queryByRole("checkbox")).toBeNull();
+    expect(container.querySelector('a[href="/privacidade"]')).toBeNull();
+    expect(container.querySelector('a[href="/cookies"]')).toBeNull();
+    expect(pageSource).not.toMatch(/^["']use client["']/m);
+    expect(pageSource).not.toMatch(/from ["']motion/);
+    expect(pageSource).not.toMatch(/az-hero-transformacao/);
+    expect(pageSource).not.toMatch(
+      /HeroInteractiveGlow|HeroMedia|ServiceStory/,
+    );
+
+    const formSource = readFileSync(
+      path.join(
+        process.cwd(),
+        "src/app/(marketing)/contato/_components/contact-form.tsx",
+      ),
+      "utf8",
+    );
+    expect(formSource).not.toMatch(/from ["']zod["']/);
+    expect(formSource).not.toMatch(/contact-schema/);
+    expect(formSource).not.toMatch(/contact-submit/);
+    expect(formSource).not.toMatch(
+      /localStorage|sessionStorage|document\.cookie/,
+    );
+
+    const actionStateSource = readFileSync(
+      path.join(process.cwd(), "src/lib/contact-action-state.ts"),
+      "utf8",
+    );
+    expect(actionStateSource).not.toMatch(
+      /name:|company:|email:|phone:|message:/,
+    );
 
     expect(whatsapp.getAttribute("href")).toBe("https://wa.me/5577988334370");
     expect(whatsapp.getAttribute("target")).toBe("_blank");
@@ -103,6 +157,7 @@ describe("contato, legal e 404", () => {
     expect(email.getAttribute("target")).toBeNull();
     expect(text).toContain("contato@azworkcenter.com.br");
 
+    expect(text).toContain(contact.form.title);
     expect(text).toContain(contact.channels.title);
     expect(text).toContain(contact.expectation.title);
     expect(text).toContain(contact.prepare.title);
@@ -114,6 +169,24 @@ describe("contato, legal e 404", () => {
     expect(container.querySelector(`img[src="${heroPosterSrc}"]`)).toBeNull();
     expect(container.querySelector(`source[src="${heroWebmSrc}"]`)).toBeNull();
     expect(container.querySelector(`source[src="${heroMp4Src}"]`)).toBeNull();
+  });
+
+  it("não coloca o formulário de contato nas demais rotas", () => {
+    const sources = [
+      "src/app/(marketing)/page.tsx",
+      "src/app/(marketing)/sobre/page.tsx",
+      "src/app/(marketing)/como-trabalhamos/page.tsx",
+      "src/app/(marketing)/solucoes/page.tsx",
+      "src/app/(marketing)/solucoes/[slug]/page.tsx",
+      "src/app/not-found.tsx",
+    ].map((relative) =>
+      readFileSync(path.join(process.cwd(), relative), "utf8"),
+    );
+
+    for (const source of sources) {
+      expect(source).not.toMatch(/contact-form/);
+      expect(source).not.toMatch(/submitContactAction/);
+    }
   });
 
   it("mantém os CTAs de diagnóstico apontando para /contato", () => {

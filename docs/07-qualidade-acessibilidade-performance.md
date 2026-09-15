@@ -174,7 +174,11 @@ Checklist global:
 ## 8. Segurança e privacidade
 
 - formulário validado no servidor;
-- rate limit/honeypot;
+- honeypot e tempo mínimo de preenchimento na Fatia A; rate limit distribuído na Fatia B;
+- o tempo mínimo é heurística, não proteção suficiente contra abuso: token ausente/inválido não bloqueia POST direta;
+- a UI de produção de `/contato` trata o provider desabilitado como `unavailable`; `success` é contrato de teste com fake injetado;
+- com JavaScript, validação/`blocked`/`unavailable`/exceção do provider preservam os valores no estado local da instância montada; o formulário só é limpo após `{ ok: true }` mapeado para `status: "success"`; desmontar descarta o rascunho;
+- sem JavaScript, a Server Action continua sendo o destino da mutação e não devolve PII no estado serializado; o HTML de erro não recoloca campos (limitação objetiva do fallback sem JS, sem PII na URL); a hidratação da ilha Client é necessária para o POST progressivo completo nesta stack;
 - CSP validada sem quebrar integrações;
 - dependências auditadas;
 - secrets apenas no servidor;
@@ -207,7 +211,7 @@ Checklist global:
 
 1. Navegar Home → solução → contato.
 2. Abrir/fechar menu somente por teclado.
-3. Enviar formulário válido e confirmar sucesso.
+3. Enviar formulário válido e confirmar o estado vigente (na Fatia A: indisponível com canais alternativos; sucesso só após o provider real).
 4. Enviar inválido e verificar mensagens/foco.
 5. Rejeitar cookies e confirmar que analytics não carrega.
 6. Aceitar analytics e confirmar evento sem PII.

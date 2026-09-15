@@ -1,4 +1,7 @@
+import { connection } from "next/server";
+
 import { ContactChannels } from "@/app/(marketing)/contato/_components/contact-channels";
+import { ContactForm } from "@/app/(marketing)/contato/_components/contact-form";
 import { EditorialList } from "@/components/internal/editorial-list";
 import { InternalPageIntro } from "@/components/internal/internal-page-intro";
 import { Container } from "@/components/layout/container";
@@ -14,7 +17,14 @@ export const metadata = createPageMetadata(
   contact.seo.description,
 );
 
-export default function ContactPage() {
+async function readContactFormStartedAt() {
+  await connection();
+  return String(Date.now());
+}
+
+export default async function ContactPage() {
+  const startedAt = await readContactFormStartedAt();
+
   return (
     <main id="conteudo" tabIndex={-1}>
       <InternalPageIntro
@@ -25,6 +35,23 @@ export default function ContactPage() {
         ancestors={ancestors}
         titleId="contato-titulo"
       />
+
+      <Section
+        surface="light"
+        spacing="default"
+        aria-labelledby="formulario-titulo"
+      >
+        <Container width="editorial">
+          <SectionHeading
+            id="formulario-titulo"
+            as="h2"
+            size="h2"
+            title={contact.form.title}
+            description={contact.form.text}
+          />
+          <ContactForm startedAt={startedAt} />
+        </Container>
+      </Section>
 
       <Section
         surface="light"

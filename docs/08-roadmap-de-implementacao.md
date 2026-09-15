@@ -4,6 +4,10 @@
 
 Agentes podem trabalhar em paralelo apenas quando seus arquivos e decisões não se sobrepõem. O agente integrador mantém o design system, resolve conflitos e valida o build completo.
 
+### Ativos de marca disponíveis
+
+Nove rasters oficiais da logomarca estão em `public/media/logo/` e foram classificados em [`docs/03-manual-da-marca.md`](./03-manual-da-marca.md). Ainda não têm consumidores no produto e permanecem fora do Git até inventário e seleção das variantes canônicas. A futura integração no Header/Footer é trabalho de marca, não reabre o Épico 5.
+
 ## Épico 0 — Descoberta técnica
 
 ### Tarefas

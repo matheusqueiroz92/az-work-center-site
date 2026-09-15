@@ -33,21 +33,34 @@
 | D-027 | Mídia da Hero reenquadrada na origem 3D | mesma cena e animação; recorte da câmera/render; nomes públicos inalterados |
 | D-028 | Hero sem trilhos/pulsos na origem 3D; bloco textual elevado | cena limpa no render; wrapper único com translate responsivo |
 | D-029 | Art direction da Hero: poster 4:5 em retrato; vídeo só em paisagem | corta horizontal no celular e vazio em tablet retrato não se resolvem com um único object-position |
+| D-030 | Entrega futura do formulário por e-mail transacional via Resend e Server Action | contrato da Fatia B; sem CRM/banco no MVP |
+| D-031 | Destinatário de produção `contato@azworkcenter.com.br`; preview/teste `matheusqueiroz@azworkcenter.com.br` | separar leads reais de homologação |
+| D-032 | Remetente planejado `site@azworkcenter.com.br`, sujeito a DNS; Matheus tem acesso ao DNS de `azworkcenter.com.br` | envio autenticado; alteração de DNS continua restrita a humanos |
+| D-033 | Campos: nome, empresa, e-mail, tipo de necessidade e contexto obrigatórios; telefone/WhatsApp opcional | qualificar o diagnóstico sem dados excessivos |
+| D-034 | WhatsApp permanece canal secundário/fallback | formulário não substitui o canal já confirmado |
+| D-035 | Nenhuma promessa numérica de prazo de resposta | P-006 sem SLA público inventado |
+| D-036 | Sem banco/CRM no MVP; leads não convertidos retidos até seis meses na caixa comercial, salvo necessidade contratual/jurídica | retenção mínima e reversível |
+| D-037 | Sem newsletter ou consentimento de marketing nesta fase | não coletar base comercial sem oferta |
+| D-038 | Vercel como hospedagem inicial do site institucional | destino já sugerido na arquitetura técnica |
+| D-039 | Vercel Web Analytics planejado para fase posterior, sem ativá-lo agora | P-007 escolhido, não implementado |
+| D-040 | Sem banner de cookies enquanto não houver rastreadores não essenciais, sujeito a validação jurídica | P-008 permanece condicional |
+| D-041 | Razão social, CNPJ e endereço cadastral registrados; não publicar automaticamente no Header, Footer ou Contato | dados recebidos; exibição na etapa legal e conforme atendimento presencial |
+| D-042 | Canal `privacidade@azworkcenter.com.br` recomendado, pendente de criação; política poderá basear-se na LGPD e na ANPD, sem parecer jurídico | revisão profissional recomendada antes do lançamento |
 
 ## Pendências bloqueadoras antes do desenvolvimento visual final
 
 | ID | Pendência | Responsável sugerido | Impacto |
 |---|---|---|---|
-| P-001 | vetor oficial e variações do logo | Matheus/design | alto |
+| P-001 | seleção das variantes canônicas do logo e validação dos vetores | Matheus/design | alto |
 | P-002 | confirmar vermelho oficial | design | alto |
-| P-003 | nome empresarial/razão social pública | Matheus/contábil | médio |
-| P-004 | WhatsApp e e-mail confirmados; endereço oficial ainda pendente | Matheus | alto |
-| P-005 | destino do formulário/CRM | Matheus/Lucas | alto |
-| P-006 | prazo de resposta prometido | comercial | médio |
-| P-007 | ferramenta de analytics | Matheus/Lucas | médio |
-| P-008 | estratégia de cookies/LGPD | jurídico | alto |
+| P-003 | razão social e CNPJ recebidos; onde (e se) exibir publicamente ainda não decidido | Matheus/contábil | médio |
+| P-004 | WhatsApp e e-mail confirmados; endereço cadastral recebido, sem publicação automática | Matheus | alto |
+| P-005 | destino transacional decidido (Resend); envio real, DNS do remetente e CRM ausentes | Matheus/Lucas | alto |
+| P-006 | sem promessa numérica de prazo; texto público não cita SLA | comercial | médio |
+| P-007 | Vercel Web Analytics planejado; não ativar nesta fase | Matheus/Lucas | médio |
+| P-008 | sem banner enquanto não houver rastreadores não essenciais; validação jurídica pendente | jurídico | alto |
 | P-009 | assets fotográficos reais | equipe | alto |
-| P-010 | acesso e inventário WordPress/DNS | Matheus | alto |
+| P-010 | Matheus tem acesso ao DNS de `azworkcenter.com.br`; inventário WordPress e alteração de DNS de produção seguem restritos | Matheus | alto |
 
 ## Pendências não bloqueadoras do MVP estrutural
 
@@ -332,19 +345,173 @@ Implementação na branch `feat/motion-polish`. D-017 a D-023 foram aceitas por 
 - Catálogo efetivo: Hero 3D; duas linhas editoriais AZ (Processo no trilho superior do `<ol>`, CTA acima do botão); Service Story como painel de leitura, não como terceira linha; microinterações CSS de Button/ButtonLink, TextLink, navegação, Accordion e Sheet. Sem Section Reveal, fade-up de listas, hide-on-scroll, page transition ou Motion nas internas.
 - Compromisso mobile: em viewport estreita a mídia permanece decorativa e pode intersectar o bloco textual; não é regressão a corrigir nesta entrega.
 - Variante `outline` em `button-styles.ts`: necessária ao CTA secundário aprovado da Hero (`ButtonLink variant="outline"`). Difere de `secondary` pela borda `border-foreground` em vez de `border-border`. Não é resíduo órfão.
-- Arquivos em `public/media/logo/*.png`: dumps locais sem consumidor no código. Ficam fora do Épico 5; não foram incorporados nem apagados nesta passagem.
+- Arquivos em `public/media/logo/*.png`: rasters oficiais da logomarca, ainda sem consumidores. Ficaram fora do commit do Épico 5 por isso, não por serem descartáveis. Inventário e seleção canônica continuam em P-001; ver `docs/03-manual-da-marca.md`.
 - Metodologia de bundle: o `next build` com Turbopack 16.3.5 desta consolidação não imprime a coluna First Load JS usada nas Fatias A–C (206 041 B / 206 571 B / 206 646 B). A medição vigente é a soma de `encodedBodySize` dos resources de script após navegação document da Home em produção local (`pnpm start`), excluindo WebP/WebM/MP4. Não misturar esse número com o First Load histórico do webpack. Teto amplo do Épico 5: 220 KB gzip.
 - Limitação da auditoria: o agent-browser não emula zoom nativo (150%/200%) nem CPU 4×; esses cenários não foram medidos.
 
 ### Pendências humanas ainda abertas
 
-- P-003: razão social e CNPJ públicos; onde exibir.
-- P-004: endereço oficial ainda pendente (WhatsApp e e-mail confirmados).
-- P-005: destino do formulário/CRM — o Épico 6 não está resolvido.
-- P-006: prazo de resposta prometido.
-- P-008: estratégia de cookies/LGPD.
+- P-001: rasters oficiais recebidos em `public/media/logo/` (sete lockups `LOGO-AZ-WORK-CENTER-*.png` e dois com slogan). Não resolve P-001: faltam inventário, seleção canônica (claro/escuro/compacto) e validação dos vetores. Os PNGs continuam untracked até essa tarefa; ver `docs/03-manual-da-marca.md`.
+- P-003: razão social e CNPJ recebidos (D-041). Exibição pública no Header, Footer ou Contato continua pendente.
+- P-004: WhatsApp e e-mail confirmados; endereço cadastral recebido (D-041). Não publicar automaticamente; uso na etapa legal e conforme atendimento presencial.
+- P-005: destino transacional e destinatários decididos (D-030, D-031). Resend, DNS do remetente, rate limit distribuído e CRM não estão implementados. A Fatia A só entrega o contrato local com provider desabilitado.
+- P-006: decidido não prometer prazo numérico (D-035). Não há SLA público a redigir nesta fase.
+- P-007: Vercel Web Analytics escolhido (D-039). Não ativar agora; sem eventos, tags ou consent store.
+- P-008: sem banner de cookies enquanto não houver rastreadores não essenciais (D-040). Validação jurídica e textos definitivos de privacidade/cookies continuam pendentes. `privacidade@azworkcenter.com.br` ainda precisa ser criado/confirmado (D-042).
 - Credenciais selecionadas de Matheus para `/sobre`.
 - Fotos reais até P-009.
+
+## Registro — Épico 6, Fatia A (fundação local do formulário)
+
+- Data: 2026-09-15
+- Status: implementação técnica na branch `feat/forms-analytics-privacy`, sem commit nesta passagem
+- Escopo: `/contato` com formulário acessível, validação Zod 4 no servidor, Server Action pública e provider desabilitado. Sem Resend, sem persistência, sem analytics, sem banner, sem páginas jurídicas publicadas e sem commit dos logos.
+
+### D-030 — Entrega transacional via Resend e Server Action
+
+- Data: 2026-09-15
+- Status: aceita
+- Contexto: o Épico 4 deixou `/contato` só com WhatsApp e e-mail (D-016). P-005 pedia destino do formulário/CRM.
+- Decisão: a entrega futura dos leads será por e-mail transacional via Resend, acionada por Server Action tratada como endpoint público. Sem Route Handler para esta mutação. Sem banco ou CRM no MVP.
+- Alternativas: webhook de CRM; persistência imediata; Route Handler `/api/contato`.
+- Consequências: a Fatia A define o contrato (`submitContactLead` + provider). A Fatia B conecta o provider Resend. Preview não deve enviar leads reais ao destinatário de produção.
+- Responsável: Matheus
+
+### D-031 — Destinatários de produção e preview
+
+- Data: 2026-09-15
+- Status: aceita
+- Contexto: P-005 e a regra de preview da arquitetura técnica.
+- Decisão: produção envia para `contato@azworkcenter.com.br`. Preview e testes enviam para `matheusqueiroz@azworkcenter.com.br`.
+- Alternativas: caixa única; discard em preview.
+- Consequências: a Fatia B deve selecionar o destinatário pelo ambiente. A Fatia A não envia e-mail e não adiciona variáveis de ambiente.
+- Responsável: Matheus
+
+### D-032 — Remetente planejado e acesso DNS
+
+- Data: 2026-09-15
+- Status: aceita com condição
+- Contexto: envio autenticado exige SPF/DKIM/DMARC no domínio.
+- Decisão: remetente planejado `site@azworkcenter.com.br`, sujeito à validação DNS. Matheus possui acesso ao DNS de `azworkcenter.com.br`. Agentes não alteram DNS de produção.
+- Alternativas: remetente em domínio de teste do Resend; `contato@` como From.
+- Consequências: a Fatia B só ativa o envio depois da validação humana do DNS. P-010 continua aberto para inventário WordPress e para qualquer mudança de DNS.
+- Responsável: Matheus
+
+### D-033 — Campos do formulário
+
+- Data: 2026-09-15
+- Status: aceita
+- Contexto: o diagnóstico precisa de contexto operacional sem coleta excessiva.
+- Decisão: obrigatórios — nome, empresa, e-mail, tipo de necessidade (enum dos desafios já publicados em `src/content/contact.ts`) e contexto. Opcional — telefone/WhatsApp. Sem orçamento, faturamento, arquivo, CPF, CNPJ do lead, senha, newsletter ou checkbox de marketing. Sem checkbox jurídico apontando para política inexistente.
+- Alternativas: só e-mail e mensagem; checkbox de política nesta fatia.
+- Consequências: a Fatia A implementa esses campos e reserva o consentimento jurídico para a etapa legal.
+- Responsável: Matheus
+
+### D-034 — WhatsApp como fallback
+
+- Data: 2026-09-15
+- Status: aceita
+- Contexto: D-016 já confirmou WhatsApp e e-mail reais.
+- Decisão: o formulário não substitui esses canais. WhatsApp permanece secundário/fallback, visível em `/contato` junto com o e-mail.
+- Alternativas: ocultar canais depois do formulário existir.
+- Consequências: estados `unavailable`, `blocked` e erro interno apontam para WhatsApp e e-mail.
+- Responsável: Matheus
+
+### D-035 — Sem prazo numérico de resposta
+
+- Data: 2026-09-15
+- Status: aceita
+- Contexto: P-006 pedia um prazo prometido. Não há evidência operacional para um número público.
+- Decisão: nenhuma promessa numérica de prazo de resposta no site.
+- Alternativas: “até X horas úteis”; horário de atendimento.
+- Consequências: copy de expectativa/diagnóstico não ganha SLA. P-006 deixa de ser um texto a inventar e permanece como ausência de promessa.
+- Responsável: Matheus
+
+### D-036 — Sem banco/CRM; retenção na caixa comercial
+
+- Data: 2026-09-15
+- Status: aceita
+- Contexto: P-005 também perguntava por CRM.
+- Decisão: sem banco ou CRM no MVP. Leads não convertidos ficam retidos por até seis meses na caixa comercial, salvo necessidade contratual ou jurídica.
+- Alternativas: persistir no Postgres; CRM imediato.
+- Consequências: a Fatia A não grava filesystem, cookie, localStorage nem banco. A Fatia B envia e-mail; a retenção vive na caixa, não no app.
+- Responsável: Matheus
+
+### D-037 — Sem newsletter ou marketing nesta fase
+
+- Data: 2026-09-15
+- Status: aceita
+- Contexto: consentimento de marketing exigiria oferta, base legal e copy aprovados.
+- Decisão: não coletar newsletter nem consentimento de marketing nesta fase.
+- Alternativas: checkbox opcional já no MVP.
+- Consequências: o formulário não tem checkbox de marketing. Qualquer texto auxiliar sobre dados é factual e não finge política publicada.
+- Responsável: Matheus
+
+### D-038 — Hospedagem inicial na Vercel
+
+- Data: 2026-09-15
+- Status: aceita
+- Contexto: a arquitetura técnica já sugeria Vercel.
+- Decisão: Vercel é a hospedagem inicial do site institucional.
+- Alternativas: VPS próprio; outro PaaS.
+- Consequências: preview/produção seguem o modelo da Vercel. Não implica ativar produtos extras (Analytics, Speed Insights) nesta fatia.
+- Responsável: Matheus
+
+### D-039 — Vercel Web Analytics posterior
+
+- Data: 2026-09-15
+- Status: aceita
+- Contexto: P-007 pedia a ferramenta de analytics.
+- Decisão: Vercel Web Analytics é a escolha planejada, para fase posterior. Não ativar agora.
+- Alternativas: GA4; Plausible; nada.
+- Consequências: sem `@vercel/analytics`, sem eventos, sem tags. P-007 não está implementado.
+- Responsável: Matheus
+
+### D-040 — Sem banner de cookies por enquanto
+
+- Data: 2026-09-15
+- Status: aceita com condição
+- Contexto: P-008 e D-015. Sem rastreadores não essenciais nesta fatia.
+- Decisão: não há banner de cookies enquanto não houver rastreadores não essenciais. A decisão está sujeita à validação jurídica.
+- Alternativas: banner preventivo; só aviso textual.
+- Consequências: Footer sem preferências de cookies. D-015 permanece. P-008 não está resolvido.
+- Responsável: Matheus, com revisão jurídica
+
+### D-041 — Dados cadastrais sem publicação automática
+
+- Data: 2026-09-15
+- Status: aceita
+- Contexto: P-003 e P-004 pediam razão social, CNPJ e endereço.
+- Decisão: razão social `A Z WORK CENTER ESCRITORIO VIRTUAL LTDA - ME`; CNPJ `36.987.516/0001-19`; endereço cadastral `Rua Góes Calmon, nº 118 - sala 05. Centro. Vitória da Conquista-BA. CEP: 45.000-400`. Esses dados não entram automaticamente no Header, Footer ou Contato. O uso público será decidido na etapa legal e conforme o atendimento presencial.
+- Alternativas: rodapé com CNPJ e endereço já nesta fatia.
+- Consequências: `src/content/company.ts` permanece sem e-mail, telefone, endereço ou CNPJ. `/contato` não exibe o endereço cadastral.
+- Responsável: Matheus
+
+### D-042 — Canal de privacidade e redação da política
+
+- Data: 2026-09-15
+- Status: aceita com condição
+- Contexto: P-008 e a necessidade de um canal do titular.
+- Decisão: canal recomendado `privacidade@azworkcenter.com.br`, ainda pendente de criação/confirmação. A política poderá ser redigida com base na LGPD e em orientações da ANPD, mas não será apresentada como parecer jurídico. Revisão profissional permanece recomendada antes do lançamento.
+- Alternativas: usar só `contato@` como canal de titular; publicar rascunho agora.
+- Consequências: sem rotas públicas de privacidade/cookies. Sem link para política inexistente no formulário. D-015 e `legal.ts` (`published: false`) seguem.
+- Responsável: Matheus, com revisão profissional
+
+### Registro de implementação — Fatia A
+
+- `page.tsx` de `/contato` permanece Server Component (async só para `connection()` e o instante `startedAt`).
+- Schema, parser hostil e limites: `src/lib/contact-fields.ts` (constantes sem Zod) e `src/lib/contact-schema.ts` (Zod 4, só servidor).
+- Estado serializável da Action: `src/lib/contact-action-state.ts`.
+- Função de domínio `submitContactLead` e providers: `src/lib/contact-submit.ts`.
+- Server Action: `src/app/(marketing)/contato/actions.ts`, sempre com `disabledContactProvider`.
+- Ilha Client: `src/app/(marketing)/contato/_components/contact-form.tsx` (`useActionState`, pending e foco do feedback).
+- Na aplicação, o provider desabilitado devolve `unavailable`. `success` só existe nos testes de domínio com fake injetado.
+- Sem Resend, sem env, sem `console.log` de FormData, sem persistência, sem rate limit in-memory, sem CAPTCHA, sem analytics e sem banner.
+- `connection()` deixa `/contato` dinâmica de forma intencional. `startedAt` é gerado por requisição/render (`Date.now()` depois de `connection()`), não congelado entre acessos. A checagem de tempo mínimo é heurística: token ausente ou inválido não bloqueia chamada direta. Não documentar isso como defesa suficiente contra abuso.
+- Com JS, os valores de nome, empresa, e-mail, telefone, necessidade e contexto permanecem no estado local da instância após `validation`, `blocked`, `unavailable` ou exceção, enquanto o formulário continua montado. Só são limpos depois de `status: "success"` (`{ ok: true }` do provider). Desmontar a ilha ou sair de `/contato` descarta o rascunho; uma nova montagem começa vazia. `ContactActionState` não ecoa PII. Sem localStorage, sessionStorage, cookie, querystring, arquivo, log ou variável mutável de módulo desses campos.
+- O botão de envio permanece focável durante `pending` (`aria-busy`, `aria-disabled`, texto `Enviando…`). Clique, Enter e Space repetidos não disparam segunda Action. Isso não é idempotência de segurança (Fatia B).
+- Progressive enhancement: o `<form method="post">` usa a Server Action real (`submitContactAction`), não um wrapper Client. O HTML inicial do Next 16 na ilha pode exibir o placeholder `javascript:throw` do React até a hidratação; sem JS, o POST não recolocará PII na URL nem no estado serializado. Sem hidratação, os campos também não podem ser recolocados no HTML de erro — limitação do fallback sem JS, não um transporte de PII. WhatsApp e e-mail permanecem.
+- Ilha Client de `/contato`: chunk `35xbfk9jgsz7y.js` (4 645 B gzip, sem Zod). Ausente em Home, `/sobre` e 404. Não carrega mídia da Hero nem Motion.
 
 ## Decisões que agentes não podem tomar sozinhos
 

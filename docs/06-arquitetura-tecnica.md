@@ -163,30 +163,52 @@ Escolher CMS apenas após esses requisitos. Não acoplar a primeira versão a um
 
 ## 7. Formulário e integração
 
-Fluxo recomendado:
+Fluxo alvo (Fatias B+):
 
 ```text
-Client form
-→ validação progressiva
-→ Server Action
-→ schema Zod
-→ proteção anti-spam/rate limit
-→ envio de e-mail/CRM
-→ persistência mínima opcional
-→ retorno tipado
-→ evento de conversão após sucesso
+Página Server
+→ formulário progressivo
+→ Server Action tratada como endpoint público
+→ leitura defensiva de FormData
+→ Zod no servidor
+→ normalização e limites
+→ honeypot + tempo mínimo
+→ provider de entrega (Resend na Fatia B)
+→ resultado discriminado sem PII
+→ feedback acessível
+→ rate limit distribuído e evento de conversão só depois do envio real
 ```
 
-Requisitos:
+Estado vigente da Fatia A:
+
+```text
+src/lib/contact-fields.ts          # constantes e limites, sem Zod
+src/lib/contact-action-state.ts    # união serializável da Action
+src/lib/contact-schema.ts          # parser hostil e Zod 4 (servidor)
+src/lib/contact-submit.ts          # domínio testável + provider por interface
+src/app/(marketing)/contato/
+├── page.tsx                       # Server Component; connection() para startedAt
+├── actions.ts                     # Server Action pública com provider desabilitado
+└── _components/contact-form.tsx   # ilha Client (useActionState, pending, foco)
+```
+
+- A mutação vive na Server Action, não em Route Handler.
+- O provider da aplicação é `disabledContactProvider` e devolve `unavailable`. `success` só aparece em testes com fake injetado.
+- `connection()` em `/contato` é intencional: a rota permanece dinâmica (`ƒ`) para que `startedAt` seja gerado por requisição/render, não congelado no prerender. O tempo mínimo de preenchimento é só heurística local; token ausente ou inválido não bloqueia uma POST direta. Não substitui rate limit nem idempotência (Fatia B).
+- Valores digitados ficam só no estado local da instância da ilha Client (`useState`). Não há variável mutável de módulo, storage, cookie ou cache. `ContactActionState` não ecoa PII. Sem JavaScript, o POST continua sem querystring, mas os campos não podem ser recolocados no HTML de erro sem violar essa regra.
+- Sem persistência, sem e-mail, sem CRM, sem analytics e sem rate limit in-memory nesta fatia.
+- Retenção futura: até seis meses na caixa comercial após o envio real, salvo necessidade contratual/jurídica.
+- Preview não deve enviar leads reais ao destinatário de produção.
+
+Requisitos permanentes:
 
 - honeypot;
-- limite de requisições;
 - validação no servidor;
-- sanitização/escape;
-- logs sem conteúdo pessoal completo;
+- sanitização/escape e limites de tamanho;
+- logs sem conteúdo pessoal;
 - nunca expor chave de e-mail/CRM;
-- política de retenção definida;
-- mensagens de erro genéricas para falha interna e específicas para validação.
+- mensagens de erro genéricas para falha interna e específicas para validação;
+- rate limit distribuído apenas na Fatia B.
 
 ## 8. Analytics e privacidade
 
