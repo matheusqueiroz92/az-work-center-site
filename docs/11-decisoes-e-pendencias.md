@@ -46,6 +46,10 @@
 | D-040 | Sem banner de cookies enquanto não houver rastreadores não essenciais, sujeito a validação jurídica | P-008 permanece condicional |
 | D-041 | Razão social, CNPJ e endereço cadastral registrados; não publicar automaticamente no Header, Footer ou Contato | dados recebidos; exibição na etapa legal e conforme atendimento presencial |
 | D-042 | Canal `privacidade@azworkcenter.com.br` recomendado, pendente de criação; política poderá basear-se na LGPD e na ANPD, sem parecer jurídico | revisão profissional recomendada antes do lançamento |
+| D-043 | Plano pós-lançamento aprovado como direção estratégica de planejamento | não autoriza implementação nem altera o cronograma do site |
+| D-044 | `estrutura.azworkcenter.com.br` é ferramenta interna da AZ com subsistemas especializados e handoffs | não é SaaS administrativo multiempresa |
+| D-045 | Oferta futura ao cliente = método/serviço da AZ; visão restrita de resultados eventual | cliente não controla a esteira interna |
+| D-046 | OpenClaw e Hermes Agent são apenas candidatos a avaliação | não são dependências nem arquitetura escolhida |
 
 ## Pendências bloqueadoras antes do desenvolvimento visual final
 
@@ -573,6 +577,70 @@ Retenção operacional: até seis meses na caixa comercial para leads não conve
 ### Pendências externas (não executadas nesta passagem)
 
 Ver `docs/14-checklist-configuracao-resend.md`. Não marcar como concluídos: domínio/remetente no Resend, DNS, variáveis da Vercel, envio Preview/Production, política jurídica/Analytics da Fatia C.
+
+## Registro — Evolução pós-lançamento (planejamento)
+
+- Data: 2026-09-16
+- Status: direção estratégica aprovada por Matheus e Lucas para o **planejamento**; escopo técnico, orçamento, cronograma e implementação **não aprovados**
+- Fonte incorporada ao repositório: `docs/15-plano-pos-lancamento.md`
+- Esta passagem é somente documental. Não implementa frentes, não instala OpenClaw/Hermes, não configura Resend/Vercel/DNS e não altera o Launch gate nem os Épicos 6–8/9
+
+### D-043 — Plano pós-lançamento como direção de planejamento
+
+- Data: 2026-09-16
+- Status: aceita
+- Contexto: ideias pós-lançamento alinhadas entre Matheus e Lucas; risco de misturar com o cronograma do site.
+- Decisão: incorporar o plano em `docs/15-plano-pos-lancamento.md` e apontá-lo a partir de `docs/08-roadmap-de-implementacao.md` como fase **posterior** ao lançamento. Não autoriza código, dependências de agentes, pilotos reais nem mudança do escopo de lançamento do site.
+- Alternativas: adiar qualquer registro; embutir frentes nos Épicos 6–8 (rejeitado).
+- Consequências: agentes e humanos tratam o documento como planejamento, não como backlog imediato. Pendências condicionais do MVP (P-005 a P-008 etc.) permanecem abertas.
+- Responsável: Matheus e Lucas
+
+### D-044 — `estrutura` como ferramenta interna com subsistemas
+
+- Data: 2026-09-16
+- Status: aceita (direção)
+- Contexto: risco de interpretar a área administrativa como produto multiempresa ou como um único agente com acesso total.
+- Decisão: `estrutura.azworkcenter.com.br` é ponto de entrada interno da AZ para Marketing/Vendas, Projetos/Desenvolvimento e Manutenção/Suporte. Trabalho e contexto autorizado transitam por handoffs, APIs e eventos versionados. Memória compartilhada = conhecimento/histórico por cliente e projeto, com origem, versão e permissões — não chat global.
+- Alternativas: SaaS administrativo vendável; monolito com um agente global (rejeitados como direção).
+- Consequências: hospedagem Vercel × VPS do `estrutura`, banco e workers ficam para decisão técnica futura; a hospedagem do site institucional na Vercel (D-038) não muda.
+- Responsável: Matheus e Lucas
+
+### D-045 — Oferta futura = método/serviço; visão restrita de resultados
+
+- Data: 2026-09-16
+- Status: aceita (direção)
+- Contexto: distinguir o que a AZ pode comercializar do que permanece operação interna.
+- Decisão: a oferta futura é o método/serviço (diagnóstico, planejamento, implementação e evolução). O cliente poderá, eventualmente, visualizar resultados e marcos em interface restrita, sem controlar CRM interno, agentes, filas ou a esteira. Harness de projetos exige aprovação humana para arquitetura, mudança de escopo, dados reais e deploy. Stack preferencial provisória React/Next.js, TypeScript, Node.js e Tailwind, a confirmar na auditoria do portfólio; repositórios anteriores só com leitura autorizada e curadoria humana.
+- Alternativas: vender a plataforma de controle; liberar autonomia ampla de agentes no MVP pós-lançamento (rejeitadas como direção).
+- Consequências: chatbot/funil/pilotos (AZ Work Center, Óticas Queiroz, AZ News) permanecem frentes futuras com autorização e dados separados; métricas de sucesso são conversão, tempo, retrabalho, qualidade, margem e custo — não volume de mensagens/código.
+- Responsável: Matheus e Lucas
+
+### D-046 — OpenClaw e Hermes Agent como candidatos
+
+- Data: 2026-09-16
+- Status: aceita (direção)
+- Contexto: ferramentas externas aparecem no plano de pesquisa de agentes.
+- Decisão: OpenClaw e Hermes Agent são candidatos a avaliação em experimentos internos futuros. Não são dependências deste repositório, não estão escolhidos e não substituem a arquitetura de dados/eventos.
+- Alternativas: adotar já uma das ferramentas; proibir qualquer menção no planejamento.
+- Consequências: nenhum `package.json` nem integração nesta passagem; comparação fica para piloto pós-lançamento com critérios explícitos.
+- Responsável: Matheus e Lucas
+
+### Pendências pós-lançamento (abertas — não resolvidas)
+
+Não confundir com bloqueadores do lançamento do site. Detalhamento em `docs/15-plano-pos-lancamento.md`.
+
+- P-021: definir ICP inicial (segmentos, porte, região, decisor, dores).
+- P-022: decidir CRM pronto × módulo interno e ponto de integração com `estrutura`.
+- P-023: regras de preço/prazo/capacidade e o que o chatbot pode dizer sem revisão humana.
+- P-024: canais de captação autorizados, permissões Meta, opt-out e base legal.
+- P-025: políticas de privacidade, retenção e uso de IA antes de chatbot/funil públicos.
+- P-026: orçamento mensal máximo de IA, mensageria e infraestrutura; critérios de sucesso e de parada por piloto.
+- P-027: inventário e autorização de repositórios anteriores; curadoria de padrões; stack preferencial confirmada.
+- P-028: aprovações humanas obrigatórias (arquitetura, escopo, PR, dados, deploy) e isolamento por cliente.
+- P-029: escopo, aprovadores, dados e retenção dos pilotos Óticas Queiroz e AZ News.
+- P-030: contratos de handoff Vendas→Projetos e Projetos→Suporte; versionamento da memória compartilhada.
+- P-031: avaliar OpenClaw, Hermes Agent ou outra ferramenta (nenhuma escolhida).
+- P-032: o que o cliente visualiza na visão de resultados; precificação do método/serviço (sem vender a plataforma interna).
 
 ## Decisões que agentes não podem tomar sozinhos
 

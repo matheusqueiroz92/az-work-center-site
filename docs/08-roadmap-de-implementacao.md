@@ -215,6 +215,12 @@ Todos os itens de `07-qualidade-acessibilidade-performance.md` atendidos ou exce
 - publicar um por vez;
 - atualizar Home e links internos.
 
+## Evolução pós-lançamento
+
+Depois do Launch gate (Épicos 6–8) e do Épico 9 conforme conteúdo aprovado, a evolução operacional e comercial da AZ — operação comercial, chatbot, funil assistido, área interna `estrutura.azworkcenter.com.br`, harness de projetos e esteira de subsistemas — está descrita em [`docs/15-plano-pos-lancamento.md`](./15-plano-pos-lancamento.md).
+
+Essas frentes são **planejamento estratégico aprovado para discussão**, não escopo do lançamento do site. Não entram nos Épicos 6–8, não reabrem épicos encerrados e não autorizam implementação, instalação de dependências de agentes nem configuração externa nesta fase. Pendências abertas do tema: **P-021–P-032** em [`docs/11-decisoes-e-pendencias.md`](./11-decisoes-e-pendencias.md) (distintas de P-009 fotos e P-010 DNS/WordPress).
+
 ## Sugestão de agentes
 
 | Agente | Responsabilidade | Pode paralelizar com |

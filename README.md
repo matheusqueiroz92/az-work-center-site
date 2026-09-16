@@ -49,6 +49,8 @@ O site deve transmitir competência técnica, proximidade regional e maturidade 
 - [Decisões e pendências](docs/11-decisoes-e-pendencias.md)
 - [Wireframe e mapa de componentes da Home](docs/12-wireframe-e-componentes-home.md)
 - [Playbook de skills e agentes](docs/13-playbook-de-skills.md)
+- [Checklist externo Resend/Vercel](docs/14-checklist-configuracao-resend.md)
+- [Plano de evolução pós-lançamento](docs/15-plano-pos-lancamento.md)
 - [Tokens em JSON](design-system/tokens.json)
 - [Tokens em CSS](design-system/tokens.css)
 - [Prompts de agentes](agent-prompts/README.md)
