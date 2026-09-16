@@ -156,11 +156,13 @@ Primeiro entregar sem motion avançado. A narrativa e responsividade devem ser a
 
 ### Aceite
 
-- lead real de teste recebido;
-- lead duplicado/spam tratado;
+- lead real de teste recebido (ainda depende da configuração externa da Fatia B);
+- lead duplicado/spam tratado (idempotência e anti-spam locais no código; Firewall distribuído pendente);
 - evento só dispara após sucesso;
 - rejeitar cookies impede analytics não essencial;
 - nenhum dado pessoal em evento/URL.
+
+A Fatia B entrega o adapter Resend e o contrato de ambiente no código. O aceite de “lead real recebido” permanece pendente do checklist em `docs/14-checklist-configuracao-resend.md`. Analytics, cookies e política seguem na Fatia C.
 
 ## Épico 7 — SEO e migração
 

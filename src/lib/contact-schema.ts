@@ -2,6 +2,7 @@ import { z } from "zod";
 
 import { contactNeedKinds, type ContactNeedKind } from "@/content/contact";
 import {
+  contactAttemptField,
   contactFieldErrorMessages,
   contactFieldLimits,
   contactFields,
@@ -13,6 +14,7 @@ import {
 } from "@/lib/contact-fields";
 
 export {
+  contactAttemptField,
   contactFieldErrorMessages,
   contactFieldLimits,
   contactFields,
@@ -43,6 +45,7 @@ export type ContactFormCandidate = {
   message: string;
   companyWebsite: string;
   startedAt: string;
+  attemptId: string;
 };
 
 export type ContactFormParseResult =
@@ -84,6 +87,7 @@ export function parseContactFormData(
   const message = readSingleText(formData, "message");
   const companyWebsite = readSingleText(formData, contactHoneypotField);
   const startedAt = readSingleText(formData, contactStartedAtField);
+  const attemptId = readSingleText(formData, contactAttemptField);
 
   if (
     name === null ||
@@ -93,7 +97,8 @@ export function parseContactFormData(
     need === null ||
     message === null ||
     companyWebsite === null ||
-    startedAt === null
+    startedAt === null ||
+    attemptId === null
   ) {
     return { ok: false, formError: contactGenericFormError };
   }
@@ -109,6 +114,7 @@ export function parseContactFormData(
       message,
       companyWebsite,
       startedAt,
+      attemptId,
     },
   };
 }

@@ -9,6 +9,6 @@ export type ContactActionState =
     }
   | { status: "blocked" }
   | { status: "unavailable" }
-  | { status: "success"; submissionId: string };
+  | { status: "success"; submissionId: string; nextAttemptId: string };
 
 export const idleContactActionState: ContactActionState = { status: "idle" };

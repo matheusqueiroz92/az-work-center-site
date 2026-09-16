@@ -108,7 +108,10 @@ describe("contato, legal e 404", () => {
     expect(container.querySelector("#contato-campo-email")).toBeTruthy();
     expect(container.querySelector("#contato-campo-phone")).toBeTruthy();
     expect(container.querySelector("#contato-campo-need")).toBeTruthy();
-    expect(container.querySelector("#contato-campo-message")).toBeTruthy();
+    expect(container.querySelector('input[name="attemptId"]')).toBeTruthy();
+    expect(
+      container.querySelector('input[name="attemptId"]')?.getAttribute("type"),
+    ).toBe("hidden");
     expect(
       container.querySelector("#contato-campo-phone")?.hasAttribute("required"),
     ).toBe(false);
@@ -132,6 +135,10 @@ describe("contato, legal e 404", () => {
     expect(formSource).not.toMatch(/from ["']zod["']/);
     expect(formSource).not.toMatch(/contact-schema/);
     expect(formSource).not.toMatch(/contact-submit/);
+    expect(formSource).not.toMatch(/from ["']resend["']/);
+    expect(formSource).not.toMatch(
+      /contact-resend|contact-provider|RESEND_API_KEY/,
+    );
     expect(formSource).not.toMatch(
       /localStorage|sessionStorage|document\.cookie/,
     );
@@ -186,6 +193,8 @@ describe("contato, legal e 404", () => {
     for (const source of sources) {
       expect(source).not.toMatch(/contact-form/);
       expect(source).not.toMatch(/submitContactAction/);
+      expect(source).not.toMatch(/from ["']resend["']/);
+      expect(source).not.toMatch(/contact-resend|RESEND_API_KEY/);
     }
   });
 

@@ -163,42 +163,47 @@ Escolher CMS apenas após esses requisitos. Não acoplar a primeira versão a um
 
 ## 7. Formulário e integração
 
-Fluxo alvo (Fatias B+):
+Fluxo vigente (Fatia B, código pronto; envio real ainda externo):
 
 ```text
-Página Server
+Página Server (connection() → startedAt + attemptId)
 → formulário progressivo
 → Server Action tratada como endpoint público
-→ leitura defensiva de FormData
-→ Zod no servidor
-→ normalização e limites
+→ limite bruto de FormData
+→ Zod no servidor e normalização
 → honeypot + tempo mínimo
-→ provider de entrega (Resend na Fatia B)
+→ frequência best-effort da instância (se houver IP confiável)
+→ provider (disabled | Resend)
 → resultado discriminado sem PII
 → feedback acessível
-→ rate limit distribuído e evento de conversão só depois do envio real
 ```
 
-Estado vigente da Fatia A:
-
 ```text
-src/lib/contact-fields.ts          # constantes e limites, sem Zod
+src/lib/contact-fields.ts          # constantes, attemptId e chave de idempotência
 src/lib/contact-action-state.ts    # união serializável da Action
 src/lib/contact-schema.ts          # parser hostil e Zod 4 (servidor)
-src/lib/contact-submit.ts          # domínio testável + provider por interface
+src/lib/contact-env.ts             # CONTACT_* / RESEND_API_KEY, sem valores reais
+src/lib/contact-email.ts           # text/html internos com escape
+src/lib/contact-resend.ts          # adapter Resend (Node, import dinâmico do SDK)
+src/lib/contact-frequency.ts       # mapa limitado por instância; não é rate limit distribuído
+src/lib/contact-submit.ts          # domínio testável + interface do provider
+src/lib/contact-provider.ts        # seleção disabled vs resend
 src/app/(marketing)/contato/
-├── page.tsx                       # Server Component; connection() para startedAt
-├── actions.ts                     # Server Action pública com provider desabilitado
+├── page.tsx                       # Server Component; tokens por requisição
+├── actions.ts                     # Server Action pública
 └── _components/contact-form.tsx   # ilha Client (useActionState, pending, foco)
 ```
 
-- A mutação vive na Server Action, não em Route Handler.
-- O provider da aplicação é `disabledContactProvider` e devolve `unavailable`. `success` só aparece em testes com fake injetado.
-- `connection()` em `/contato` é intencional: a rota permanece dinâmica (`ƒ`) para que `startedAt` seja gerado por requisição/render, não congelado no prerender. O tempo mínimo de preenchimento é só heurística local; token ausente ou inválido não bloqueia uma POST direta. Não substitui rate limit nem idempotência (Fatia B).
-- Valores digitados ficam só no estado local da instância da ilha Client (`useState`). Não há variável mutável de módulo, storage, cookie ou cache. `ContactActionState` não ecoa PII. Sem JavaScript, o POST continua sem querystring, mas os campos não podem ser recolocados no HTML de erro sem violar essa regra.
-- Sem persistência, sem e-mail, sem CRM, sem analytics e sem rate limit in-memory nesta fatia.
-- Retenção futura: até seis meses na caixa comercial após o envio real, salvo necessidade contratual/jurídica.
-- Preview não deve enviar leads reais ao destinatário de produção.
+- A mutação vive na Server Action, não em Route Handler. Runtime Node.js padrão; sem Edge.
+- `connection()` em `/contato` permanece intencional: a rota é dinâmica (`ƒ`) para `startedAt` e `attemptId` por requisição/render.
+- Valores digitados ficam só no estado local da instância da ilha Client (`useState`). `ContactActionState` não ecoa PII. Sem JavaScript, o POST continua sem querystring; os campos não são recolocados no HTML de erro.
+- `CONTACT_PROVIDER=disabled` (padrão local/Development) devolve `unavailable`. `CONTACT_PROVIDER=resend` exige destinatário, remetente e chave do próprio escopo da Vercel. Preview não herda Production.
+- O SDK Resend e a chave ficam fora do bundle Client. Home, `/sobre` e 404 não carregam o formulário nem o adapter.
+- `replyTo` é o e-mail do lead; `from` nunca é o lead. HTML do usuário é escapado.
+- Idempotência: chave `contact-lead/<attemptId>` no mecanismo oficial do Resend (janela de 24 h). Não é exactly-once absoluto. Timeout ambíguo e `unavailable` conservam o mesmo `attemptId`. Após sucesso, o servidor emite `nextAttemptId` opaco; a ilha Client atualiza o campo oculto. Sem JS, um novo render da página gera outro identificador.
+- Frequência in-memory é best-effort por instância, com mapa limitado e TTL, sem IP bruto. Sem IP confiável, a camada é ignorada (não há bucket global). Rate limit distribuído permanece configuração posterior no Vercel Firewall, se aplicável ao endpoint da Server Action; não está aplicado.
+- Retenção: até seis meses na caixa comercial após o envio real, salvo necessidade contratual/jurídica. Sem persistência no app.
+- WhatsApp e e-mail continuam fallback visível. Sem SLA numérico. Sem confirmação automática ao remetente do lead.
 
 Requisitos permanentes:
 
@@ -208,7 +213,7 @@ Requisitos permanentes:
 - logs sem conteúdo pessoal;
 - nunca expor chave de e-mail/CRM;
 - mensagens de erro genéricas para falha interna e específicas para validação;
-- rate limit distribuído apenas na Fatia B.
+- rate limit distribuído ainda externo (Vercel Firewall, se aplicável); a frequência in-memory da Fatia B não substitui isso.
 
 ## 8. Analytics e privacidade
 

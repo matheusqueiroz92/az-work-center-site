@@ -1,5 +1,14 @@
 import type { ContactActionState } from "@/lib/contact-action-state";
 import {
+  contactIdempotencyKey,
+  createContactAttemptId,
+  isContactAttemptId,
+} from "@/lib/contact-fields";
+import {
+  contactFrequencyLimiter,
+  type ContactFrequencyLimiter,
+} from "@/lib/contact-frequency";
+import {
   contactGenericFormError,
   isHoneypotFilled,
   isUnrealisticFillTime,
@@ -12,10 +21,14 @@ export type { ContactActionState } from "@/lib/contact-action-state";
 export { idleContactActionState } from "@/lib/contact-action-state";
 
 export type ContactDeliveryResult =
-  { ok: true; submissionId: string } | { ok: false; reason: "disabled" };
+  | { ok: true; submissionId: string }
+  | { ok: false; reason: "disabled" | "rejected" };
 
 export type ContactProvider = {
-  deliver(lead: ContactLead): Promise<ContactDeliveryResult>;
+  deliver(
+    lead: ContactLead,
+    options: { idempotencyKey: string },
+  ): Promise<ContactDeliveryResult>;
 };
 
 export const disabledContactProvider: ContactProvider = {
@@ -24,20 +37,35 @@ export const disabledContactProvider: ContactProvider = {
   },
 };
 
+const inflightDeliveries = new Map<string, Promise<ContactActionState>>();
+
 export function createFakeContactProvider(options?: {
   submissionId?: string;
   failWith?: Error;
-}): ContactProvider & { delivered: ContactLead[] } {
+  delayMs?: number;
+}): ContactProvider & {
+  delivered: ContactLead[];
+  idempotencyKeys: string[];
+} {
   const delivered: ContactLead[] = [];
+  const idempotencyKeys: string[] = [];
 
   return {
     delivered,
-    async deliver(lead: ContactLead) {
+    idempotencyKeys,
+    async deliver(lead, deliveryOptions) {
+      if (options?.delayMs) {
+        await new Promise((resolve) => {
+          setTimeout(resolve, options.delayMs);
+        });
+      }
+
       if (options?.failWith) {
         throw options.failWith;
       }
 
       delivered.push(lead);
+      idempotencyKeys.push(deliveryOptions.idempotencyKey);
 
       return {
         ok: true,
@@ -51,6 +79,9 @@ export async function submitContactLead(input: {
   formData: FormData;
   provider: ContactProvider;
   now?: number;
+  frequencyKey?: string;
+  frequencyLimiter?: ContactFrequencyLimiter;
+  createAttemptId?: () => string;
 }): Promise<ContactActionState> {
   const parsed = parseContactFormData(input.formData);
 
@@ -60,13 +91,6 @@ export async function submitContactLead(input: {
       fieldErrors: {},
       formError: parsed.formError,
     };
-  }
-
-  if (
-    isHoneypotFilled(parsed.candidate.companyWebsite) ||
-    isUnrealisticFillTime(parsed.candidate.startedAt, input.now)
-  ) {
-    return { status: "blocked" };
   }
 
   const leadResult = parseContactLead(parsed.candidate);
@@ -82,8 +106,55 @@ export async function submitContactLead(input: {
     };
   }
 
+  if (
+    isHoneypotFilled(parsed.candidate.companyWebsite) ||
+    isUnrealisticFillTime(parsed.candidate.startedAt, input.now)
+  ) {
+    return { status: "blocked" };
+  }
+
+  if (!isContactAttemptId(parsed.candidate.attemptId)) {
+    return { status: "blocked" };
+  }
+
+  if (input.frequencyKey !== undefined) {
+    const limiter = input.frequencyLimiter ?? contactFrequencyLimiter;
+
+    if (!limiter.allow(input.frequencyKey, input.now)) {
+      return { status: "blocked" };
+    }
+  }
+
+  const idempotencyKey = contactIdempotencyKey(parsed.candidate.attemptId);
+  const existing = inflightDeliveries.get(idempotencyKey);
+
+  if (existing) {
+    return existing;
+  }
+
+  const pending = deliverLead({
+    lead: leadResult.lead,
+    provider: input.provider,
+    idempotencyKey,
+    createAttemptId: input.createAttemptId ?? createContactAttemptId,
+  }).finally(() => {
+    inflightDeliveries.delete(idempotencyKey);
+  });
+
+  inflightDeliveries.set(idempotencyKey, pending);
+  return pending;
+}
+
+async function deliverLead(input: {
+  lead: ContactLead;
+  provider: ContactProvider;
+  idempotencyKey: string;
+  createAttemptId: () => string;
+}): Promise<ContactActionState> {
   try {
-    const delivery = await input.provider.deliver(leadResult.lead);
+    const delivery = await input.provider.deliver(input.lead, {
+      idempotencyKey: input.idempotencyKey,
+    });
 
     if (!delivery.ok) {
       return { status: "unavailable" };
@@ -92,6 +163,7 @@ export async function submitContactLead(input: {
     return {
       status: "success",
       submissionId: delivery.submissionId,
+      nextAttemptId: input.createAttemptId(),
     };
   } catch {
     return { status: "unavailable" };

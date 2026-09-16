@@ -25,6 +25,9 @@ afterEach(() => {
   submitContactAction.mockResolvedValue({ status: "unavailable" });
 });
 
+const defaultAttemptId = "550e8400-e29b-41d4-a716-446655440000";
+const remountAttemptId = "6ba7b810-9dad-41d1-80b4-00c04fd430c8";
+
 const filledValues = {
   name: "Maria Santos",
   company: "Empresa Exemplo",
@@ -100,10 +103,31 @@ async function fillValidForm(
   );
 }
 
+function setValidFormValues(container: HTMLElement) {
+  fireEvent.change(container.querySelector("#contato-campo-name")!, {
+    target: { value: filledValues.name },
+  });
+  fireEvent.change(container.querySelector("#contato-campo-company")!, {
+    target: { value: filledValues.company },
+  });
+  fireEvent.change(container.querySelector("#contato-campo-email")!, {
+    target: { value: filledValues.email },
+  });
+  fireEvent.change(container.querySelector("#contato-campo-phone")!, {
+    target: { value: filledValues.phone },
+  });
+  fireEvent.change(container.querySelector("#contato-campo-need")!, {
+    target: { value: filledValues.need },
+  });
+  fireEvent.change(container.querySelector("#contato-campo-message")!, {
+    target: { value: filledValues.message },
+  });
+}
+
 describe("ContactForm", () => {
   it("associa labels, autocomplete e dicas sem checkbox de marketing", () => {
     const { container, queryByRole } = render(
-      <ContactForm startedAt="1700000000000" />,
+      <ContactForm startedAt="1700000000000" attemptId={defaultAttemptId} />,
     );
     const form = container.querySelector("form");
 
@@ -153,6 +177,12 @@ describe("ContactForm", () => {
         .querySelector('input[name="companyWebsite"]')
         ?.getAttribute("tabindex"),
     ).toBe("-1");
+    expect(
+      container.querySelector('input[name="attemptId"]')?.getAttribute("type"),
+    ).toBe("hidden");
+    expect(
+      container.querySelector('input[name="attemptId"]')?.getAttribute("value"),
+    ).toBe(defaultAttemptId);
   });
 
   it("não guarda campos em variável mutável de escopo de módulo", () => {
@@ -169,6 +199,10 @@ describe("ContactForm", () => {
     expect(formSource).not.toMatch(
       /localStorage|sessionStorage|document\.cookie/,
     );
+    expect(formSource).not.toMatch(/from ["']resend["']/);
+    expect(formSource).not.toMatch(
+      /RESEND_API_KEY|contact-resend|contact-provider|contact-schema/,
+    );
   });
 
   it("marca aria-invalid, foca o resumo e preserva os valores depois da validação", async () => {
@@ -176,7 +210,7 @@ describe("ContactForm", () => {
     submitContactAction.mockResolvedValue(validationState);
 
     const { container, getByRole } = render(
-      <ContactForm startedAt="1700000000000" />,
+      <ContactForm startedAt="1700000000000" attemptId={defaultAttemptId} />,
     );
 
     await fillValidForm(user, container);
@@ -220,7 +254,7 @@ describe("ContactForm", () => {
   it("preserva os valores em unavailable na mesma instância e descarta no remount", async () => {
     const user = userEvent.setup();
     const { container, getByRole, unmount } = render(
-      <ContactForm startedAt="1700000000000" />,
+      <ContactForm startedAt="1700000000000" attemptId={defaultAttemptId} />,
     );
 
     await fillValidForm(user, container);
@@ -237,7 +271,9 @@ describe("ContactForm", () => {
     );
 
     unmount();
-    const remounted = render(<ContactForm startedAt="1800000000000" />);
+    const remounted = render(
+      <ContactForm startedAt="1800000000000" attemptId={remountAttemptId} />,
+    );
     expectEmptyValues(remounted.container);
   });
 
@@ -246,7 +282,7 @@ describe("ContactForm", () => {
     submitContactAction.mockResolvedValue({ status: "blocked" });
 
     const { container, getByRole } = render(
-      <ContactForm startedAt="1700000000000" />,
+      <ContactForm startedAt="1700000000000" attemptId={defaultAttemptId} />,
     );
 
     await fillValidForm(user, container);
@@ -271,7 +307,7 @@ describe("ContactForm", () => {
     });
 
     const { container, getByRole } = render(
-      <ContactForm startedAt="1700000000000" />,
+      <ContactForm startedAt="1700000000000" attemptId={defaultAttemptId} />,
     );
 
     await fillValidForm(user, container);
@@ -285,15 +321,16 @@ describe("ContactForm", () => {
     expectPreservedValues(container);
   });
 
-  it("limpa o formulário somente depois de sucesso real", async () => {
+  it("limpa o formulário e instala nextAttemptId somente depois de sucesso real", async () => {
     const user = userEvent.setup();
     submitContactAction.mockImplementation(async () => ({
       status: "success",
       submissionId: "fake_opaque",
+      nextAttemptId: remountAttemptId,
     }));
 
     const { container, getByRole } = render(
-      <ContactForm startedAt="1700000000000" />,
+      <ContactForm startedAt="1700000000000" attemptId={defaultAttemptId} />,
     );
 
     await fillValidForm(user, container);
@@ -307,12 +344,148 @@ describe("ContactForm", () => {
     expectEmptyValues(container);
     expect(container.textContent).not.toContain("fake_opaque");
     expect(container.textContent).not.toContain(filledValues.email);
+    expect(container.textContent).not.toContain(remountAttemptId);
+    expect(
+      container.querySelector('input[name="attemptId"]')?.getAttribute("value"),
+    ).toBe(remountAttemptId);
+    expect(remountAttemptId).not.toBe(defaultAttemptId);
+  });
+
+  it("permite segundo lead na mesma montagem com chave diferente após sucesso", async () => {
+    const user = userEvent.setup();
+    const thirdAttemptId = "7c9e6679-7425-40de-944b-e07fc1f90ae7";
+    const seenAttemptIds: string[] = [];
+
+    submitContactAction.mockImplementation(async (_prev, formData) => {
+      const current = String(formData.get("attemptId") ?? "");
+      seenAttemptIds.push(current);
+
+      if (current === defaultAttemptId) {
+        return {
+          status: "success",
+          submissionId: "opaque_1",
+          nextAttemptId: remountAttemptId,
+        };
+      }
+
+      return {
+        status: "success",
+        submissionId: "opaque_2",
+        nextAttemptId: thirdAttemptId,
+      };
+    });
+
+    const { container, getByRole } = render(
+      <ContactForm startedAt="1700000000000" attemptId={defaultAttemptId} />,
+    );
+
+    setValidFormValues(container);
+    await user.click(getByRole("button", { name: contact.form.submitLabel }));
+
+    await waitFor(() => {
+      expect(
+        container
+          .querySelector('input[name="attemptId"]')
+          ?.getAttribute("value"),
+      ).toBe(remountAttemptId);
+    });
+    await waitFor(() => {
+      expect(
+        getByRole("button", { name: contact.form.submitLabel }).getAttribute(
+          "aria-busy",
+        ),
+      ).not.toBe("true");
+    });
+
+    setValidFormValues(container);
+    await user.click(getByRole("button", { name: contact.form.submitLabel }));
+
+    await waitFor(() => {
+      expect(submitContactAction).toHaveBeenCalledTimes(2);
+    });
+    await waitFor(() => {
+      expect(
+        container
+          .querySelector('input[name="attemptId"]')
+          ?.getAttribute("value"),
+      ).toBe(thirdAttemptId);
+    });
+
+    expect(seenAttemptIds).toEqual([defaultAttemptId, remountAttemptId]);
+    expectEmptyValues(container);
+  });
+
+  it("conserva attemptId em unavailable e validation", async () => {
+    const user = userEvent.setup();
+    submitContactAction.mockResolvedValueOnce({ status: "unavailable" });
+
+    const { container, getByRole } = render(
+      <ContactForm startedAt="1700000000000" attemptId={defaultAttemptId} />,
+    );
+
+    setValidFormValues(container);
+    await user.click(getByRole("button", { name: contact.form.submitLabel }));
+
+    await waitFor(() => {
+      expect(
+        getByRole("heading", { name: contact.form.unavailableTitle }),
+      ).toBeTruthy();
+    });
+    expect(
+      container.querySelector('input[name="attemptId"]')?.getAttribute("value"),
+    ).toBe(defaultAttemptId);
+    expectPreservedValues(container);
+
+    submitContactAction.mockResolvedValueOnce(validationState);
+    await user.click(getByRole("button", { name: contact.form.submitLabel }));
+
+    await waitFor(() => {
+      expect(container.querySelector("#contato-form-erros")).toBeTruthy();
+    });
+    expect(
+      container.querySelector('input[name="attemptId"]')?.getAttribute("value"),
+    ).toBe(defaultAttemptId);
+  });
+
+  it("não reverte nextAttemptId para A quando o React dispara reset", async () => {
+    const user = userEvent.setup();
+    submitContactAction.mockResolvedValue({
+      status: "success",
+      submissionId: "fake_opaque",
+      nextAttemptId: remountAttemptId,
+    });
+
+    const { container, getByRole } = render(
+      <ContactForm startedAt="1700000000000" attemptId={defaultAttemptId} />,
+    );
+
+    setValidFormValues(container);
+    await user.click(getByRole("button", { name: contact.form.submitLabel }));
+
+    await waitFor(() => {
+      expect(
+        container
+          .querySelector('input[name="attemptId"]')
+          ?.getAttribute("value"),
+      ).toBe(remountAttemptId);
+    });
+
+    fireEvent.reset(container.querySelector("form")!);
+
+    expect(
+      container.querySelector('input[name="attemptId"]')?.getAttribute("value"),
+    ).toBe(remountAttemptId);
+    expectEmptyValues(container);
   });
 
   it("mantém rascunhos independentes entre duas instâncias", async () => {
     const user = userEvent.setup();
-    const first = render(<ContactForm startedAt="1700000000000" />);
-    const second = render(<ContactForm startedAt="1800000000000" />);
+    const first = render(
+      <ContactForm startedAt="1700000000000" attemptId={defaultAttemptId} />,
+    );
+    const second = render(
+      <ContactForm startedAt="1800000000000" attemptId={remountAttemptId} />,
+    );
 
     await fillValidForm(user, first.container);
 
@@ -331,7 +504,7 @@ describe("ContactForm", () => {
     );
 
     const { container, getByRole } = render(
-      <ContactForm startedAt="1700000000000" />,
+      <ContactForm startedAt="1700000000000" attemptId={defaultAttemptId} />,
     );
 
     await fillValidForm(user, container);

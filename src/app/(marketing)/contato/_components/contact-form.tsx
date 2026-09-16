@@ -14,6 +14,7 @@ import { Button } from "@/components/ui/button";
 import { contact, contactNeedOptions } from "@/content/contact";
 import { idleContactActionState } from "@/lib/contact-action-state";
 import {
+  contactAttemptField,
   contactFieldLimits,
   contactHoneypotField,
   contactStartedAtField,
@@ -143,13 +144,21 @@ function ContactTextField({
   );
 }
 
-export function ContactForm({ startedAt }: { startedAt: string }) {
+export function ContactForm({
+  startedAt,
+  attemptId,
+}: {
+  startedAt: string;
+  attemptId: string;
+}) {
   const [state, formAction, pending] = useActionState(
     submitContactAction,
     idleContactActionState,
   );
   const [values, setValues] = useState<ContactFieldValues>(emptyFieldValues);
   const [formStartedAt] = useState(startedAt);
+  const [formAttemptId, setFormAttemptId] = useState(attemptId);
+  const [appliedSuccessId, setAppliedSuccessId] = useState<string | null>(null);
   const submitLockRef = useRef(false);
   const errorSummaryRef = useRef<HTMLDivElement>(null);
   const statusRef = useRef<HTMLDivElement>(null);
@@ -157,16 +166,11 @@ export function ContactForm({ startedAt }: { startedAt: string }) {
   const validationEntries = Object.entries(fieldErrors) as Array<
     [ContactField, string[]]
   >;
-  const hasDraftValues =
-    values.name !== "" ||
-    values.company !== "" ||
-    values.email !== "" ||
-    values.phone !== "" ||
-    values.need !== "" ||
-    values.message !== "";
 
-  if (state.status === "success" && hasDraftValues) {
+  if (state.status === "success" && appliedSuccessId !== state.submissionId) {
+    setAppliedSuccessId(state.submissionId);
     setValues(emptyFieldValues);
+    setFormAttemptId(state.nextAttemptId);
   }
 
   useEffect(() => {
@@ -309,6 +313,7 @@ export function ContactForm({ startedAt }: { startedAt: string }) {
         />
       </div>
       <input type="hidden" name={contactStartedAtField} value={formStartedAt} />
+      <input type="hidden" name={contactAttemptField} value={formAttemptId} />
 
       <ContactTextField
         field="name"

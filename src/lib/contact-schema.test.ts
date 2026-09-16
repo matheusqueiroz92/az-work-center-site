@@ -6,6 +6,7 @@ import {
   contactNeedOptions,
 } from "@/content/contact";
 import {
+  contactAttemptField,
   contactFieldLimits,
   contactGenericFormError,
   contactHoneypotField,
@@ -29,6 +30,7 @@ function candidate(overrides: Record<string, string> = {}) {
     message: longContext,
     companyWebsite: "",
     startedAt: String(Date.now() - 5_000),
+    attemptId: "550e8400-e29b-41d4-a716-446655440000",
     ...overrides,
   };
 }
@@ -87,6 +89,7 @@ describe("parseContactFormData", () => {
         message: longContext,
         [contactHoneypotField]: "",
         startedAt: "1700000000000",
+        [contactAttemptField]: "550e8400-e29b-41d4-a716-446655440000",
       }),
     );
 
@@ -118,6 +121,7 @@ describe("parseContactFormData", () => {
         message: "",
         companyWebsite: "",
         startedAt: "",
+        attemptId: "",
       },
     });
   });

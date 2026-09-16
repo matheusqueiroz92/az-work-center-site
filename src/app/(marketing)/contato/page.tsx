@@ -8,6 +8,7 @@ import { Container } from "@/components/layout/container";
 import { Section } from "@/components/layout/section";
 import { SectionHeading } from "@/components/layout/section-heading";
 import { contact } from "@/content/contact";
+import { createContactAttemptId } from "@/lib/contact-fields";
 import { createPageMetadata } from "@/lib/metadata";
 
 const ancestors = [{ label: "Início", href: "/" }] as const;
@@ -17,13 +18,16 @@ export const metadata = createPageMetadata(
   contact.seo.description,
 );
 
-async function readContactFormStartedAt() {
+async function readContactFormTokens() {
   await connection();
-  return String(Date.now());
+  return {
+    startedAt: String(Date.now()),
+    attemptId: createContactAttemptId(),
+  };
 }
 
 export default async function ContactPage() {
-  const startedAt = await readContactFormStartedAt();
+  const { startedAt, attemptId } = await readContactFormTokens();
 
   return (
     <main id="conteudo" tabIndex={-1}>
@@ -49,7 +53,7 @@ export default async function ContactPage() {
             title={contact.form.title}
             description={contact.form.text}
           />
-          <ContactForm startedAt={startedAt} />
+          <ContactForm startedAt={startedAt} attemptId={attemptId} />
         </Container>
       </Section>
 

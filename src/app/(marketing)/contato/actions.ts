@@ -1,10 +1,19 @@
 "use server";
 
+import { headers } from "next/headers";
+
 import type { ContactActionState } from "@/lib/contact-action-state";
-import {
-  disabledContactProvider,
-  submitContactLead,
-} from "@/lib/contact-submit";
+import { readContactFrequencyKey } from "@/lib/contact-frequency";
+import { getContactProvider } from "@/lib/contact-provider";
+import { submitContactLead } from "@/lib/contact-submit";
+
+async function readRequestFrequencyKey(): Promise<string | undefined> {
+  try {
+    return readContactFrequencyKey(await headers());
+  } catch {
+    return undefined;
+  }
+}
 
 export async function submitContactAction(
   _previousState: ContactActionState,
@@ -13,7 +22,8 @@ export async function submitContactAction(
   try {
     return await submitContactLead({
       formData,
-      provider: disabledContactProvider,
+      provider: getContactProvider(),
+      frequencyKey: await readRequestFrequencyKey(),
     });
   } catch {
     return { status: "unavailable" };

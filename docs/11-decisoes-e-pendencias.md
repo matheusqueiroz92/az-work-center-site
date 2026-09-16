@@ -33,7 +33,7 @@
 | D-027 | Mídia da Hero reenquadrada na origem 3D | mesma cena e animação; recorte da câmera/render; nomes públicos inalterados |
 | D-028 | Hero sem trilhos/pulsos na origem 3D; bloco textual elevado | cena limpa no render; wrapper único com translate responsivo |
 | D-029 | Art direction da Hero: poster 4:5 em retrato; vídeo só em paisagem | corta horizontal no celular e vazio em tablet retrato não se resolvem com um único object-position |
-| D-030 | Entrega futura do formulário por e-mail transacional via Resend e Server Action | contrato da Fatia B; sem CRM/banco no MVP |
+| D-030 | Entrega de leads por e-mail transacional via Resend e Server Action | adapter na Fatia B; configuração externa e envio real ainda pendentes; sem CRM/banco no MVP |
 | D-031 | Destinatário de produção `contato@azworkcenter.com.br`; preview/teste `matheusqueiroz@azworkcenter.com.br` | separar leads reais de homologação |
 | D-032 | Remetente planejado `site@azworkcenter.com.br`, sujeito a DNS; Matheus tem acesso ao DNS de `azworkcenter.com.br` | envio autenticado; alteração de DNS continua restrita a humanos |
 | D-033 | Campos: nome, empresa, e-mail, tipo de necessidade e contexto obrigatórios; telefone/WhatsApp opcional | qualificar o diagnóstico sem dados excessivos |
@@ -55,7 +55,7 @@
 | P-002 | confirmar vermelho oficial | design | alto |
 | P-003 | razão social e CNPJ recebidos; onde (e se) exibir publicamente ainda não decidido | Matheus/contábil | médio |
 | P-004 | WhatsApp e e-mail confirmados; endereço cadastral recebido, sem publicação automática | Matheus | alto |
-| P-005 | destino transacional decidido (Resend); envio real, DNS do remetente e CRM ausentes | Matheus/Lucas | alto |
+| P-005 | adapter Resend no código; DNS, domínio/remetente, variáveis Vercel e envio real pendentes; CRM ausente | Matheus/Lucas | alto |
 | P-006 | sem promessa numérica de prazo; texto público não cita SLA | comercial | médio |
 | P-007 | Vercel Web Analytics planejado; não ativar nesta fase | Matheus/Lucas | médio |
 | P-008 | sem banner enquanto não houver rastreadores não essenciais; validação jurídica pendente | jurídico | alto |
@@ -354,7 +354,7 @@ Implementação na branch `feat/motion-polish`. D-017 a D-023 foram aceitas por 
 - P-001: rasters oficiais recebidos em `public/media/logo/` (sete lockups `LOGO-AZ-WORK-CENTER-*.png` e dois com slogan). Não resolve P-001: faltam inventário, seleção canônica (claro/escuro/compacto) e validação dos vetores. Os PNGs continuam untracked até essa tarefa; ver `docs/03-manual-da-marca.md`.
 - P-003: razão social e CNPJ recebidos (D-041). Exibição pública no Header, Footer ou Contato continua pendente.
 - P-004: WhatsApp e e-mail confirmados; endereço cadastral recebido (D-041). Não publicar automaticamente; uso na etapa legal e conforme atendimento presencial.
-- P-005: destino transacional e destinatários decididos (D-030, D-031). Resend, DNS do remetente, rate limit distribuído e CRM não estão implementados. A Fatia A só entrega o contrato local com provider desabilitado.
+- P-005: destino transacional e destinatários decididos (D-030, D-031). O adapter Resend está no código; DNS do remetente, variáveis da Vercel, verificação de domínio e envio Preview/Production reais continuam pendentes. Rate limit distribuído e CRM não estão implementados. Ver `docs/14-checklist-configuracao-resend.md`.
 - P-006: decidido não prometer prazo numérico (D-035). Não há SLA público a redigir nesta fase.
 - P-007: Vercel Web Analytics escolhido (D-039). Não ativar agora; sem eventos, tags ou consent store.
 - P-008: sem banner de cookies enquanto não houver rastreadores não essenciais (D-040). Validação jurídica e textos definitivos de privacidade/cookies continuam pendentes. `privacidade@azworkcenter.com.br` ainda precisa ser criado/confirmado (D-042).
@@ -512,6 +512,67 @@ Implementação na branch `feat/motion-polish`. D-017 a D-023 foram aceitas por 
 - O botão de envio permanece focável durante `pending` (`aria-busy`, `aria-disabled`, texto `Enviando…`). Clique, Enter e Space repetidos não disparam segunda Action. Isso não é idempotência de segurança (Fatia B).
 - Progressive enhancement: o `<form method="post">` usa a Server Action real (`submitContactAction`), não um wrapper Client. O HTML inicial do Next 16 na ilha pode exibir o placeholder `javascript:throw` do React até a hidratação; sem JS, o POST não recolocará PII na URL nem no estado serializado. Sem hidratação, os campos também não podem ser recolocados no HTML de erro — limitação do fallback sem JS, não um transporte de PII. WhatsApp e e-mail permanecem.
 - Ilha Client de `/contato`: chunk `35xbfk9jgsz7y.js` (4 645 B gzip, sem Zod). Ausente em Home, `/sobre` e 404. Não carrega mídia da Hero nem Motion.
+
+## Registro — Épico 6, Fatia B (entrega via Resend)
+
+- Data: 2026-09-15
+- Status: implementação técnica na branch `feat/forms-analytics-privacy`, sem commit nesta passagem
+- Escopo: adapter Resend, configuração tipada por ambiente, e-mail interno com `text`/`html`, idempotência e proteção operacional best-effort. Sem envio real, sem DNS, sem variáveis da Vercel, sem Analytics, sem banner, sem páginas jurídicas, sem CRM/banco e sem confirmação ao remetente do lead.
+
+### Contrato de ambiente
+
+- Nomes: `CONTACT_PROVIDER`, `CONTACT_TO_EMAIL`, `CONTACT_FROM_EMAIL`, `RESEND_API_KEY`. Nenhuma usa `NEXT_PUBLIC_`.
+- `CONTACT_PROVIDER` aceita só `disabled` ou `resend`. Omissão ou vazio = `disabled`.
+- Desenvolvimento/local permanece `disabled` por padrão (`.env.example`).
+- Quando `CONTACT_PROVIDER=resend`, destinatário, remetente e chave são obrigatórios e validados antes do envio. Configuração ausente/inválida vira `unavailable`, sem detalhe ao usuário.
+- A separação Preview/Production é feita pelos escopos de variáveis da Vercel, não por endereços hardcoded. Preview sem `CONTACT_TO_EMAIL` não herda o destinatário de Production.
+- Destinatários aprovados para configuração posterior: Production `contato@azworkcenter.com.br`; Preview `matheusqueiroz@azworkcenter.com.br`; remetente desejado `AZ Work Center <site@azworkcenter.com.br>`. Esses valores não entram no código.
+
+### Provider e fronteiras
+
+- Interface `ContactProvider.deliver(lead, { idempotencyKey })` permanece no domínio (`src/lib/contact-submit.ts`).
+- `getContactProvider()` escolhe `disabled` ou o adapter Resend. O SDK `resend` só é importado dinamicamente no servidor, no momento do envio.
+- A ilha Client não importa Zod, schema, submit, provider, Resend nem a chave.
+- `from` = `CONTACT_FROM_EMAIL`; `to` = `CONTACT_TO_EMAIL`; `replyTo` = e-mail do lead. O lead nunca é `from`.
+- Assunto interno: `Pedido de diagnóstico pelo site`. Corpo: nome, empresa, e-mail, telefone se houver, tipo de necessidade e contexto. HTML escapa conteúdo do usuário.
+- Sucesso devolve identificador opaco `c_` + hash; o id bruto do Resend não vai ao Client.
+- Log operacional, se houver, usa só código estável, ambiente, id opaco e categoria (`timeout` | `provider_error` | `misconfigured` | `rejected`). Sem PII, sem mensagem bruta do provider.
+
+### Idempotência
+
+- `attemptId` (UUID v4) é gerado no Server render, separado de `startedAt`, enviado como campo oculto e validado no servidor.
+- Chave Resend: `contact-lead/<attemptId>`, via opção oficial `idempotencyKey` (header `Idempotency-Key`).
+- Janela do provider: 24 horas. Não é exactly-once absoluto. Payload diferente com a mesma chave pode retornar conflito (`invalid_idempotent_request`).
+- Retry após falha inequívoca: o mesmo `attemptId` pode ser reenviado; o adapter não tenta de novo na mesma invocação.
+- Timeout ambíguo: a invocação atual não dispara segundo POST; o retry do usuário reutiliza o `attemptId` para o Resend deduplicar. Preferimos duplicidade evitada a um segundo envio “por garantia”. Não rotacionar em `unavailable`/timeout.
+- Envios concorrentes com o mesmo id coalescem na instância e compartilham a chave.
+- Depois de `{ ok: true }`, o Server Action devolve `nextAttemptId` (UUID novo, sem PII). O Client limpa o rascunho e atualiza o campo oculto uma vez por `submissionId` (não a cada render em `success`), permitindo um segundo lead na mesma montagem com chave distinta. `validation`, `blocked` e `unavailable` conservam o identificador atual.
+- Sem JavaScript: o POST continua sem PII na URL. Após o round-trip, um novo render de `/contato` gera outro `attemptId` via `createContactAttemptId()`. O `nextAttemptId` no estado serve sobretudo ao caminho com JS que permanece montado; sem JS não há garantia de reaproveitar o estado Client entre renders.
+
+### Anti-spam
+
+Ordem antes do provider: limite bruto → schema/normalização → honeypot e tempo mínimo → frequência best-effort da instância → provider.
+
+A frequência in-memory (mapa limitado, TTL, sem IP bruto) é insuficiente em múltiplas instâncias/serverless. Sem IP confiável, não há bucket global. Rate limit distribuído fica como configuração posterior no Vercel Firewall, se o plano e o endpoint da Server Action permitirem; não está aplicado nesta passagem.
+
+### Falha e fallback
+
+WhatsApp e e-mail continuam visíveis. `unavailable` preserva o rascunho com JS e não revela recusa, supressão ou rate limit do Resend. Sem confirmação automática ao lead. Sem SLA numérico.
+
+Retenção operacional: até seis meses na caixa comercial para leads não convertidos, depois exclusão, salvo necessidade contratual ou jurídica. O app não persiste o lead.
+
+### Dependência
+
+- `resend@6.28.1`: SDK oficial Node para `emails.send` e idempotência. Sem React Email; o aviso interno é `text`/`html` pequenos no servidor.
+
+### Bundle e verificação local
+
+- Ilha Client de `/contato`: chunk `392ymqehjndt0.js` (4 527 B gzip). Fatia A media `35xbfk9jgsz7y.js` em 4 645 B gzip; variação −118 B, sem materialidade. Sem `resend`, sem Zod e sem chave no Client. Chunk ausente em Home, `/sobre` e 404.
+- Produção local em `http://127.0.0.1:3028/contato` com `CONTACT_PROVIDER=disabled`: overflow ausente em 320×568, 375×812, 768×1024, 1024×768 e 1440×900; envio válido → `unavailable` com rascunho preservado, foco em `#contato-form-status` e canais WhatsApp/e-mail visíveis; sem PII na URL. Sucesso real não foi exercido (sem envio externo); coberto por testes com fake.
+
+### Pendências externas (não executadas nesta passagem)
+
+Ver `docs/14-checklist-configuracao-resend.md`. Não marcar como concluídos: domínio/remetente no Resend, DNS, variáveis da Vercel, envio Preview/Production, política jurídica/Analytics da Fatia C.
 
 ## Decisões que agentes não podem tomar sozinhos
 

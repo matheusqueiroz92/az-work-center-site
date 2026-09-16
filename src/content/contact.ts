@@ -73,7 +73,7 @@ export const contact = {
     title: "Envie o contexto",
     text: "Descreva a operação e o gargalo. WhatsApp e e-mail continuam disponíveis se preferir outro canal.",
     notice:
-      "O envio automático pelo site ainda não está ativo. WhatsApp e e-mail são os canais que a equipe lê hoje.",
+      "WhatsApp e e-mail continuam disponíveis se preferir outro canal ou se o envio pelo formulário não concluir.",
     dataUse:
       "Os dados deste pedido servem apenas para responder ao diagnóstico. Não há cadastro de newsletter.",
     submitLabel: "Enviar mensagem",

@@ -11,6 +11,23 @@ export type ContactField = (typeof contactFields)[number];
 
 export const contactHoneypotField = "companyWebsite";
 export const contactStartedAtField = "startedAt";
+export const contactAttemptField = "attemptId";
+export const contactIdempotencyPrefix = "contact-lead/";
+
+const contactAttemptIdPattern =
+  /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+
+export function isContactAttemptId(value: string): boolean {
+  return contactAttemptIdPattern.test(value.trim());
+}
+
+export function createContactAttemptId(): string {
+  return crypto.randomUUID();
+}
+
+export function contactIdempotencyKey(attemptId: string): string {
+  return `${contactIdempotencyPrefix}${attemptId.trim().toLowerCase()}`;
+}
 
 export const contactFieldLimits = {
   name: { min: 2, max: 80 },
