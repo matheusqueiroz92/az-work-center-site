@@ -85,8 +85,10 @@ export const contact = {
     blockedTitle: "Não foi possível concluir o envio.",
     blockedText:
       "Fale pelo WhatsApp ou por e-mail para continuar o diagnóstico.",
-    successTitle: "Contexto registrado.",
-    successText: "A equipe segue pelo canal combinado.",
+    successTitle: "Mensagem enviada.",
+    successText:
+      "Recebemos o contexto. A equipe retorna pelo e-mail informado.",
+    successCloseLabel: "Fechar aviso",
     fields: {
       name: {
         label: "Nome",

@@ -338,9 +338,29 @@ describe("ContactForm", () => {
 
     await waitFor(() => {
       expect(
-        getByRole("heading", { name: contact.form.successTitle }),
+        container.querySelector("[data-contact-success-toast]"),
       ).toBeTruthy();
     });
+    expect(
+      getByRole("status", { name: contact.form.successTitle }),
+    ).toBeTruthy();
+    expect(document.activeElement).not.toBe(
+      container.querySelector("[data-contact-success-toast]"),
+    );
+
+    const toast = container.querySelector("[data-contact-success-toast]");
+    const submit = getByRole("button", { name: contact.form.submitLabel });
+    expect(toast).toBeTruthy();
+    expect(
+      Boolean(
+        toast!.compareDocumentPosition(submit) &
+        Node.DOCUMENT_POSITION_FOLLOWING,
+      ),
+    ).toBe(true);
+    expect(
+      container.querySelector("[data-contact-success-inline]"),
+    ).toBeTruthy();
+
     expectEmptyValues(container);
     expect(container.textContent).not.toContain("fake_opaque");
     expect(container.textContent).not.toContain(filledValues.email);
@@ -349,6 +369,69 @@ describe("ContactForm", () => {
       container.querySelector('input[name="attemptId"]')?.getAttribute("value"),
     ).toBe(remountAttemptId);
     expect(remountAttemptId).not.toBe(defaultAttemptId);
+  });
+
+  it("permite fechar o toast de sucesso pelo teclado sem limpar o próximo attemptId", async () => {
+    const user = userEvent.setup();
+    submitContactAction.mockResolvedValue({
+      status: "success",
+      submissionId: "fake_opaque",
+      nextAttemptId: remountAttemptId,
+    });
+
+    const { container, getByRole } = render(
+      <ContactForm startedAt="1700000000000" attemptId={defaultAttemptId} />,
+    );
+
+    setValidFormValues(container);
+    await user.click(getByRole("button", { name: contact.form.submitLabel }));
+
+    await waitFor(() => {
+      expect(
+        getByRole("button", { name: contact.form.successCloseLabel }),
+      ).toBeTruthy();
+    });
+
+    await user.click(
+      getByRole("button", { name: contact.form.successCloseLabel }),
+    );
+
+    expect(container.querySelector("[data-contact-success-toast]")).toBeNull();
+    expect(
+      container.querySelector('input[name="attemptId"]')?.getAttribute("value"),
+    ).toBe(remountAttemptId);
+  });
+
+  it("mantém o toast de sucesso até o fechamento explícito", async () => {
+    const user = userEvent.setup();
+    submitContactAction.mockResolvedValue({
+      status: "success",
+      submissionId: "fake_opaque",
+      nextAttemptId: remountAttemptId,
+    });
+
+    const { container, getByRole } = render(
+      <ContactForm startedAt="1700000000000" attemptId={defaultAttemptId} />,
+    );
+
+    setValidFormValues(container);
+    await user.click(getByRole("button", { name: contact.form.submitLabel }));
+
+    await waitFor(() => {
+      expect(
+        container.querySelector("[data-contact-success-toast]"),
+      ).toBeTruthy();
+    });
+
+    await new Promise((resolve) => {
+      setTimeout(resolve, 50);
+    });
+    expect(
+      container.querySelector("[data-contact-success-toast]"),
+    ).toBeTruthy();
+    expect(
+      getByRole("button", { name: contact.form.successCloseLabel }),
+    ).toBeTruthy();
   });
 
   it("permite segundo lead na mesma montagem com chave diferente após sucesso", async () => {

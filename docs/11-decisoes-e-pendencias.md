@@ -33,7 +33,7 @@
 | D-027 | Mídia da Hero reenquadrada na origem 3D | mesma cena e animação; recorte da câmera/render; nomes públicos inalterados |
 | D-028 | Hero sem trilhos/pulsos na origem 3D; bloco textual elevado | cena limpa no render; wrapper único com translate responsivo |
 | D-029 | Art direction da Hero: poster 4:5 em retrato; vídeo só em paisagem | corta horizontal no celular e vazio em tablet retrato não se resolvem com um único object-position |
-| D-030 | Entrega de leads por e-mail transacional via Resend e Server Action | adapter na Fatia B; configuração externa e envio real ainda pendentes; sem CRM/banco no MVP |
+| D-030 | Entrega de leads por e-mail transacional via Resend e Server Action | adapter no código; domínio Verified e Preview operacional; Production e Firewall ainda pendentes; sem CRM/banco no MVP |
 | D-031 | Destinatário de produção `contato@azworkcenter.com.br`; preview/teste `matheusqueiroz@azworkcenter.com.br` | separar leads reais de homologação |
 | D-032 | Remetente planejado `site@azworkcenter.com.br`, sujeito a DNS; Matheus tem acesso ao DNS de `azworkcenter.com.br` | envio autenticado; alteração de DNS continua restrita a humanos |
 | D-033 | Campos: nome, empresa, e-mail, tipo de necessidade e contexto obrigatórios; telefone/WhatsApp opcional | qualificar o diagnóstico sem dados excessivos |
@@ -59,7 +59,7 @@
 | P-002 | confirmar vermelho oficial | design | alto |
 | P-003 | razão social e CNPJ recebidos; onde (e se) exibir publicamente ainda não decidido | Matheus/contábil | médio |
 | P-004 | WhatsApp e e-mail confirmados; endereço cadastral recebido, sem publicação automática | Matheus | alto |
-| P-005 | adapter Resend no código; DNS, domínio/remetente, variáveis Vercel e envio real pendentes; CRM ausente | Matheus/Lucas | alto |
+| P-005 | domínio Verified no Resend; DNS exigidos adicionados; vars só em Preview; teste Preview OK; Production, Firewall e CRM pendentes | Matheus/Lucas | alto |
 | P-006 | sem promessa numérica de prazo; texto público não cita SLA | comercial | médio |
 | P-007 | Vercel Web Analytics planejado; não ativar nesta fase | Matheus/Lucas | médio |
 | P-008 | sem banner enquanto não houver rastreadores não essenciais; validação jurídica pendente | jurídico | alto |
@@ -358,7 +358,7 @@ Implementação na branch `feat/motion-polish`. D-017 a D-023 foram aceitas por 
 - P-001: rasters oficiais recebidos em `public/media/logo/` (sete lockups `LOGO-AZ-WORK-CENTER-*.png` e dois com slogan). Não resolve P-001: faltam inventário, seleção canônica (claro/escuro/compacto) e validação dos vetores. Os PNGs continuam untracked até essa tarefa; ver `docs/03-manual-da-marca.md`.
 - P-003: razão social e CNPJ recebidos (D-041). Exibição pública no Header, Footer ou Contato continua pendente.
 - P-004: WhatsApp e e-mail confirmados; endereço cadastral recebido (D-041). Não publicar automaticamente; uso na etapa legal e conforme atendimento presencial.
-- P-005: destino transacional e destinatários decididos (D-030, D-031). O adapter Resend está no código; DNS do remetente, variáveis da Vercel, verificação de domínio e envio Preview/Production reais continuam pendentes. Rate limit distribuído e CRM não estão implementados. Ver `docs/14-checklist-configuracao-resend.md`.
+- P-005: destino transacional e destinatários decididos (D-030, D-031). Adapter Resend no código. Verificado: domínio `azworkcenter.com.br` **Verified** no Resend; três registros DNS exigidos adicionados; team Vercel do projeto no **Pro**; quatro variáveis de contato configuradas **somente em Preview**; envio de teste em Preview com sucesso e recebimento em `matheusqueiroz@azworkcenter.com.br`. Ainda pendentes: variáveis e teste de **Production**, rate limit no Vercel Firewall, rotação da chave, CRM. Sem registrar chave, valores DNS completos ou dados de lead. Inspeção por mensagem de `replyTo`/SPF/DKIM não está registrada como feita. Ver `docs/14-checklist-configuracao-resend.md`.
 - P-006: decidido não prometer prazo numérico (D-035). Não há SLA público a redigir nesta fase.
 - P-007: Vercel Web Analytics escolhido (D-039). Não ativar agora; sem eventos, tags ou consent store.
 - P-008: sem banner de cookies enquanto não houver rastreadores não essenciais (D-040). Validação jurídica e textos definitivos de privacidade/cookies continuam pendentes. `privacidade@azworkcenter.com.br` ainda precisa ser criado/confirmado (D-042).
@@ -574,9 +574,13 @@ Retenção operacional: até seis meses na caixa comercial para leads não conve
 - Ilha Client de `/contato`: chunk `392ymqehjndt0.js` (4 527 B gzip). Fatia A media `35xbfk9jgsz7y.js` em 4 645 B gzip; variação −118 B, sem materialidade. Sem `resend`, sem Zod e sem chave no Client. Chunk ausente em Home, `/sobre` e 404.
 - Produção local em `http://127.0.0.1:3028/contato` com `CONTACT_PROVIDER=disabled`: overflow ausente em 320×568, 375×812, 768×1024, 1024×768 e 1440×900; envio válido → `unavailable` com rascunho preservado, foco em `#contato-form-status` e canais WhatsApp/e-mail visíveis; sem PII na URL. Sucesso real não foi exercido (sem envio externo); coberto por testes com fake.
 
-### Pendências externas (não executadas nesta passagem)
+### Pendências externas
 
-Ver `docs/14-checklist-configuracao-resend.md`. Não marcar como concluídos: domínio/remetente no Resend, DNS, variáveis da Vercel, envio Preview/Production, política jurídica/Analytics da Fatia C.
+Ver `docs/14-checklist-configuracao-resend.md`.
+
+**Verificado (2026-09):** domínio `azworkcenter.com.br` Verified no Resend; três registros DNS exigidos adicionados; equipe Vercel do projeto no Pro; quatro variáveis de contato só em Preview; teste Preview com sucesso e e-mail recebido em `matheusqueiroz@azworkcenter.com.br`. Sem colar chave, DNS completo ou PII do lead.
+
+**Ainda não concluído:** variáveis e envio em Production; Firewall/rate limit distribuído; procedimento de rotação da chave; política jurídica/Analytics da Fatia C. Confirmação por mensagem de `replyTo`/autenticação no cliente de e-mail não está registrada como inspecionada.
 
 ## Registro — Evolução pós-lançamento (planejamento)
 

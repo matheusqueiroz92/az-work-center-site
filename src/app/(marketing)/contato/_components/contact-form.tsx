@@ -10,6 +10,7 @@ import {
 } from "react";
 
 import { submitContactAction } from "@/app/(marketing)/contato/actions";
+import { ContactSuccessToast } from "@/app/(marketing)/contato/_components/contact-success-toast";
 import { Button } from "@/components/ui/button";
 import { contact, contactNeedOptions } from "@/content/contact";
 import { idleContactActionState } from "@/lib/contact-action-state";
@@ -159,6 +160,9 @@ export function ContactForm({
   const [formStartedAt] = useState(startedAt);
   const [formAttemptId, setFormAttemptId] = useState(attemptId);
   const [appliedSuccessId, setAppliedSuccessId] = useState<string | null>(null);
+  const [dismissedSuccessId, setDismissedSuccessId] = useState<string | null>(
+    null,
+  );
   const submitLockRef = useRef(false);
   const errorSummaryRef = useRef<HTMLDivElement>(null);
   const statusRef = useRef<HTMLDivElement>(null);
@@ -185,11 +189,7 @@ export function ContactForm({
       return;
     }
 
-    if (
-      state.status === "unavailable" ||
-      state.status === "blocked" ||
-      state.status === "success"
-    ) {
+    if (state.status === "unavailable" || state.status === "blocked") {
       statusRef.current?.focus();
     }
   }, [state]);
@@ -227,6 +227,9 @@ export function ContactForm({
     messageErrors !== undefined && messageErrors.length > 0;
   const needErrors = fieldErrors.need;
   const needInvalid = needErrors !== undefined && needErrors.length > 0;
+  const showSuccessToast =
+    state.status === "success" && dismissedSuccessId !== state.submissionId;
+  const showSuccessInline = state.status === "success";
 
   return (
     <form
@@ -273,9 +276,7 @@ export function ContactForm({
         </div>
       ) : null}
 
-      {state.status === "unavailable" ||
-      state.status === "blocked" ||
-      state.status === "success" ? (
+      {state.status === "unavailable" || state.status === "blocked" ? (
         <div
           ref={statusRef}
           id="contato-form-status"
@@ -284,18 +285,29 @@ export function ContactForm({
           className="border-border flex flex-col gap-2 border-l-2 py-1 pl-4"
         >
           <h3 className="text-h3 font-semibold">
-            {state.status === "success"
-              ? contact.form.successTitle
-              : state.status === "blocked"
-                ? contact.form.blockedTitle
-                : contact.form.unavailableTitle}
+            {state.status === "blocked"
+              ? contact.form.blockedTitle
+              : contact.form.unavailableTitle}
           </h3>
           <p className="text-body text-muted-foreground max-w-text">
-            {state.status === "success"
-              ? contact.form.successText
-              : state.status === "blocked"
-                ? contact.form.blockedText
-                : contact.form.unavailableText}
+            {state.status === "blocked"
+              ? contact.form.blockedText
+              : contact.form.unavailableText}
+          </p>
+        </div>
+      ) : null}
+
+      {showSuccessInline ? (
+        <div
+          id="contato-form-status"
+          role="status"
+          aria-live="polite"
+          data-contact-success-inline=""
+          className="border-border flex flex-col gap-2 border-l-2 py-1 pl-4 [@media(scripting:enabled)]:hidden"
+        >
+          <h3 className="text-h3 font-semibold">{contact.form.successTitle}</h3>
+          <p className="text-body text-muted-foreground max-w-text">
+            {contact.form.successText}
           </p>
         </div>
       ) : null}
@@ -445,6 +457,12 @@ export function ContactForm({
         <p className="sr-only" aria-live="polite" aria-atomic="true">
           {pending ? contact.form.pendingLabel : ""}
         </p>
+        {showSuccessToast && state.status === "success" ? (
+          <ContactSuccessToast
+            submissionId={state.submissionId}
+            onDismiss={() => setDismissedSuccessId(state.submissionId)}
+          />
+        ) : null}
         <Button
           type="submit"
           size="lg"
