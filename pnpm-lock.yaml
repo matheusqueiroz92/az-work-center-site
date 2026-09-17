@@ -30,7 +30,7 @@ importers:
         specifier: 19.2.8
         version: 19.2.8(react@19.2.8)
       resend:
-        specifier: ^6.28.1
+        specifier: 6.28.1
         version: 6.28.1
       tailwind-merge:
         specifier: 3.6.0
