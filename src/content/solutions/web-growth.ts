@@ -2,16 +2,17 @@ import type { SolutionPage } from "@/types/content";
 
 export const webGrowth = {
   slug: "web-growth",
-  title: "Web e Growth",
-  shortTitle: "Web e Growth",
+  title: "Web e vendas digitais",
+  shortTitle: "Web e vendas digitais",
   href: "/solucoes/web-growth",
   preview: {
-    outcome: "Criar uma presença capaz de captar, medir e converter demanda.",
+    outcome:
+      "Criamos sites e experiências digitais preparados para atrair demanda, medir resultados e transformar visitas em oportunidades e vendas.",
     summary:
       "Site, e-commerce e medição trabalhados juntos. Tráfego entra quando existe estrutura para converter e acompanhar.",
     capabilities: [
-      "Sites e landing pages",
-      "Analytics e eventos",
+      "Sites, landing pages e lojas virtuais",
+      "Mensuração e análise",
       "Otimização de conversão",
     ],
   },

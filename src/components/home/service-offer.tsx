@@ -1,5 +1,6 @@
 import Link from "next/link";
 
+import { homeServices } from "@/content/home";
 import type { ServicePreview } from "@/types/content";
 
 export const serviceGroupName = "solucoes-home";
@@ -51,12 +52,13 @@ export function ServiceOffer({
   index: number;
 }) {
   const headingId = `solucao-${service.slug}`;
+  const ctaName = `${homeServices.ctaLabel} de ${service.title}`;
 
   return (
     <article
       aria-labelledby={headingId}
       data-service-story-item={service.slug}
-      className="border-border relative border-t py-8 first:border-t-0 first:pt-0 last:pb-0 max-lg:py-0 lg:pl-3"
+      className="border-border relative border-t py-8 first:border-t-0 first:pt-0 last:pb-0 max-lg:py-0"
     >
       <details
         data-service-offer=""
@@ -75,19 +77,19 @@ export function ServiceOffer({
           </span>
           <ServiceMarker />
         </summary>
+        <p data-service-copy="" className="text-body text-muted-foreground">
+          {service.outcome}
+        </p>
         <div data-service-body="">
-          <p className="text-body-lg text-foreground max-w-text mt-4">
-            {service.outcome}
+          <p
+            data-service-fronts=""
+            className="text-label font-semibold uppercase"
+          >
+            {homeServices.frontsLabel}
           </p>
-          <p className="text-body text-muted-foreground max-w-text mt-3">
-            {service.summary}
-          </p>
-          <ul className="max-w-text mt-6">
+          <ul data-service-capabilities="">
             {service.capabilities.map((capability) => (
-              <li
-                key={capability}
-                className="text-body text-foreground border-border border-l py-2 pl-4"
-              >
+              <li key={capability} data-service-capability="">
                 {capability}
               </li>
             ))}
@@ -95,9 +97,10 @@ export function ServiceOffer({
           <Link
             href={service.href}
             data-service-cta=""
+            aria-label={ctaName}
             className="text-small min-h-touch border-border mt-6 inline-flex items-center gap-2 rounded-xs border px-4 py-2 font-semibold"
           >
-            <span>{`Ver solução de ${service.title}`}</span>
+            <span>{homeServices.ctaLabel}</span>
             <ServiceCtaArrow />
           </Link>
         </div>

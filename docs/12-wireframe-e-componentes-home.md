@@ -26,7 +26,7 @@ Atualização de escopo (D-047): a apresentação dos fundadores agora pertence 
 │ [Sistemas]                        │ arte/interface sticky          │  │
 │ [Automação e IA]                  │ muda conforme item ativo       │  │
 │ [Produtos digitais]               └────────────────────────────────┘  │
-│ [Web e Growth]                                                        │
+│ [Web e vendas digitais]                                               │
 ├───────────────────────────────────────────────────────────────────────┤
 │ 03 / COMO TRABALHAMOS                                                │
 │ ENTENDER ───── DEFINIR ───── CONSTRUIR ───── EVOLUIR                  │

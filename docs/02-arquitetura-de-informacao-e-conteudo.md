@@ -112,10 +112,10 @@ Itens:
 
 1. Sistemas sob medida
 2. Automação e IA aplicada
-3. Produtos digitais e MVPs
-4. Web e Growth
+3. Produtos digitais
+4. Web e vendas digitais
 
-Cada item deve conter resultado, descrição curta, 3 capacidades e link. Pode usar accordion no mobile e painel visual sticky no desktop.
+Cada item deve conter um parágrafo unificado, 3 capacidades e link. Pode usar accordion no mobile e painel visual sticky no desktop.
 
 ### 3.5 Método
 

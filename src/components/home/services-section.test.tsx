@@ -24,6 +24,26 @@ const serviceOfferSource = readFileSync(
   join(process.cwd(), "src/components/home/service-offer.tsx"),
   "utf8",
 );
+const globalsCss = readFileSync(
+  join(process.cwd(), "src/styles/globals.css"),
+  "utf8",
+);
+const heroSource = readFileSync(
+  join(process.cwd(), "src/components/home/hero-section.tsx"),
+  "utf8",
+);
+const headerSource = readFileSync(
+  join(process.cwd(), "src/components/layout/site-header.tsx"),
+  "utf8",
+);
+const problemSource = readFileSync(
+  join(process.cwd(), "src/components/home/problem-section.tsx"),
+  "utf8",
+);
+const processSource = readFileSync(
+  join(process.cwd(), "src/components/home/process-section.tsx"),
+  "utf8",
+);
 
 function exclusiveDetailsSupported() {
   const first = document.createElement("details");
@@ -71,24 +91,43 @@ describe("ServicesSection", () => {
     expect(
       getByRole("heading", { level: 2, name: homeServices.title }),
     ).toBeTruthy();
+    expect(section?.textContent).toContain(homeServices.description);
 
     for (const service of servicePreviews) {
       expect(
         getAllByRole("heading", { level: 3, name: service.title }),
       ).toHaveLength(1);
       expect(section?.textContent).toContain(service.outcome);
-      expect(section?.textContent).toContain(service.summary);
+      expect(section?.textContent).not.toContain(service.summary);
+      expect(section?.textContent).toContain(homeServices.frontsLabel);
       expect(
         getByRole("link", {
-          name: `Ver solução de ${service.title}`,
+          name: `${homeServices.ctaLabel} de ${service.title}`,
         }).getAttribute("href"),
       ).toBe(service.href);
+      expect(
+        getByRole("link", {
+          name: `${homeServices.ctaLabel} de ${service.title}`,
+        }).textContent,
+      ).toContain(homeServices.ctaLabel);
     }
 
     expect(container.querySelectorAll("[data-service-offer]")).toHaveLength(4);
     expect(container.querySelectorAll("[data-service-body]")).toHaveLength(4);
+    expect(container.querySelectorAll("[data-service-copy]")).toHaveLength(4);
+    expect(container.querySelectorAll("[data-service-fronts]")).toHaveLength(4);
     expect(container.querySelector("[data-service-index]")).toBeNull();
     expect(section?.textContent).not.toMatch(/\b0[1-4]\b/);
+    expect(section?.textContent).not.toMatch(/MVPs/);
+    expect(section?.textContent).not.toMatch(/Growth/);
+    expect(section?.textContent).toContain("Produtos digitais");
+    expect(section?.textContent).toContain("Web e vendas digitais");
+    expect(section?.textContent).not.toContain(
+      "Operação centralizada, menos retrabalho e mais controle.",
+    );
+    expect(section?.textContent).not.toContain(
+      "Reduzir tarefas repetitivas e acelerar atendimento, análise e decisão.",
+    );
     expect(container.querySelector("summary h3")).toBeNull();
     expect(container.querySelector("article h3")).toBeNull();
   });
@@ -130,7 +169,20 @@ describe("ServicesSection", () => {
     expect(serviceOfferSource).toContain("<summary");
     expect(serviceOfferSource).toContain("name={serviceGroupName}");
     expect(serviceOfferSource).toContain("data-service-story-item");
+    expect(serviceOfferSource).toContain("data-service-copy");
+    expect(serviceOfferSource).toContain("data-service-fronts");
     expect(serviceOfferSource).not.toMatch(/padStart|data-service-index/);
+    expect(serviceOfferSource).not.toMatch(/border-l/);
+    expect(serviceOfferSource).not.toMatch(/service\.summary/);
+    expect(globalsCss).not.toMatch(
+      /\[data-service-capabilities\][\s\S]{0,80}border-l/,
+    );
+    expect(globalsCss).toMatch(/\[data-service-capability\]::before/);
+    expect(globalsCss).toMatch(/\[data-service-summary\]::before/);
+    expect(globalsCss).toMatch(/\[data-service-copy\]::before/);
+    expect(globalsCss).toMatch(
+      /\[data-service-cta\]:focus-visible \{[\s\S]*outline: 3px/,
+    );
     expect(container.querySelector("[data-service-story-frame]")).toBeTruthy();
     expect(
       container.querySelector("[data-service-story-fallback]"),
@@ -138,5 +190,21 @@ describe("ServicesSection", () => {
     expect(
       container.querySelectorAll("[data-service-story-item]"),
     ).toHaveLength(4);
+    expect(
+      container.querySelectorAll(
+        "[data-service-story-fallback] a, [data-service-story-fallback] button, [data-service-story-fallback] [tabindex]",
+      ).length,
+    ).toBe(0);
+  });
+
+  it("não altera Hero, Header, ProblemSection ou ProcessSection", () => {
+    expect(heroSource).not.toContain("homeServices");
+    expect(headerSource).not.toContain("homeServices");
+    expect(problemSource).not.toContain("homeServices");
+    expect(processSource).not.toContain("homeServices");
+    expect(heroSource).not.toContain("Frentes de entrega");
+    expect(headerSource).not.toContain("Conhecer solução");
+    expect(problemSource).not.toContain("data-service-");
+    expect(processSource).not.toContain("data-service-");
   });
 });

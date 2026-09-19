@@ -683,6 +683,15 @@ Ver `docs/14-checklist-configuracao-resend.md`.
 - Os diagramas passam a miniaturas de interface/fluxo (shell, pipeline, roadmap e painel de canais). O fallback Server reusa o diagrama de Sistemas; o painel Motion continua com crossfade `opacity`/`y`. Sem imagens de banco, 3D ou bibliotecas novas.
 - No mobile (`<1024px`), cada oferta vira `details` nativo com `name="solucoes-home"`: um aberto por vez, o primeiro inicia aberto e o atual pode ser fechado. Uma única árvore Server; no desktop o disclosure não opera e a lista/diagrama sticky permanecem. Sem nova ilha Client.
 
+### Registro — Atuação (copy unificada, nomes e ilustrações)
+
+- Data: 2026-09-19
+- Status: implementação técnica na branch `feat/forms-analytics-privacy`, sem commit nesta passagem
+- Escopo: refino da `ServicesSection` sem redesenho das duas colunas. Hero, Header, ProblemSection e ProcessSection permanecem. Sem nova ilha Client e sem dependências novas.
+- Um parágrafo de ligação entra após o H2. Cada serviço passa a um parágrafo único, label “Frentes de entrega”, marcadores quadrados e CTA visual uniforme “Conhecer solução”, com nome acessível específico. Slugs e hrefs não mudam.
+- Títulos visíveis: “Produtos digitais” e “Web e vendas digitais”. Metadados SEO das páginas internas permanecem. Sem redirects.
+- O filete ativo cobre só título e parágrafo. As ilustrações viram interfaces abstratas de produto, com animação pontual de 650 ms na ativação e estado final estático em reduced motion.
+
 ### Pendências pós-lançamento (abertas — não resolvidas)
 
 Não confundir com bloqueadores do lançamento do site. Detalhamento em `docs/15-plano-pos-lancamento.md`.

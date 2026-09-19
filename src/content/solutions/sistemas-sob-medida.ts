@@ -6,10 +6,15 @@ export const sistemasSobMedida = {
   shortTitle: "Sistemas",
   href: "/solucoes/sistemas-sob-medida",
   preview: {
-    outcome: "Operação centralizada, menos retrabalho e mais controle.",
+    outcome:
+      "Centralizamos sistemas, portais e integrações para substituir planilhas, WhatsApp e ferramentas soltas por uma operação com menos retrabalho e mais controle.",
     summary:
       "Sistemas, portais e integrações que organizam o que hoje está em planilha, WhatsApp e ferramentas soltas.",
-    capabilities: ["Sistemas de gestão", "Integrações", "Fluxos multiusuário"],
+    capabilities: [
+      "Sistemas de gestão",
+      "Integrações entre ferramentas",
+      "Fluxos multiusuário",
+    ],
   },
   intro: {
     headline:

@@ -60,6 +60,10 @@ export const homeServices = {
   eyebrow: "Atuação",
   title:
     "Construímos a estrutura digital que o próximo estágio do seu negócio exige.",
+  description:
+    "Conectamos software, automação, produtos e presença digital para resolver gargalos agora e sustentar o próximo estágio da operação.",
+  frontsLabel: "Frentes de entrega",
+  ctaLabel: "Conhecer solução",
 } as const;
 
 export const homeMethod = {

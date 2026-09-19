@@ -105,8 +105,10 @@ Desktop:
 - o diagrama estático de Sistemas permanece no painel sticky como fallback Server;
 - a melhoria Motion só carrega perto do viewport, fora do First Load;
 - mudança de serviço faz crossfade e deslocamento de 12–20 px, spring 220/28/1;
-- quatro ilustrações de produto ocupam o painel: sistemas (shell com sidebar, módulos e usuários), automação (pipeline entrada → validação humana → saída), produtos (roadmap descoberta → MVP → evolução) e web/growth (canais, conversões, gráfico e ciclo); não há barra de progresso.
-- a lista marca o item ativo com filete vermelho no título, usando o observer compartilhado da ilha já existente; reduced motion mantém o marcador sem transições decorativas e sem importar Motion. Sem índices 01–04.
+- quatro ilustrações de produto ocupam o painel: sistemas (shell operacional com sidebar, módulos e atividade), automação (orquestração com validação humana), produtos (fidelidade crescente até a primeira versão) e web/vendas digitais (canais, funil, análise e ciclo); não há barra de progresso nem métricas inventadas.
+- as ilustrações usam quatro níveis de superfície/borda (`shell`, `surface`, `inset`/`chrome` e `guide`) para criar profundidade sem repetir o mesmo contorno branco; o vermelho fica só em estado, progresso ou validação.
+- ao ativar um serviço, a ilustração correspondente executa uma animação curta (400–700 ms) uma vez: sincronização dos módulos, sinal no pipeline, avanço do roadmap ou desenho da conversão. Sem loop, parallax ou listener de scroll.
+- a lista marca o item ativo com filete vermelho do título ao parágrafo unificado, usando o observer compartilhado da ilha já existente; reduced motion mantém o estado final visível, sem transições decorativas e sem importar Motion. Sem índices 01–04.
 
 Mobile:
 

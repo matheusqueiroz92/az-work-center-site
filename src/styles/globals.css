@@ -340,6 +340,84 @@ html {
   visibility: hidden;
 }
 
+[data-service-story-diagram] {
+  --diagram-fill-shell: 0.045;
+  --diagram-fill-surface: 0.065;
+  --diagram-fill-inset: 0.08;
+  --diagram-fill-chrome: 0.1;
+  --diagram-stroke-shell: 0.52;
+  --diagram-stroke-surface: 0.22;
+  --diagram-stroke-guide: 0.18;
+  --diagram-stroke-plot: 0.42;
+}
+
+[data-diagram-pane="shell"] {
+  fill: currentColor;
+  fill-opacity: var(--diagram-fill-shell);
+  stroke: currentColor;
+  stroke-opacity: var(--diagram-stroke-shell);
+  stroke-width: 1;
+}
+
+[data-diagram-pane="surface"] {
+  fill: currentColor;
+  fill-opacity: var(--diagram-fill-surface);
+  stroke: currentColor;
+  stroke-opacity: var(--diagram-stroke-surface);
+  stroke-width: 1;
+}
+
+[data-diagram-pane="emphasis"] {
+  fill: currentColor;
+  fill-opacity: 0.085;
+  stroke: currentColor;
+  stroke-opacity: var(--diagram-stroke-surface);
+  stroke-width: 1;
+}
+
+[data-diagram-pane="inset"] {
+  fill: currentColor;
+  fill-opacity: var(--diagram-fill-inset);
+  stroke: none;
+}
+
+[data-diagram-pane="chrome"] {
+  fill: currentColor;
+  fill-opacity: var(--diagram-fill-chrome);
+  stroke: none;
+}
+
+[data-diagram-line="primary"] {
+  fill: none;
+  stroke: currentColor;
+  stroke-opacity: var(--diagram-stroke-shell);
+  stroke-width: 1;
+}
+
+[data-diagram-line="guide"] {
+  fill: none;
+  stroke: currentColor;
+  stroke-opacity: var(--diagram-stroke-guide);
+  stroke-width: 1;
+}
+
+[data-diagram-line="plot"] {
+  fill: none;
+  stroke: currentColor;
+  stroke-opacity: var(--diagram-stroke-plot);
+  stroke-width: 1.5;
+}
+
+[data-diagram-mark] {
+  fill: currentColor;
+  fill-opacity: 0.22;
+}
+
+[data-diagram-mark="active"] {
+  fill: var(--primary);
+  fill-opacity: 1;
+}
+
 [data-service-summary] {
   display: flex;
   min-height: var(--touch-target);
@@ -356,27 +434,78 @@ html {
   content: none;
 }
 
+[data-service-offer] {
+  padding-left: 0.75rem;
+}
+
 [data-service-body] {
+  padding-top: 1.25rem;
   padding-bottom: 2rem;
 }
 
-[data-service-story-item]::before {
+[data-service-copy] {
+  padding-top: 0.75rem;
+}
+
+[data-service-fronts] {
+  color: var(--muted-foreground);
+}
+
+[data-service-capabilities] {
+  margin-top: 0.75rem;
+  list-style: none;
+  padding: 0;
+}
+
+[data-service-capability] {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  min-height: 2.5rem;
+  pointer-events: none;
+  color: var(--foreground);
+  text-decoration: none;
+  cursor: default;
+}
+
+[data-service-capability]::before {
+  content: "";
+  width: 0.375rem;
+  height: 0.375rem;
+  flex-shrink: 0;
+  background: var(--primary);
+}
+
+[data-service-summary],
+[data-service-copy] {
+  position: relative;
+}
+
+[data-service-summary]::before,
+[data-service-copy]::before {
   content: "";
   position: absolute;
-  top: 0.75rem;
-  bottom: 0.75rem;
-  left: 0;
+  top: 0;
+  bottom: 0;
+  left: -0.75rem;
   width: 2px;
   background: var(--primary);
   opacity: 0;
   pointer-events: none;
 }
 
-[data-service-story-item]:first-of-type::before {
-  top: 0;
+[data-roadmap-progress] {
+  transform-origin: left center;
 }
 
-[data-service-story-item][data-service-story-active]::before {
+[data-convert-bar] {
+  transform-origin: center bottom;
+}
+
+[data-service-story-item][data-service-story-active]
+  [data-service-summary]::before,
+[data-service-story-item][data-service-story-active]
+  [data-service-copy]::before {
   opacity: 1;
 }
 
@@ -385,7 +514,10 @@ html {
 }
 
 @media (max-width: 1023px) {
-  [data-service-story-item]:has([data-service-offer][open])::before {
+  [data-service-story-item]:has([data-service-offer][open])
+    [data-service-summary]::before,
+  [data-service-story-item]:has([data-service-offer][open])
+    [data-service-copy]::before {
     opacity: 1;
   }
 
@@ -399,7 +531,11 @@ html {
 
 @media (min-width: 1024px) {
   #solucoes:not(:has([data-service-story-active]))
-    [data-service-story-item]:first-of-type::before {
+    [data-service-story-item]:first-of-type
+    [data-service-summary]::before,
+  #solucoes:not(:has([data-service-story-active]))
+    [data-service-story-item]:first-of-type
+    [data-service-copy]::before {
     opacity: 1;
   }
 
@@ -421,6 +557,7 @@ html {
   }
 
   [data-service-offer]::details-content,
+  [data-service-copy],
   [data-service-body] {
     display: block !important;
     height: auto !important;
@@ -458,6 +595,11 @@ html {
 [data-service-cta] > * {
   position: relative;
   z-index: 1;
+}
+
+[data-service-cta]:focus-visible {
+  outline: 3px solid var(--ring);
+  outline-offset: 3px;
 }
 
 [data-service-cta]:focus-visible::before {
@@ -689,11 +831,110 @@ body:has([data-header-overlay]) [data-hero] {
     transition: transform var(--duration-fast) var(--ease-standard);
   }
 
-  [data-service-story-item]::before,
+  [data-service-summary]::before,
+  [data-service-copy]::before,
   [data-service-title] {
     transition:
       opacity var(--duration-fast) var(--ease-standard),
       color var(--duration-fast) var(--ease-standard);
+  }
+
+  [data-service-diagram-active] [data-sync-mod] {
+    animation: service-sync var(--duration-deliberate) var(--ease-standard) both;
+  }
+
+  [data-service-diagram-active] [data-sync-mod="estoque"] {
+    animation-delay: 0ms;
+  }
+
+  [data-service-diagram-active] [data-sync-mod="vendas"] {
+    animation-delay: var(--duration-instant);
+  }
+
+  [data-service-diagram-active] [data-sync-mod="financeiro"] {
+    animation-delay: var(--duration-fast);
+  }
+
+  [data-service-diagram-active] [data-sync-mod="permissoes"] {
+    animation-delay: var(--duration-base);
+  }
+
+  [data-service-diagram-active] [data-pipeline-signal] {
+    animation: service-pipeline var(--duration-deliberate) var(--ease-standard)
+      both;
+  }
+
+  [data-service-diagram-active] [data-roadmap-progress] {
+    animation: service-roadmap var(--duration-deliberate) var(--ease-standard)
+      both;
+  }
+
+  [data-service-diagram-active] [data-chart-line] {
+    animation: service-chart var(--duration-deliberate) var(--ease-standard)
+      both;
+  }
+
+  [data-service-diagram-active] [data-convert-bar] {
+    animation: service-convert var(--duration-deliberate) var(--ease-standard)
+      both;
+  }
+}
+
+@keyframes service-sync {
+  from {
+    opacity: 0.4;
+    transform: translateY(0.25rem);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes service-pipeline {
+  from {
+    transform: translateY(-7.5rem);
+  }
+
+  70% {
+    transform: translateY(0);
+  }
+
+  to {
+    transform: translateY(0);
+  }
+}
+
+@keyframes service-roadmap {
+  from {
+    transform: scaleX(0.28);
+  }
+
+  to {
+    transform: scaleX(1);
+  }
+}
+
+@keyframes service-chart {
+  from {
+    opacity: 0;
+    transform: translateY(0.35rem);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes service-convert {
+  from {
+    transform: scaleY(0.35);
+  }
+
+  to {
+    transform: scaleY(1);
   }
 }
 

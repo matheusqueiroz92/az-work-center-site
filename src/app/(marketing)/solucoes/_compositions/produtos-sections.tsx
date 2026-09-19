@@ -20,7 +20,7 @@ export function ProdutosSections({ solution }: { solution: SolutionPage }) {
   return (
     <>
       <InternalPageIntro
-        eyebrow="Produtos digitais e MVPs"
+        eyebrow="Produtos digitais"
         title={solution.intro.headline}
         description={solution.intro.text}
         current={solution.title}

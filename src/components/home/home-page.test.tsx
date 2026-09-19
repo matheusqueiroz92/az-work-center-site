@@ -191,12 +191,13 @@ describe("HomePage", () => {
 
     for (const service of servicePreviews) {
       const solutionLink = getByRole("link", {
-        name: `Ver solução de ${service.title}`,
+        name: `${homeServices.ctaLabel} de ${service.title}`,
       });
 
       expect(solutionLink.getAttribute("href")).toBe(service.href);
       expect(solutionLink.hasAttribute("data-service-cta")).toBe(true);
       expect(solutionLink.className).toContain("min-h-touch");
+      expect(solutionLink.textContent).toContain(homeServices.ctaLabel);
       expect(service.capabilities).toHaveLength(3);
     }
 
@@ -226,10 +227,10 @@ describe("HomePage", () => {
         ?.getAttribute("data-service-story-diagram"),
     ).toBe("sistemas-sob-medida");
     expect(container.querySelector("[data-service-story-frame]")).toBeTruthy();
-    expect(container.textContent).toContain("Dados");
-    expect(container.textContent).toContain("Módulos");
-    expect(container.textContent).toContain("Usuários");
-    expect(container.textContent).toContain("Integrações");
+    expect(container.textContent).toContain("Operação");
+    expect(container.textContent).toContain("Estoque");
+    expect(container.textContent).toContain("Atividade recente");
+    expect(container.textContent).toContain("Permissões");
   });
 
   it("renderiza problemas, método, entrega e confiança sem vazio", () => {

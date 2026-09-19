@@ -23,6 +23,8 @@ export function ServicesSection() {
           maxWidth="editorial"
           eyebrow={homeServices.eyebrow}
           title={homeServices.title}
+          description={homeServices.description}
+          className="gap-3"
         />
         <div className="mt-12 grid items-start gap-12 lg:grid-cols-12 lg:gap-16">
           <div className="min-w-0 lg:col-span-7">

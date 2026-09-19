@@ -2,15 +2,19 @@ import type { SolutionPage } from "@/types/content";
 
 export const produtosDigitaisMvp = {
   slug: "produtos-digitais-mvp",
-  title: "Produtos digitais e MVPs",
-  shortTitle: "Produtos e MVPs",
+  title: "Produtos digitais",
+  shortTitle: "Produtos digitais",
   href: "/solucoes/produtos-digitais-mvp",
   preview: {
     outcome:
-      "Validar e lançar uma ideia digital com base técnica para evoluir.",
+      "Transformamos ideias em produtos digitais validáveis, da descoberta à primeira versão funcional, com uma base técnica preparada para evoluir.",
     summary:
-      "Da compreensão da ideia à base que pode crescer: descoberta, MVP e evolução, sem tratar o primeiro release como produto acabado.",
-    capabilities: ["Descoberta de produto", "MVP", "Manutenção e evolução"],
+      "Da compreensão da ideia à base que pode crescer: descoberta, primeira versão e evolução, sem tratar o primeiro release como produto acabado.",
+    capabilities: [
+      "Descoberta e validação",
+      "Primeira versão funcional",
+      "Evolução contínua",
+    ],
   },
   intro: {
     headline: "Do problema ao primeiro recorte que dá para aprender.",

@@ -54,11 +54,24 @@ describe("Service Story diagrams", () => {
       expect(container.querySelectorAll("a, button, [tabindex]").length).toBe(
         0,
       );
+      expect(svg?.hasAttribute("data-service-diagram-active")).toBe(false);
+      expect(text).not.toMatch(/\bMVP\b/);
+      expect(text).not.toMatch(/Growth/);
 
       for (const label of serviceStoryDiagramLabels[slug]) {
         expect(text).toContain(label);
       }
     }
+
+    const { container: activeContainer } = render(
+      <ServiceStoryDiagram slug="sistemas-sob-medida" active />,
+    );
+
+    expect(
+      activeContainer
+        .querySelector("[data-service-story-diagram]")
+        ?.hasAttribute("data-service-diagram-active"),
+    ).toBe(true);
   });
 
   it("não conserva os diagramas genéricos de retângulos", () => {
@@ -74,11 +87,45 @@ describe("Service Story diagrams", () => {
     );
     expect(diagrams).not.toMatch(/stages:descoberta>prototipo>mvp>evolucao/);
     expect(diagrams).not.toMatch(
+      /roadmap:descoberta>prototipo>mvp-construcao>evolucao/,
+    );
+    expect(diagrams).not.toMatch(/\bMVP\b/);
+    expect(diagrams).not.toMatch(
       /cycle:presenca>aquisicao>conversao>analise\+retorno/,
     );
     expect(section).not.toMatch(/M124 64 H156/);
     expect(section).toMatch(/ServiceStoryDiagram/);
     expect(section).toMatch(/sistemas-sob-medida/);
+  });
+
+  it("usa hierarquia de superfícies e bordas em vez de um único contorno", () => {
+    const diagrams = readSource("components/motion/service-story-diagrams.tsx");
+    const globals = readSource("styles/globals.css");
+
+    expect(diagrams).toMatch(/data-diagram-pane=\{level\}/);
+    expect(diagrams).toMatch(/level="shell"/);
+    expect(diagrams).toMatch(/\? "emphasis"/);
+    expect(diagrams).toMatch(/data-diagram-line/);
+    expect(diagrams).toMatch(/data-diagram-mark/);
+    expect(globals).toMatch(/--diagram-stroke-shell: 0\.52/);
+    expect(globals).toMatch(/--diagram-stroke-surface: 0\.22/);
+    expect(globals).toMatch(/--diagram-stroke-guide: 0\.18/);
+    expect(globals).toMatch(/\[data-diagram-pane="shell"\]/);
+    expect(globals).toMatch(/\[data-diagram-pane="surface"\]/);
+
+    for (const slug of solutionSlugs) {
+      const { container } = render(<ServiceStoryDiagram slug={slug} />);
+
+      expect(
+        container.querySelectorAll('[data-diagram-pane="shell"]').length,
+      ).toBeGreaterThan(0);
+      expect(
+        container.querySelectorAll("[data-diagram-pane]").length,
+      ).toBeGreaterThan(3);
+      expect(
+        container.querySelectorAll('[data-diagram-line="guide"]').length,
+      ).toBeGreaterThan(0);
+    }
   });
 });
 
@@ -284,6 +331,7 @@ describe("Service Story architecture", () => {
     expect(panel).toMatch(/import\("\.\/dom-animation"\)/);
     expect(panel).toMatch(/strict/);
     expect(panel).toMatch(/initial=\{false\}/);
+    expect(panel).toMatch(/active=\{slug === activeSlug\}/);
     expect(panel).toMatch(/MutationObserver/);
     expect(panel).not.toMatch(/observeServiceStoryItems/);
     expect(panel).not.toMatch(/addEventListener\(["']scroll/);

@@ -136,7 +136,7 @@ export function ServiceStoryPanel() {
                 transition={panelSpring}
                 className="absolute inset-0"
               >
-                <ServiceStoryDiagram slug={slug} />
+                <ServiceStoryDiagram slug={slug} active={slug === activeSlug} />
               </m.div>
             ))}
           </LazyMotion>
