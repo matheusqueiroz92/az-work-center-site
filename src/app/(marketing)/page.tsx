@@ -1,7 +1,6 @@
 import { EngagementSection } from "@/components/home/engagement-section";
 import { FAQSection } from "@/components/home/faq-section";
 import { FinalCtaSection } from "@/components/home/final-cta-section";
-import { FoundersSection } from "@/components/home/founders-section";
 import { HeroSection } from "@/components/home/hero-section";
 import { ProblemSection } from "@/components/home/problem-section";
 import { ProcessSection } from "@/components/home/process-section";
@@ -13,13 +12,12 @@ export const metadata = createHomeMetadata();
 
 export default function HomePage() {
   return (
-    <main id="conteudo" tabIndex={-1}>
+    <main id="conteudo" tabIndex={-1} data-header-overlay="">
       <HeroSection />
       <ProblemSection />
       <ServicesSection />
       <ProcessSection />
       <EngagementSection />
-      <FoundersSection />
       <TrustSection />
       <FAQSection />
       <FinalCtaSection />

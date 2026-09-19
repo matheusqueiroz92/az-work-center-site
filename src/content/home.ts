@@ -4,7 +4,6 @@ export const homeSectionIds = [
   "solucoes",
   "metodo",
   "capacidades",
-  "equipe",
   "faq",
   "diagnostico",
 ] as const;
@@ -27,7 +26,7 @@ export const homeProblems = {
   eyebrow: "O problema",
   title: "Quando a empresa cresce, os improvisos começam a custar caro.",
   description:
-    "A empresa cresceu, mas a operação digital não acompanhou. Esses improvisos costumam aparecer juntos.",
+    "Se a operação digital não acompanhou o crescimento da empresa, esses improvisos costumam aparecer juntos.",
   items: [
     {
       title: "Informações espalhadas",
@@ -119,12 +118,6 @@ export const homeEngagement = {
         "Acompanhamento de suporte, analytics, melhorias e crescimento.",
     },
   ],
-} as const;
-
-export const homeFounders = {
-  eyebrow: "Quem conduz",
-  title:
-    "Tecnologia com visão de negócio e gente responsável por cada entrega.",
 } as const;
 
 export const homeTrust = {

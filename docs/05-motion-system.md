@@ -102,14 +102,16 @@ Máximo de duas linhas AZ na Home: Processo e CTA. A Hero deixou de usar line-dr
 Desktop:
 
 - títulos/descrições rolam normalmente e permanecem no HTML Server;
-- o mapa estático permanece no painel sticky como fallback;
+- o diagrama estático de Sistemas permanece no painel sticky como fallback Server;
 - a melhoria Motion só carrega perto do viewport, fora do First Load;
 - mudança de serviço faz crossfade e deslocamento de 12–20 px, spring 220/28/1;
-- quatro diagramas geométricos distintos ocupam o painel; não há barra de progresso.
+- quatro ilustrações de produto ocupam o painel: sistemas (shell com sidebar, módulos e usuários), automação (pipeline entrada → validação humana → saída), produtos (roadmap descoberta → MVP → evolução) e web/growth (canais, conversões, gráfico e ciclo); não há barra de progresso.
+- a lista marca o item ativo com filete vermelho no título, usando o observer compartilhado da ilha já existente; reduced motion mantém o marcador sem transições decorativas e sem importar Motion. Sem índices 01–04.
 
 Mobile:
 
-- lista linear completa, sem accordion e sem pinning;
+- disclosure nativo exclusivo (`details[name="solucoes-home"]`); o primeiro item começa aberto, abrir outro fecha o anterior e o atual pode ser fechado;
+- sem pinning e sem Motion; o conteúdo permanece no HTML Server;
 - nenhuma rolagem horizontal forçada;
 - o chunk do painel não carrega enquanto o frame estiver `display: none`.
 
@@ -126,11 +128,15 @@ Somente para métricas aprovadas. Número pode contar uma vez, mas o valor final
 
 ### 5.7 Header Behavior
 
-Header sticky Server, sem hide-on-scroll (D-018). Âncoras continuam compensadas com `scroll-padding-top`.
+Header sticky Server, sem hide-on-scroll (D-018). Chrome externo transparente, sem borda inferior nem sombra. A moldura interna usa tinta escura sutil, `backdrop-filter` moderado e borda de baixa opacidade (D-049). Na Home, o Header fica `fixed` sobre a Hero via `data-header-overlay` (D-050); nas páginas internas permanece sticky no fluxo. Em `prefers-reduced-motion`, o blur some e o fundo fica mais opaco. Âncoras continuam compensadas com `scroll-padding-top`.
 
 ### 5.8 Accordion
 
 240–320 ms. Ícone gira 90/180 graus. Conteúdo usa clip/grid rows ou biblioteca acessível. Reduced motion: instantâneo.
+
+A `ProblemSection` da Home usa disclosure nativo exclusivo (`details[name="problemas-home"]`): o primeiro item começa aberto, abrir outro fecha o anterior e o usuário pode deixar todos fechados. Animação CSS-only, 240 ms em `opacity`/`transform`, sem ilha Client nem JavaScript de accordion.
+
+A `ServicesSection` reusa o mesmo padrão só abaixo de 1024 px (`details[name="solucoes-home"]`). No desktop a lista permanece linear, o corpo fica visível por CSS e o painel sticky/Motion não muda. O FAQ continua no Accordion acessível existente.
 
 ### 5.9 Button
 

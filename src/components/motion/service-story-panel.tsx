@@ -7,7 +7,7 @@ import * as m from "motion/react-m";
 import { ServiceStoryDiagram } from "@/components/motion/service-story-diagrams";
 import {
   collectServiceStoryItems,
-  observeServiceStoryItems,
+  readActiveServiceStorySlug,
   resolveActiveServiceSlug,
 } from "@/components/motion/service-story-observer";
 import { panelShiftY, panelSpring } from "@/lib/motion-tokens";
@@ -80,22 +80,32 @@ export function ServiceStoryPanel() {
     }
 
     const items = collectServiceStoryItems(section);
-    const frame = requestAnimationFrame(() => {
-      const initial = resolveActiveServiceSlug(items);
-      if (initial) {
-        setActiveSlug(initial);
-        markFrameReady(host, true);
-      }
-    });
 
-    const disconnect = observeServiceStoryItems(items, (slug) => {
-      setActiveSlug(slug);
+    const syncActive = () => {
+      const next =
+        readActiveServiceStorySlug(items) ?? resolveActiveServiceSlug(items);
+
+      if (!next) {
+        return;
+      }
+
+      setActiveSlug(next);
       markFrameReady(host, true);
-    });
+    };
+
+    const frame = requestAnimationFrame(syncActive);
+    const mutation = new MutationObserver(syncActive);
+
+    for (const item of items) {
+      mutation.observe(item, {
+        attributes: true,
+        attributeFilter: ["data-service-story-active"],
+      });
+    }
 
     return () => {
       cancelAnimationFrame(frame);
-      disconnect();
+      mutation.disconnect();
       markFrameReady(host, false);
     };
   }, [host, reduceMotion]);

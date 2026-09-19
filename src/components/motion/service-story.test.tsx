@@ -8,14 +8,17 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 
 import {
   ServiceStoryDiagram,
+  serviceStoryDiagramLabels,
   serviceStoryGeometrySignatures,
 } from "@/components/motion/service-story-diagrams";
 import {
+  bindServiceStoryActiveList,
   bindServiceStoryLoader,
   desktopMediaQuery,
   reducedMotionMediaQuery,
 } from "@/components/motion/service-story-loader-runtime";
 import {
+  applyActiveServiceStoryItem,
   collectServiceStoryItems,
   observeServiceStoryItems,
   resolveActiveServiceSlug,
@@ -32,7 +35,7 @@ function readSource(relativePath: string) {
 }
 
 describe("Service Story diagrams", () => {
-  it("cobre os quatro slugs com geometrias distintas", () => {
+  it("cobre os quatro slugs com geometrias e rótulos distintos", () => {
     const signatures = solutionSlugs.map(
       (slug) => serviceStoryGeometrySignatures[slug],
     );
@@ -43,6 +46,7 @@ describe("Service Story diagrams", () => {
     for (const slug of solutionSlugs) {
       const { container } = render(<ServiceStoryDiagram slug={slug} />);
       const svg = container.querySelector("[data-service-story-diagram]");
+      const text = container.textContent ?? "";
 
       expect(svg?.getAttribute("data-service-story-diagram")).toBe(slug);
       expect(svg?.getAttribute("aria-hidden")).toBe("true");
@@ -50,7 +54,31 @@ describe("Service Story diagrams", () => {
       expect(container.querySelectorAll("a, button, [tabindex]").length).toBe(
         0,
       );
+
+      for (const label of serviceStoryDiagramLabels[slug]) {
+        expect(text).toContain(label);
+      }
     }
+  });
+
+  it("não conserva os diagramas genéricos de retângulos", () => {
+    const diagrams = readSource("components/motion/service-story-diagrams.tsx");
+    const section = readSource("components/home/services-section.tsx");
+
+    expect(diagrams).not.toMatch(/hub:5-left-modules\+center-column/);
+    expect(diagrams).not.toMatch(/flow:4-staggered-stages\+broken-path/);
+    expect(diagrams).not.toMatch(/scope:outer-field\+inner-release/);
+    expect(diagrams).not.toMatch(/channels:3-bands\+center-gap/);
+    expect(diagrams).not.toMatch(
+      /board:dados\+usuarios\+modulos\+integracoes\+nucleo-gestao/,
+    );
+    expect(diagrams).not.toMatch(/stages:descoberta>prototipo>mvp>evolucao/);
+    expect(diagrams).not.toMatch(
+      /cycle:presenca>aquisicao>conversao>analise\+retorno/,
+    );
+    expect(section).not.toMatch(/M124 64 H156/);
+    expect(section).toMatch(/ServiceStoryDiagram/);
+    expect(section).toMatch(/sistemas-sob-medida/);
   });
 });
 
@@ -190,7 +218,26 @@ describe("Service Story observer", () => {
       "produtos-digitais-mvp",
       "sistemas-sob-medida",
     ]);
+    expect(first.hasAttribute("data-service-story-active")).toBe(true);
+    expect(third.hasAttribute("data-service-story-active")).toBe(false);
     vi.unstubAllGlobals();
+  });
+
+  it("aplica e limpa o marcador ativo na lista", () => {
+    const root = mountItems();
+    const items = collectServiceStoryItems(root);
+
+    applyActiveServiceStoryItem(items, "web-growth");
+
+    expect(
+      items.map((item) => item.hasAttribute("data-service-story-active")),
+    ).toEqual([false, false, false, true]);
+
+    applyActiveServiceStoryItem(items, "automacao-inteligencia-artificial");
+
+    expect(
+      items.map((item) => item.hasAttribute("data-service-story-active")),
+    ).toEqual([false, true, false, false]);
   });
 });
 
@@ -218,7 +265,9 @@ describe("Service Story architecture", () => {
     expect(runtime).not.toMatch(/from ["']motion/);
     expect(runtime).not.toMatch(/from ["']framer-motion["']/);
     expect(loader).toMatch(/import\("\.\/service-story-panel"\)/);
+    expect(loader).toMatch(/bindServiceStoryActiveList/);
     expect(runtime).toMatch(/observer\?\.disconnect/);
+    expect(runtime).toMatch(/bindServiceStoryActiveList/);
     expect(loader).not.toMatch(/passive/);
     expect(runtime).not.toMatch(/passive/);
   });
@@ -235,6 +284,9 @@ describe("Service Story architecture", () => {
     expect(panel).toMatch(/import\("\.\/dom-animation"\)/);
     expect(panel).toMatch(/strict/);
     expect(panel).toMatch(/initial=\{false\}/);
+    expect(panel).toMatch(/MutationObserver/);
+    expect(panel).not.toMatch(/observeServiceStoryItems/);
+    expect(panel).not.toMatch(/addEventListener\(["']scroll/);
     expect(panel).not.toMatch(/domMax|AnimatePresence|useScroll|layoutId/);
     expect(panel).not.toMatch(/<motion\./);
     expect(features).toMatch(/export default domAnimation/);
@@ -709,5 +761,90 @@ describe("Service Story loader runtime", () => {
 
     expect(onPanelLoaded).toHaveBeenCalledTimes(1);
     expect(importPanel).toHaveBeenCalledTimes(1);
+  });
+
+  function mountStoryItems() {
+    const root = document.createElement("section");
+    root.id = "solucoes";
+
+    for (const slug of solutionSlugs) {
+      const article = document.createElement("article");
+      article.setAttribute("data-service-story-item", slug);
+      article.getBoundingClientRect = () =>
+        ({
+          top: 400 + solutionSlugs.indexOf(slug) * 200,
+          height: 180,
+          bottom: 580 + solutionSlugs.indexOf(slug) * 200,
+          left: 0,
+          right: 100,
+          width: 100,
+          x: 0,
+          y: 400 + solutionSlugs.indexOf(slug) * 200,
+          toJSON() {
+            return {};
+          },
+        }) as DOMRect;
+      root.append(article);
+    }
+
+    document.body.append(root);
+    return root;
+  }
+
+  it("marca o item ativo no desktop mesmo com reduced motion", () => {
+    const desktop = createMedia(true);
+    const observe = vi.fn();
+
+    Object.defineProperty(window, "innerHeight", {
+      configurable: true,
+      value: 800,
+    });
+    vi.stubGlobal(
+      "IntersectionObserver",
+      class {
+        observe = observe;
+        disconnect = vi.fn();
+        unobserve = vi.fn();
+      },
+    );
+    vi.stubGlobal("matchMedia", (query: string) =>
+      query === desktopMediaQuery ? desktop : createMedia(true),
+    );
+
+    const root = mountStoryItems();
+    const stop = bindServiceStoryActiveList(root);
+
+    expect(observe).toHaveBeenCalledTimes(4);
+    expect(
+      root
+        .querySelector('[data-service-story-item="sistemas-sob-medida"]')
+        ?.hasAttribute("data-service-story-active"),
+    ).toBe(true);
+
+    stop();
+    expect(root.querySelector("[data-service-story-active]")).toBeNull();
+  });
+
+  it("não observa nem marca a lista fora do desktop", () => {
+    const desktop = createMedia(false);
+    const observe = vi.fn();
+
+    vi.stubGlobal(
+      "IntersectionObserver",
+      class {
+        observe = observe;
+        disconnect = vi.fn();
+        unobserve = vi.fn();
+      },
+    );
+    vi.stubGlobal("matchMedia", (query: string) =>
+      query === desktopMediaQuery ? desktop : createMedia(false),
+    );
+
+    const root = mountStoryItems();
+    bindServiceStoryActiveList(root);
+
+    expect(observe).not.toHaveBeenCalled();
+    expect(root.querySelector("[data-service-story-active]")).toBeNull();
   });
 });

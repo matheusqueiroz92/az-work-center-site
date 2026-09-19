@@ -1,5 +1,13 @@
 import type { ComponentType } from "react";
 
+import {
+  applyActiveServiceStoryItem,
+  clearActiveServiceStoryItems,
+  collectServiceStoryItems,
+  observeServiceStoryItems,
+  resolveActiveServiceSlug,
+} from "@/components/motion/service-story-observer";
+
 export const desktopMediaQuery = "(min-width: 1024px)";
 export const reducedMotionMediaQuery = "(prefers-reduced-motion: reduce)";
 
@@ -147,5 +155,62 @@ export function bindServiceStoryLoader(
     stopObserver();
     desktopMedia.removeEventListener("change", sync);
     reducedMotionMedia.removeEventListener("change", sync);
+  };
+}
+
+export function bindServiceStoryActiveList(root: ParentNode) {
+  if (typeof IntersectionObserver === "undefined") {
+    return () => undefined;
+  }
+
+  const desktopMedia = window.matchMedia(desktopMediaQuery);
+  let stopObserver: (() => void) | null = null;
+  let cancelled = false;
+
+  const disconnect = () => {
+    stopObserver?.();
+    stopObserver = null;
+    clearActiveServiceStoryItems(collectServiceStoryItems(root));
+  };
+
+  const connect = () => {
+    if (cancelled || stopObserver || !desktopMedia.matches) {
+      return;
+    }
+
+    const items = collectServiceStoryItems(root);
+    if (items.length === 0) {
+      return;
+    }
+
+    const initial = resolveActiveServiceSlug(items);
+    if (initial) {
+      applyActiveServiceStoryItem(items, initial);
+    }
+
+    stopObserver = observeServiceStoryItems(items, () => undefined);
+  };
+
+  const sync = () => {
+    if (cancelled) {
+      disconnect();
+      return;
+    }
+
+    if (desktopMedia.matches) {
+      connect();
+      return;
+    }
+
+    disconnect();
+  };
+
+  desktopMedia.addEventListener("change", sync);
+  sync();
+
+  return () => {
+    cancelled = true;
+    desktopMedia.removeEventListener("change", sync);
+    disconnect();
   };
 }

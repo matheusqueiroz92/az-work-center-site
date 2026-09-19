@@ -199,11 +199,11 @@ Todos os componentes deste diretório são universais: sem `"use client"`, sem e
 
 ## SiteWordmark
 
-**Finalidade:** assinatura textual temporária até o lockup vetorial (P-001).
+**Finalidade:** assinatura horizontal oficial, sem slogan, no Header escuro. Usa somente a cópia curada em `public/media/brand/`; os arquivos originais em `public/media/logo/` são preservados.
 
-**Semântica:** `next/link` para `/`. O nome visível é o nome acessível.
+**Semântica:** `next/link` para `/`, com nome acessível “AZ Work Center”. Imagem com dimensões reservadas e sem texto duplicado para leitores de tela.
 
-**Proibido:** desenhar símbolo novo, usar imagem falsa ou o logo atual sem arquivo fornecido.
+**Proibido:** desenhar símbolo novo, usar imagem falsa ou trocar o lockup sem aprovação visual.
 
 ## SiteHeader / DesktopNav / MobileNav
 
@@ -221,7 +221,7 @@ Todos os componentes deste diretório são universais: sem `"use client"`, sem e
 
 **Finalidade:** rodapé institucional com dados aprovados.
 
-**Conteúdo:** nome, descritor, tagline, cidade/UF, grupos Atuação/Empresa/Legal sem destinos repetidos e copyright do ano no servidor. Preferências de cookies não aparecem enquanto P-008 estiver pendente.
+**Conteúdo:** prévia do lockup com “Soluções que Transformam”, descritor, cidade/UF, grupos Atuação/Empresa/Legal sem destinos repetidos e copyright do ano no servidor. A tagline longa permanece em `company.ts`, mas não é repetida junto ao slogan nesta composição em avaliação. Preferências de cookies não aparecem enquanto P-008 estiver pendente.
 
 **Proibido:** CNPJ, telefone, e-mail, endereço, redes, selos ou clientes não confirmados.
 

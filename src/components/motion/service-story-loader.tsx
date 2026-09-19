@@ -7,7 +7,10 @@ import {
   type ComponentType,
 } from "react";
 
-import { bindServiceStoryLoader } from "@/components/motion/service-story-loader-runtime";
+import {
+  bindServiceStoryActiveList,
+  bindServiceStoryLoader,
+} from "@/components/motion/service-story-loader-runtime";
 
 export function ServiceStoryLoader() {
   const [Panel, setPanel] = useState<ComponentType | null>(null);
@@ -22,7 +25,8 @@ export function ServiceStoryLoader() {
       return;
     }
 
-    return bindServiceStoryLoader(frame, {
+    const section = frame.closest("#solucoes") ?? frame;
+    const stopLoader = bindServiceStoryLoader(frame, {
       importPanel: () => import("./service-story-panel"),
       onPanelLoaded: (NextPanel) => {
         startTransition(() => {
@@ -30,6 +34,12 @@ export function ServiceStoryLoader() {
         });
       },
     });
+    const stopActiveList = bindServiceStoryActiveList(section);
+
+    return () => {
+      stopLoader();
+      stopActiveList();
+    };
   }, []);
 
   if (!Panel) {

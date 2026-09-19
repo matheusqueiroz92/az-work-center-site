@@ -74,6 +74,9 @@ describe("solutions routes", () => {
 
     expect(getAllByRole("heading", { level: 1 })).toHaveLength(1);
     expect(container.querySelector("main")?.id).toBe("conteudo");
+    expect(
+      container.querySelector("main")?.hasAttribute("data-header-overlay"),
+    ).toBe(false);
     expect(getByRole("link", { name: "Início" }).getAttribute("href")).toBe(
       "/",
     );
@@ -102,6 +105,9 @@ describe("solutions routes", () => {
       expect(container.textContent).toContain(solution.faqs[0]!.question);
       expect(container.querySelector("form")).toBeNull();
       expect(container.querySelector("input")).toBeNull();
+      expect(
+        container.querySelector("main")?.hasAttribute("data-header-overlay"),
+      ).toBe(false);
       expect(
         getByRole("link", { name: "Solicitar diagnóstico" }).getAttribute(
           "href",

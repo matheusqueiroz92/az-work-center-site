@@ -21,11 +21,6 @@ export const about = {
       text: "A nova fase concentra o trabalho público em tecnologia aplicada e crescimento digital. O restante da história continua existindo, mas deixa de competir com a oferta principal.",
     },
     {
-      id: "papeis",
-      title: "Quem conduz o trabalho hoje",
-      text: foundersNote,
-    },
-    {
       id: "gildasio",
       title: "Participação histórica de Gildásio",
       text: "Gildásio faz parte da origem e da formação da empresa. Hoje conduz o AZ News e não atua na operação tecnológica do dia a dia.",
@@ -52,6 +47,12 @@ export const about = {
     },
   ],
   founders,
+  foundersSection: {
+    eyebrow: "Quem conduz",
+    title:
+      "Tecnologia com visão de negócio e gente responsável por cada entrega.",
+    note: foundersNote,
+  },
   manifesto:
     "A AZ nasceu da união de experiências diferentes e evoluiu fazendo: ouvindo, testando, construindo e aprendendo. Criamos soluções digitais com engenharia, visão de negócio e responsabilidade — próximas o bastante para compreender o contexto e ambiciosas o bastante para preparar o próximo passo.",
   cta: {

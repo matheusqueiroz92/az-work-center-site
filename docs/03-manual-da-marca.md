@@ -94,7 +94,7 @@ Tecnologia & Growth
 
 **Tecnologia para operar melhor. Estratégia para crescer.**
 
-Usar em materiais institucionais, apresentações e rodapé expandido. Não repetir tagline e headline na mesma dobra.
+Usar em materiais institucionais, apresentações e rodapé expandido quando não houver outra assinatura. Na prévia de Footer com “Soluções que Transformam” incorporado ao lockup, esta tagline não é repetida. Não repetir tagline e headline na mesma dobra.
 
 ## 4. Mensagens-chave
 
@@ -188,10 +188,14 @@ O logotipo atual será mantido provisoriamente. Antes do lançamento, obter arqu
 
 ### Rasters oficiais recebidos
 
-Matheus disponibilizou nove PNGs em `public/media/logo/`. São ativos intencionais de identidade visual da AZ Work Center, para possível uso futuro em Header, Footer e outras assinaturas — não dumps temporários.
+Matheus disponibilizou treze PNGs em `public/media/logo/`. São ativos intencionais de identidade visual da AZ Work Center — não dumps temporários.
 
 - `LOGO-AZ-WORK-CENTER-1.png` a `LOGO-AZ-WORK-CENTER-7.png`;
 - `LOGO-AZ-WORK-CENTER-COM-SLOGAN-1.png` e `LOGO-AZ-WORK-CENTER-COM-SLOGAN-2.png`.
+- `LOGO-AZ-WORK-CENTER-HORIZONTAL-1.png` e `LOGO-AZ-WORK-CENTER-HORIZONTAL-2.png`;
+- `LOGO-AZ-WORK-CENTER-HORIZONTAL-COM-SLOGAN-1.png` e `LOGO-AZ-WORK-CENTER-HORIZONTAL-COM-SLOGAN-2.png`.
+
+As quatro versões horizontais usam `#EF233C` após a reexportação de setembro de 2026. Para a integração em superfícies escuras, apenas as versões `-2` foram copiadas para `public/media/brand/`: sem slogan no Header e com “Soluções que Transformam” no Footer. Matheus aprovou o Header em 17 de setembro de 2026 e decidiu manter o Footer com slogan provisoriamente; ele poderá ser revisto. As cópias são os únicos arquivos destinados ao deploy; os treze originais continuam preservados e fora do Git. A validação responsiva completa, a seleção para superfícies claras, o símbolo compacto e os vetores equivalentes permanecem em P-001.
 
 Ficaram fora do commit do Épico 5 por ainda não possuírem consumidores no produto, não porque sejam descartáveis. Continuam untracked até uma tarefa específica de inventário/integração decidir quais arquivos entram no Git.
 
@@ -387,4 +391,3 @@ Uma ideia por peça; tipografia e fragmentos reais do projeto; assinatura discre
 - O texto contém alguma promessa sem prova?
 - A fotografia é plausível e coerente com a região?
 - A assinatura permanece legível no tamanho de uso?
-

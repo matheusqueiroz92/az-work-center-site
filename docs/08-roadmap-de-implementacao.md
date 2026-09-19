@@ -76,7 +76,7 @@ Nove rasters oficiais da logomarca estão em `public/media/logo/` e foram classi
 - soluções;
 - método;
 - bloco provisório no lugar dos cases;
-- fundadores;
+- apresentação dos fundadores em `/sobre`, fora da Home (D-047);
 - confiança;
 - FAQ;
 - CTA final;
@@ -251,4 +251,3 @@ Não usar vários agentes para editar `globals.css`, `layout.tsx` ou os mesmos c
 4. **Motion gate:** performance e reduced motion aprovados.
 5. **Content gate:** textos, fotos e dados aprovados.
 6. **Launch gate:** QA, migração e rollback prontos.
-

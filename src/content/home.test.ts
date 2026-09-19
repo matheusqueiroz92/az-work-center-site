@@ -18,7 +18,6 @@ describe("home copy", () => {
       "solucoes",
       "metodo",
       "capacidades",
-      "equipe",
       "faq",
       "diagnostico",
     ]);

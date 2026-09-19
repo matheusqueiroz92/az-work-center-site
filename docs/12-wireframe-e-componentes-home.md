@@ -2,6 +2,8 @@
 
 Documento estrutural. Não representa layout pixel-perfect.
 
+Atualização de escopo (D-047): a apresentação dos fundadores agora pertence a `/sobre#fundadores`, não à Home. Os trechos antigos deste wireframe sobre Hero, Motion e cases representam a concepção inicial; o código e as decisões posteriores prevalecem.
+
 ## 1. Desktop
 
 ```text
@@ -17,8 +19,8 @@ Documento estrutural. Não representa layout pixel-perfect.
 │ [texto] [Solicitar] [Soluções]                                        │
 │ ───────────────────── linha AZ / prova curta ───────────────────────  │
 ├───────────────────────────────────────────────────────────────────────┤
-│ 01 / O PROBLEMA                  Quando os improvisos custam caro     │
-│                                   lista editorial progressiva         │
+│ 01 / O PROBLEMA                  diagnóstico à esquerda               │
+│                                   lista expansível nativa à direita   │
 ├───────────────────────────────────────────────────────────────────────┤
 │ 02 / SOLUÇÕES                     ┌────────────────────────────────┐  │
 │ [Sistemas]                        │ arte/interface sticky          │  │
@@ -63,9 +65,12 @@ Documento estrutural. Não representa layout pixel-perfect.
 │ arte estática/motion leve    │
 ├──────────────────────────────┤
 │ O PROBLEMA                   │
-│ item 1                       │
-│ item 2                       │
-│ item 3                       │
+│ diagnóstico                  │
+│ 01 título [aberto]           │
+│ 02 título                    │
+│ 03 título                    │
+│ 04 título                    │
+│ 05 título                    │
 ├──────────────────────────────┤
 │ SOLUÇÕES                     │
 │ accordion 01                 │
@@ -81,8 +86,6 @@ Documento estrutural. Não representa layout pixel-perfect.
 ├──────────────────────────────┤
 │ bloco provisório/cases       │
 ├──────────────────────────────┤
-│ foto + fundadores            │
-├──────────────────────────────┤
 │ confiança                    │
 ├──────────────────────────────┤
 │ FAQ                          │
@@ -97,19 +100,18 @@ Documento estrutural. Não representa layout pixel-perfect.
 
 ```text
 HomePage (Server)
-├── SiteHeader (Server shell)
+├── SiteHeader (Server shell; overlay na Home, sticky nas internas)
 │   ├── DesktopNav (Server)
 │   └── MobileNav (Client)
 ├── HeroSection (Server)
 │   └── HeroAssembly (Client/Motion)
 ├── ProblemSection (Server)
-│   └── SectionReveal (Client wrapper opcional)
+│   └── details/summary nativos exclusivos (`name="problemas-home"`; primeiro item aberto)
 ├── ServicesSection (Server shell)
 │   └── ServiceStory (Client/Motion)
 ├── ProcessSection (Server)
 │   └── AzLineDraw (Client/Motion)
 ├── ProjectsPlaceholder | FeaturedCases (Server)
-├── FoundersSection (Server)
 ├── TrustSection (Server)
 ├── FAQSection (Server shell)
 │   └── Accordion (Client)
@@ -125,7 +127,6 @@ HomePage (Server)
 - `#solucoes`;
 - `#metodo`;
 - `#projetos` somente quando publicado;
-- `#equipe`;
 - `#faq`;
 - `#diagnostico`.
 
@@ -159,7 +160,6 @@ body
 | Soluções | dark |
 | Método | paper/light |
 | Projetos | variável conforme mídia |
-| Fundadores | light editorial |
 | Confiança | dark |
 | FAQ | light |
 | CTA final | brand |
@@ -171,10 +171,9 @@ body
 - CTA principal aparece no primeiro viewport sem encobrir conteúdo.
 - Soluções são compreensíveis sem interação.
 - Nenhum case/resultado fictício.
-- Fundadores aparecem com papel real.
+- A menção aos fundadores na Home não substitui os perfis em `/sobre#fundadores`.
 - Não há mais de um elemento sticky narrativo.
 - O mobile não imita a composição desktop comprimida.
 - Sem dependência de hover.
 - Motion reduzido mantém toda a informação.
 - Nenhuma seção é visualmente intercambiável com um template SaaS genérico.
-

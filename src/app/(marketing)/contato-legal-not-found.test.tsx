@@ -97,6 +97,9 @@ describe("contato, legal e 404", () => {
 
     expect(getAllByRole("heading", { level: 1 })).toHaveLength(1);
     expect(getByRole("heading", { level: 1 }).textContent).toBe(contact.title);
+    expect(
+      container.querySelector("main")?.hasAttribute("data-header-overlay"),
+    ).toBe(false);
     expect(form).not.toBeNull();
     expect(form?.getAttribute("method")?.toLowerCase()).toBe("post");
     expect(form?.getAttribute("action") ?? "").not.toMatch(

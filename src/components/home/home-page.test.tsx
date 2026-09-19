@@ -15,7 +15,6 @@ import {
   homeCta,
   homeEngagement,
   homeFaq,
-  homeFounders,
   homeHero,
   homeMethod,
   homeProblems,
@@ -23,7 +22,6 @@ import {
   homeTrust,
 } from "@/content/home";
 import { servicePreviews } from "@/content/services";
-import { founders, foundersNote } from "@/content/team";
 import { company } from "@/content/company";
 
 afterEach(() => {
@@ -91,9 +89,42 @@ describe("HomePage", () => {
     expect(main).toBeTruthy();
     expect(main?.id).toBe("conteudo");
     expect(main?.getAttribute("tabIndex")).toBe("-1");
+    expect(main?.hasAttribute("data-header-overlay")).toBe(true);
   });
 
-  it("mantém os oito H2 na ordem real do DOM", () => {
+  it("ativa o Header overlay na Home e preserva a Hero", () => {
+    const { container, getByRole } = renderHome();
+    const header = getByRole("banner");
+    const main = container.querySelector("main");
+    const globalsCss = readFileSync(
+      join(process.cwd(), "src/styles/globals.css"),
+      "utf8",
+    );
+    const heroSource = readFileSync(
+      join(process.cwd(), "src/components/home/hero-section.tsx"),
+      "utf8",
+    );
+    const layoutSource = readFileSync(
+      join(process.cwd(), "src/app/(marketing)/layout.tsx"),
+      "utf8",
+    );
+
+    expect(main?.hasAttribute("data-header-overlay")).toBe(true);
+    expect(header.hasAttribute("data-site-header")).toBe(true);
+    expect(header.className).toContain("sticky");
+    expect(header.className).not.toContain("fixed");
+    expect(globalsCss).toMatch(
+      /body:has\(\[data-header-overlay\]\) \[data-site-header\]/,
+    );
+    expect(globalsCss).toMatch(
+      /body:has\(\[data-header-overlay\]\) \[data-hero\]/,
+    );
+    expect(layoutSource).not.toMatch(/['"]use client['"]/);
+    expect(heroSource).not.toContain("data-header-overlay");
+    expect(heroSource).toContain('data-hero=""');
+  });
+
+  it("mantém os sete H2 na ordem real do DOM", () => {
     const { getAllByRole } = render(<HomePage />);
 
     expect(
@@ -105,7 +136,6 @@ describe("HomePage", () => {
       homeServices.title,
       homeMethod.title,
       homeEngagement.title,
-      homeFounders.title,
       homeTrust.title,
       homeFaq.title,
       homeCta.title,
@@ -120,7 +150,6 @@ describe("HomePage", () => {
       "solucoes",
       "metodo",
       "capacidades",
-      "equipe",
       "faq",
       "diagnostico",
     ] as const;
@@ -161,15 +190,24 @@ describe("HomePage", () => {
     ).toBe(homeHero.secondaryCta.href);
 
     for (const service of servicePreviews) {
-      expect(
-        getByRole("link", {
-          name: `Ver solução de ${service.title}`,
-        }).getAttribute("href"),
-      ).toBe(service.href);
+      const solutionLink = getByRole("link", {
+        name: `Ver solução de ${service.title}`,
+      });
+
+      expect(solutionLink.getAttribute("href")).toBe(service.href);
+      expect(solutionLink.hasAttribute("data-service-cta")).toBe(true);
+      expect(solutionLink.className).toContain("min-h-touch");
       expect(service.capabilities).toHaveLength(3);
     }
 
     expect(container.querySelector('a[href="#"]')).toBeNull();
+    expect(container.querySelector("[data-service-index]")).toBeNull();
+    expect(container.querySelector("#solucoes")?.textContent).not.toMatch(
+      /\b0[1-4]\b/,
+    );
+    expect(container.querySelectorAll("[data-service-cta-arrow]")).toHaveLength(
+      4,
+    );
 
     for (const service of servicePreviews) {
       expect(
@@ -180,11 +218,37 @@ describe("HomePage", () => {
     expect(
       container.querySelector("[data-service-story-fallback]"),
     ).toBeTruthy();
+    expect(
+      container
+        .querySelector(
+          "[data-service-story-fallback] [data-service-story-diagram]",
+        )
+        ?.getAttribute("data-service-story-diagram"),
+    ).toBe("sistemas-sob-medida");
     expect(container.querySelector("[data-service-story-frame]")).toBeTruthy();
+    expect(container.textContent).toContain("Dados");
+    expect(container.textContent).toContain("Módulos");
+    expect(container.textContent).toContain("Usuários");
+    expect(container.textContent).toContain("Integrações");
   });
 
   it("renderiza problemas, método, entrega e confiança sem vazio", () => {
     const { container, getByRole, getByText } = render(<HomePage />);
+
+    const problemSection = container.querySelector("#problemas");
+
+    expect(problemSection).toBeTruthy();
+    expect(problemSection?.querySelectorAll("summary")).toHaveLength(5);
+    expect(
+      [...(problemSection?.querySelectorAll("details") ?? [])].every(
+        (item) => item.getAttribute("name") === "problemas-home",
+      ),
+    ).toBe(true);
+    expect(
+      problemSection
+        ?.querySelector("[data-problem-item]")
+        ?.hasAttribute("open"),
+    ).toBe(true);
 
     for (const item of homeProblems.items) {
       expect(getByRole("heading", { name: item.title })).toBeTruthy();
@@ -194,8 +258,10 @@ describe("HomePage", () => {
     expect(container.querySelector("#metodo ol")).toBeTruthy();
     expect(container.querySelector("#metodo ol")?.children).toHaveLength(4);
 
+    const methodSection = container.querySelector("#metodo");
+
     for (const step of homeMethod.steps) {
-      expect(getByText(step.number)).toBeTruthy();
+      expect(methodSection?.textContent).toContain(step.number);
       expect(getByRole("heading", { name: step.title })).toBeTruthy();
     }
 
@@ -211,16 +277,13 @@ describe("HomePage", () => {
     expect(homeTrust.items).toHaveLength(6);
   });
 
-  it("apresenta somente os fundadores aprovados, sem imagem", () => {
-    const { container, getByText, queryByText } = render(<HomePage />);
-    const team = container.querySelector("#equipe");
+  it("deixa a apresentação dos fundadores para a página Sobre", () => {
+    const { container } = render(<HomePage />);
 
-    expect(getByText(founders[0]!.name)).toBeTruthy();
-    expect(getByText(founders[1]!.name)).toBeTruthy();
-    expect(getByText(foundersNote)).toBeTruthy();
-    expect(queryByText(/gildásio|gildasio/i)).toBeNull();
-    expect(team?.querySelector("img")).toBeNull();
-    expect(container.querySelector("#equipe img")).toBeNull();
+    expect(container.querySelector("#equipe")).toBeNull();
+    expect(container.querySelector("#fundadores")).toBeNull();
+    expect(container.textContent).not.toContain("Matheus Queiroz");
+    expect(container.textContent).not.toContain("Lucas Queiroz");
   });
 
   it("mantém as sete respostas do FAQ no HTML inicial", () => {
@@ -321,13 +384,13 @@ describe("HomePage", () => {
     expect(getByRole("banner")).toBeTruthy();
     expect(getByRole("contentinfo")).toBeTruthy();
     expect(getByRole("navigation", { name: "Principal" })).toBeTruthy();
-    const wordmarks = getAllByRole("link", { name: company.name });
+    const wordmarks = getAllByRole("link", { name: /AZ Work Center/ });
 
     expect(wordmarks.length).toBeGreaterThanOrEqual(2);
     expect(wordmarks.every((link) => link.getAttribute("href") === "/")).toBe(
       true,
     );
-    expect(getByText(company.tagline)).toBeTruthy();
+    expect(getByText(company.descriptor)).toBeTruthy();
   });
 
   it("não adiciona ilha cliente nem hex nos arquivos da Home", () => {
@@ -341,5 +404,21 @@ describe("HomePage", () => {
 
     expect(pageSource).not.toMatch(/getPublishedProjects/);
     expect(pageSource).not.toMatch(/['"]use client['"]/);
+
+    const servicesSection = readFileSync(
+      join(process.cwd(), "src/components/home/services-section.tsx"),
+      "utf8",
+    );
+    const serviceOffer = readFileSync(
+      join(process.cwd(), "src/components/home/service-offer.tsx"),
+      "utf8",
+    );
+
+    expect(servicesSection).not.toMatch(/['"]use client['"]/);
+    expect(serviceOffer).not.toMatch(/['"]use client['"]/);
+    expect(serviceOffer).toMatch(/data-service-cta/);
+    expect(serviceOffer).toMatch(/<details/);
+    expect(serviceOffer).toMatch(/name=\{serviceGroupName\}/);
+    expect(serviceOffer).not.toMatch(/TextLink/);
   });
 });

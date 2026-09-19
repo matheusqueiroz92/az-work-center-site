@@ -23,6 +23,8 @@ export const buttonSizes = {
 export type ButtonVariant = keyof typeof buttonVariants;
 export type ButtonSize = keyof typeof buttonSizes;
 
+export const headerCtaClassName = "hover:bg-primary";
+
 const buttonBase = [
   "relative inline-flex items-center justify-center gap-2",
   "rounded-sm border font-sans font-semibold",

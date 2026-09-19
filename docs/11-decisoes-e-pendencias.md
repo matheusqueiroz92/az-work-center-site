@@ -50,13 +50,16 @@
 | D-044 | `estrutura.azworkcenter.com.br` é ferramenta interna da AZ com subsistemas especializados e handoffs | não é SaaS administrativo multiempresa |
 | D-045 | Oferta futura ao cliente = método/serviço da AZ; visão restrita de resultados eventual | cliente não controla a esteira interna |
 | D-046 | OpenClaw e Hermes Agent são apenas candidatos a avaliação | não são dependências nem arquitetura escolhida |
+| D-047 | Apresentação dos fundadores fica em `/sobre`, não na Home | Home concentra proposta e conversão; Sobre reúne história e pessoas sem duplicar conteúdo |
+| D-048 | ProblemSection nativa e microinterações CSS do Header | accordion sem ilha Client; Header sticky com feedback hover/focus, sem glassmorphism |
+| D-049 | Header flutuante translúcido e accordion exclusivo nativo | uma moldura sticky; `details[name]` sem JavaScript |
+| D-050 | Header overlay só na Home; páginas internas permanecem sticky | Hero a partir do topo; internos sem conteúdo escondido |
 
 ## Pendências bloqueadoras antes do desenvolvimento visual final
 
 | ID | Pendência | Responsável sugerido | Impacto |
 |---|---|---|---|
 | P-001 | seleção das variantes canônicas do logo e validação dos vetores | Matheus/design | alto |
-| P-002 | confirmar vermelho oficial | design | alto |
 | P-003 | razão social e CNPJ recebidos; onde (e se) exibir publicamente ainda não decidido | Matheus/contábil | médio |
 | P-004 | WhatsApp e e-mail confirmados; endereço cadastral recebido, sem publicação automática | Matheus | alto |
 | P-005 | domínio Verified no Resend; DNS exigidos adicionados; vars só em Preview; teste Preview OK; Production, Firewall e CRM pendentes | Matheus/Lucas | alto |
@@ -65,6 +68,8 @@
 | P-008 | sem banner enquanto não houver rastreadores não essenciais; validação jurídica pendente | jurídico | alto |
 | P-009 | assets fotográficos reais | equipe | alto |
 | P-010 | Matheus tem acesso ao DNS de `azworkcenter.com.br`; inventário WordPress e alteração de DNS de produção seguem restritos | Matheus | alto |
+
+P-002 foi resolvida por Matheus: o vermelho digital é `#EF233C`, confirmado nos quatro PNGs horizontais exportados.
 
 ## Pendências não bloqueadoras do MVP estrutural
 
@@ -349,13 +354,13 @@ Implementação na branch `feat/motion-polish`. D-017 a D-023 foram aceitas por 
 - Catálogo efetivo: Hero 3D; duas linhas editoriais AZ (Processo no trilho superior do `<ol>`, CTA acima do botão); Service Story como painel de leitura, não como terceira linha; microinterações CSS de Button/ButtonLink, TextLink, navegação, Accordion e Sheet. Sem Section Reveal, fade-up de listas, hide-on-scroll, page transition ou Motion nas internas.
 - Compromisso mobile: em viewport estreita a mídia permanece decorativa e pode intersectar o bloco textual; não é regressão a corrigir nesta entrega.
 - Variante `outline` em `button-styles.ts`: necessária ao CTA secundário aprovado da Hero (`ButtonLink variant="outline"`). Difere de `secondary` pela borda `border-foreground` em vez de `border-border`. Não é resíduo órfão.
-- Arquivos em `public/media/logo/*.png`: rasters oficiais da logomarca, ainda sem consumidores. Ficaram fora do commit do Épico 5 por isso, não por serem descartáveis. Inventário e seleção canônica continuam em P-001; ver `docs/03-manual-da-marca.md`.
+- Arquivos em `public/media/logo/*.png`: originais oficiais preservados fora do Git. A prévia de integração usa somente duas cópias curadas em `public/media/brand/`; seleção para outras superfícies e validação vetorial continuam em P-001. Ver `docs/03-manual-da-marca.md`.
 - Metodologia de bundle: o `next build` com Turbopack 16.3.5 desta consolidação não imprime a coluna First Load JS usada nas Fatias A–C (206 041 B / 206 571 B / 206 646 B). A medição vigente é a soma de `encodedBodySize` dos resources de script após navegação document da Home em produção local (`pnpm start`), excluindo WebP/WebM/MP4. Não misturar esse número com o First Load histórico do webpack. Teto amplo do Épico 5: 220 KB gzip.
 - Limitação da auditoria: o agent-browser não emula zoom nativo (150%/200%) nem CPU 4×; esses cenários não foram medidos.
 
 ### Pendências humanas ainda abertas
 
-- P-001: rasters oficiais recebidos em `public/media/logo/` (sete lockups `LOGO-AZ-WORK-CENTER-*.png` e dois com slogan). Não resolve P-001: faltam inventário, seleção canônica (claro/escuro/compacto) e validação dos vetores. Os PNGs continuam untracked até essa tarefa; ver `docs/03-manual-da-marca.md`.
+- P-001: treze rasters oficiais recebidos em `public/media/logo/`. O Header com a versão horizontal sem slogan foi aprovado por Matheus em 2026-09-17; o Footer com slogan permanece provisório por decisão dele, sem mudança adicional nesta passagem. Ainda faltam validação responsiva completa, seleção para superfícies claras/uso compacto e validação dos vetores. Os originais continuam untracked; ver `docs/03-manual-da-marca.md`.
 - P-003: razão social e CNPJ recebidos (D-041). Exibição pública no Header, Footer ou Contato continua pendente.
 - P-004: WhatsApp e e-mail confirmados; endereço cadastral recebido (D-041). Não publicar automaticamente; uso na etapa legal e conforme atendimento presencial.
 - P-005: destino transacional e destinatários decididos (D-030, D-031). Adapter Resend no código. Verificado: domínio `azworkcenter.com.br` **Verified** no Resend; três registros DNS exigidos adicionados; team Vercel do projeto no **Pro**; quatro variáveis de contato configuradas **somente em Preview**; envio de teste em Preview com sucesso e recebimento em `matheusqueiroz@azworkcenter.com.br`. Ainda pendentes: variáveis e teste de **Production**, rate limit no Vercel Firewall, rotação da chave, CRM. Sem registrar chave, valores DNS completos ou dados de lead. Inspeção por mensagem de `replyTo`/SPF/DKIM não está registrada como feita. Ver `docs/14-checklist-configuracao-resend.md`.
@@ -629,6 +634,55 @@ Ver `docs/14-checklist-configuracao-resend.md`.
 - Consequências: nenhum `package.json` nem integração nesta passagem; comparação fica para piloto pós-lançamento com critérios explícitos.
 - Responsável: Matheus e Lucas
 
+### D-047 — Fundadores na página Sobre
+
+- Data: 2026-09-17
+- Status: aceita
+- Contexto: a Home ficou mais focada depois da Hero e da assinatura de marca; a apresentação dos fundadores competia com a narrativa comercial.
+- Decisão: retirar a seção `#equipe` da Home e reunir Matheus e Lucas em `/sobre#fundadores`, aproveitando os perfis já publicados sem repetição na mesma página.
+- Consequências: a Home mantém a menção textual à condução direta no bloco de confiança. Não publicar fotografia provisória; os retratos reais continuam em P-009.
+- Responsável: Matheus
+
+### D-048 — ProblemSection nativa e microinterações do Header
+
+- Data: 2026-09-17
+- Status: aceita
+- Contexto: a lista de `#problemas` estava sempre expandida; o Header sticky precisava de feedback hover/focus sem virar Client, sem esconder a barra e sem copiar chrome de referências.
+- Decisão: `ProblemSection` usa `<details>`/`<summary>` no Server Component, com o primeiro item aberto e o conteúdo aprovado de `homeProblems` no HTML inicial. No desktop, o conjunto da `DesktopNav` ganha moldura discreta; os links passam à cor AZ com linha inferior crescente no hover fino e no `focus-visible`; o CTA “Solicitar diagnóstico” recebe preenchimento vermelho gradual por pseudo-elemento. Tudo CSS-only, com `prefers-reduced-motion`. Sem alterar Hero, menu mobile, logo oficial ou o comportamento sticky.
+- Alternativas: Accordion Radix (já usado no FAQ); Header Client com Motion; barra flutuante com blur.
+- Consequências: a seção permanece compreensível sem JavaScript. Hover não é o único acesso. D-018 e D-047 permanecem. Não reabre decisões da Hero, da marca ou da arquitetura.
+- Responsável: implementação nesta passagem
+
+### D-049 — Header flutuante e accordion exclusivo nativo
+
+- Data: 2026-09-17
+- Status: aceita
+- Contexto: o Header sticky ainda lia como barra sólida; a `ProblemSection` abria vários itens ao mesmo tempo e o título dentro de `summary` não era conteúdo de phrasing válido.
+- Decisão: o `<header>` permanece sticky e transparente, sem borda inferior nem sombra. Logo, navegação e CTA “Solicitar diagnóstico” ficam na mesma moldura interna, com tinta escura sutil, `backdrop-filter` moderado e borda de baixa opacidade. As microinterações CSS atuais permanecem. A `ProblemSection` usa o mesmo `name="problemas-home"` em todos os `<details>`: o navegador mantém no máximo um item aberto, o primeiro começa aberto e o usuário pode fechar o item atual. Os títulos usam `role="heading"` e `aria-level="3"` dentro de `summary`. Sem ilha Client, listeners ou Motion novos. Sem alterar Hero, logo oficial, menu mobile ou D-018.
+- Alternativas: Accordion Radix exclusivo; Header Client com scroll; glassmorphism dominante.
+- Consequências: D-018, D-047 e D-048 permanecem. O blur sai em `prefers-reduced-motion`, com fundo mais opaco para leitura. Não reabre decisões da Hero, da marca ou da arquitetura.
+- Responsável: implementação nesta passagem
+
+### D-050 — Header overlay na Home
+
+- Data: 2026-09-18
+- Status: aceita
+- Contexto: o Header sticky ocupava fluxo e deixava uma faixa clara acima da Hero; a mídia não começava no topo da viewport.
+- Decisão: a Home marca `main` com `data-header-overlay`. O Header Server permanece no layout de marketing e, só nesse caso, passa a `position: fixed` por CSS estrutural (`body:has([data-header-overlay])`). A Hero começa no topo, atrás da moldura translúcida, sem alterar object-position, mídias ou os cálculos originais de min-height. Páginas internas (`/sobre`, `/solucoes`, `/como-trabalhamos`, `/contato`) não usam o atributo e conservam o Header sticky no fluxo. Sem ilha Client, pathname por texto, listener de scroll ou Motion.
+- Alternativas: Header Client com `usePathname`; dois layouts por route group; overlay em todas as rotas com spacer.
+- Consequências: D-018, D-048 e D-049 permanecem. Âncoras continuam com `scroll-padding-top`. Não reabre decisões da Hero, da marca ou da arquitetura.
+- Responsável: implementação nesta passagem
+
+### Registro — Atuação (CTAs, estado ativo e diagramas)
+
+- Data: 2026-09-18
+- Status: implementação técnica na branch `feat/forms-analytics-privacy`, sem commit nesta passagem
+- Escopo: refino da `ServicesSection` sem redesenho. Hero e Header permanecem. Sem nova ilha Client.
+- CTAs das quatro ofertas passam de `TextLink` sublinhado para um controle editorial compacto (`data-service-cta`): borda fina, `min-h-touch`, radius `xs`, seta SVG própria e preenchimento vermelho gradual no hover/focus. Os hrefs e os nomes acessíveis não mudam.
+- O observer já usado pelo Service Story marca `data-service-story-active` na lista. Filete vermelho e título acompanham o serviço em leitura no desktop, inclusive com `prefers-reduced-motion` (sem transições decorativas e sem importar Motion). Mobile não observa a lista. Os índices 01–04 saíram da lista.
+- Os diagramas passam a miniaturas de interface/fluxo (shell, pipeline, roadmap e painel de canais). O fallback Server reusa o diagrama de Sistemas; o painel Motion continua com crossfade `opacity`/`y`. Sem imagens de banco, 3D ou bibliotecas novas.
+- No mobile (`<1024px`), cada oferta vira `details` nativo com `name="solucoes-home"`: um aberto por vez, o primeiro inicia aberto e o atual pode ser fechado. Uma única árvore Server; no desktop o disclosure não opera e a lista/diagrama sticky permanecem. Sem nova ilha Client.
+
 ### Pendências pós-lançamento (abertas — não resolvidas)
 
 Não confundir com bloqueadores do lançamento do site. Detalhamento em `docs/15-plano-pos-lancamento.md`.
@@ -675,4 +729,3 @@ Não confundir com bloqueadores do lançamento do site. Detalhamento em `docs/15
 - Consequências:
 - Responsável:
 ```
-

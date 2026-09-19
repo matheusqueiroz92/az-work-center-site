@@ -14,6 +14,45 @@ export function collectServiceStoryItems(root: ParentNode): HTMLElement[] {
   return [...root.querySelectorAll<HTMLElement>(serviceStoryItemSelector)];
 }
 
+export function applyActiveServiceStoryItem(
+  items: readonly HTMLElement[],
+  slug: SolutionSlug,
+) {
+  for (const item of items) {
+    const isActive = item.getAttribute("data-service-story-item") === slug;
+    const wasActive = item.hasAttribute("data-service-story-active");
+
+    if (isActive && !wasActive) {
+      item.setAttribute("data-service-story-active", "");
+    } else if (!isActive && wasActive) {
+      item.removeAttribute("data-service-story-active");
+    }
+  }
+}
+
+export function clearActiveServiceStoryItems(items: readonly HTMLElement[]) {
+  for (const item of items) {
+    item.removeAttribute("data-service-story-active");
+  }
+}
+
+export function readActiveServiceStorySlug(
+  items: readonly HTMLElement[],
+): SolutionSlug | null {
+  for (const item of items) {
+    if (!item.hasAttribute("data-service-story-active")) {
+      continue;
+    }
+
+    const slug = item.getAttribute("data-service-story-item");
+    if (isSolutionStorySlug(slug)) {
+      return slug;
+    }
+  }
+
+  return null;
+}
+
 export function resolveActiveServiceSlug(items: readonly HTMLElement[]) {
   if (items.length === 0) {
     return null;
@@ -45,6 +84,18 @@ export function observeServiceStoryItems(
   onActiveChange: (slug: SolutionSlug) => void,
 ) {
   const ratios = new Map<SolutionSlug, number>();
+  let current: SolutionSlug | null = null;
+
+  const publish = (slug: SolutionSlug) => {
+    applyActiveServiceStoryItem(items, slug);
+
+    if (current === slug) {
+      return;
+    }
+
+    current = slug;
+    onActiveChange(slug);
+  };
 
   const observer = new IntersectionObserver(
     (entries) => {
@@ -62,13 +113,13 @@ export function observeServiceStoryItems(
         .toSorted((left, right) => right[1] - left[1]);
 
       if (ranked[0]) {
-        onActiveChange(ranked[0][0]);
+        publish(ranked[0][0]);
         return;
       }
 
       const fallback = resolveActiveServiceSlug(items);
       if (fallback) {
-        onActiveChange(fallback);
+        publish(fallback);
       }
     },
     {
