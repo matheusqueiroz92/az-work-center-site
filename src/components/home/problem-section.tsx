@@ -53,8 +53,6 @@ export function ProblemSection() {
             className="border-border min-w-0 border-t lg:col-span-7"
           >
             {homeProblems.items.map((item, index) => {
-              const number = String(index + 1).padStart(2, "0");
-
               return (
                 <li key={item.title} className="border-border min-w-0 border-b">
                   <details
@@ -63,12 +61,6 @@ export function ProblemSection() {
                     open={index === 0 || undefined}
                   >
                     <summary data-problem-summary>
-                      <span
-                        data-problem-index
-                        className="text-label text-muted-foreground w-8 shrink-0 tabular-nums"
-                      >
-                        {number}
-                      </span>
                       <span
                         role="heading"
                         aria-level={3}

@@ -263,8 +263,16 @@ describe("HomePage", () => {
 
     for (const step of homeMethod.steps) {
       expect(methodSection?.textContent).toContain(step.number);
+      expect(methodSection?.textContent).toContain(step.description);
+      expect(methodSection?.textContent).toContain(step.result);
       expect(getByRole("heading", { name: step.title })).toBeTruthy();
     }
+
+    expect(methodSection?.textContent).toContain(homeMethod.description);
+    expect(methodSection?.textContent).toContain(homeMethod.resultLabel);
+    expect(
+      getByRole("link", { name: homeMethod.cta.label }).getAttribute("href"),
+    ).toBe(homeMethod.cta.href);
 
     for (const mode of homeEngagement.modes) {
       expect(getByRole("heading", { name: mode.title })).toBeTruthy();

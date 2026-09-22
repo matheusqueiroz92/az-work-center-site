@@ -54,6 +54,7 @@
 | D-048 | ProblemSection nativa e microinterações CSS do Header | accordion sem ilha Client; Header sticky com feedback hover/focus, sem glassmorphism |
 | D-049 | Header flutuante translúcido e accordion exclusivo nativo | uma moldura sticky; `details[name]` sem JavaScript |
 | D-050 | Header overlay só na Home; páginas internas permanecem sticky | Hero a partir do topo; internos sem conteúdo escondido |
+| D-051 | ProblemSection sem numeração visível 01–05 | decisão visual: título e disclosure bastam; sem marcador substituto |
 
 ## Pendências bloqueadoras antes do desenvolvimento visual final
 
@@ -673,6 +674,16 @@ Ver `docs/14-checklist-configuracao-resend.md`.
 - Consequências: D-018, D-048 e D-049 permanecem. Âncoras continuam com `scroll-padding-top`. Não reabre decisões da Hero, da marca ou da arquitetura.
 - Responsável: implementação nesta passagem
 
+### D-051 — ProblemSection sem numeração visível
+
+- Data: 2026-09-22
+- Status: aceita
+- Contexto: a lista de `#problemas` ainda exibia índices `01`–`05` ao lado dos títulos. A remoção foi decisão visual do responsável, não regressão de conteúdo.
+- Decisão: a `ProblemSection` permanece sem numeração visível e sem `[data-problem-index]`. Os cinco summaries, títulos, descrições, o primeiro item aberto e o accordion exclusivo nativo (`name="problemas-home"`) continuam. Não substituir os números por outro marcador.
+- Alternativas: manter `01`–`05`; trocar por ícones ou bullets.
+- Consequências: D-048 e D-049 permanecem no disclosure nativo. Hero, Header, ServicesSection e ProcessSection não mudam.
+- Responsável: Matheus
+
 ### Registro — Atuação (CTAs, estado ativo e diagramas)
 
 - Data: 2026-09-18
@@ -691,6 +702,17 @@ Ver `docs/14-checklist-configuracao-resend.md`.
 - Um parágrafo de ligação entra após o H2. Cada serviço passa a um parágrafo único, label “Frentes de entrega”, marcadores quadrados e CTA visual uniforme “Conhecer solução”, com nome acessível específico. Slugs e hrefs não mudam.
 - Títulos visíveis: “Produtos digitais” e “Web e vendas digitais”. Metadados SEO das páginas internas permanecem. Sem redirects.
 - O filete ativo cobre só título e parágrafo. As ilustrações viram interfaces abstratas de produto, com animação pontual de 650 ms na ativação e estado final estático em reduced motion.
+
+### Registro — Como trabalhamos (esteira de quatro movimentos)
+
+- Data: 2026-09-21
+- Status: implementação técnica na branch `feat/forms-analytics-privacy`, sem commit nesta passagem
+- Escopo: somente a `ProcessSection` da Home. Hero, Header, ProblemSection, ServicesSection, formulário, Footer e páginas internas permanecem. Sem nova ilha Client e sem dependências novas.
+- A seção deixa a tabela com divisórias longas e vira esteira visual Entender → Definir → Construir → Evoluir. Desktop horizontal; abaixo de 1024 px, a mesma árvore vira narrativa vertical. Sem carousel, flip card ou conteúdo escondido no hover.
+- Copy: subtítulo positivo sobre adaptação ao contexto; cada etapa ganha descrição curta e resultado específico. O rótulo visual “Resultado” não se repete; o prefixo fica só em `sr-only`. CTA editorial “Conhecer nosso método” → `/como-trabalhamos`, no mesmo padrão visual dos CTAs da Atuação.
+- Ilustrações: o PNG oficial (`public/media/process/process-narrative.png`) entra via `next/image` no desktop e como recorte CSS do mesmo arquivo no mobile. Sem SVG de cenas e sem reinterpretação da arte.
+- Motion: View Timeline nomeada `--process-progress` (`contain 42%` → `exit 52%`). Trilho e nós vermelhos revelam-se juntos por um único recorte horizontal; números e títulos só ficam vermelhos depois do nó. Reduced motion e `scripting: none` mantêm o estado final/estático, sem importar Motion.
+- Desktop: uma narrativa SVG panorâmica Server, com quatro cenas alinhadas aos nós. Mobile: marcas simplificadas por etapa, sem reduzir a arte desktop. Padding-top da seção desce um nível (`section-space-compact`) para enxugar o vazio após a Atuação, sem mudar a ServicesSection.
 
 ### Pendências pós-lançamento (abertas — não resolvidas)
 

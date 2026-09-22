@@ -30,7 +30,8 @@ Atualização de escopo (D-047): a apresentação dos fundadores agora pertence 
 ├───────────────────────────────────────────────────────────────────────┤
 │ 03 / COMO TRABALHAMOS                                                │
 │ ENTENDER ───── DEFINIR ───── CONSTRUIR ───── EVOLUIR                  │
-│                 linha AZ conecta o processo                           │
+│ esteira horizontal no desktop; linha vertical no mobile               │
+│ resultado por etapa + CTA “Conhecer nosso método”                     │
 ├───────────────────────────────────────────────────────────────────────┤
 │ 04 / PROJETOS                                                        │
 │ [bloco provisório de capacidades enquanto cases não são publicados]  │
@@ -106,11 +107,13 @@ HomePage (Server)
 ├── HeroSection (Server)
 │   └── HeroAssembly (Client/Motion)
 ├── ProblemSection (Server)
-│   └── details/summary nativos exclusivos (`name="problemas-home"`; primeiro item aberto)
+│   └── details/summary nativos exclusivos (`name="problemas-home"`; primeiro item aberto; sem numeração visível)
 ├── ServicesSection (Server shell)
 │   └── ServiceStory (Client/Motion)
 ├── ProcessSection (Server)
-│   └── AzLineDraw (Client/Motion)
+│   ├── ProcessNarrative (Server, PNG oficial via next/image no desktop)
+│   ├── ProcessStationMark (Server, recorte do mesmo PNG no mobile)
+│   └── ProcessLine / ProcessMobileTrack (Server/CSS View Timeline; camada base + preenchimento recortado)
 ├── ProjectsPlaceholder | FeaturedCases (Server)
 ├── TrustSection (Server)
 ├── FAQSection (Server shell)

@@ -70,27 +70,39 @@ export const homeMethod = {
   eyebrow: "Como trabalhamos",
   title: "Da complexidade à solução, em quatro movimentos.",
   description:
-    "Não é uma receita fechada nem um prazo prometido. É a forma como organizamos o trabalho de acordo com cada contexto.",
+    "Organizamos cada projeto em quatro movimentos, adaptando prioridades, escopo e ritmo ao contexto de cada negócio.",
+  resultLabel: "Resultado",
+  cta: {
+    label: "Conhecer nosso método",
+    href: "/como-trabalhamos",
+  },
   steps: [
     {
       number: "01",
       title: "Entender",
-      description: "Contexto, processo e objetivo.",
+      description: "Mapeamos contexto, processos, pessoas e objetivos.",
+      result: "Diagnóstico compartilhado.",
     },
     {
       number: "02",
       title: "Definir",
-      description: "Prioridade, escopo e indicadores.",
+      description:
+        "Transformamos o diagnóstico em prioridades, escopo e indicadores.",
+      result: "Plano de execução.",
     },
     {
       number: "03",
       title: "Construir",
-      description: "Ciclos curtos, validação e qualidade.",
+      description:
+        "Executamos em ciclos curtos, com validação frequente e qualidade.",
+      result: "Entregas validadas.",
     },
     {
       number: "04",
       title: "Evoluir",
-      description: "Dados, suporte e melhoria contínua.",
+      description:
+        "Usamos dados, suporte e aprendizado para orientar as próximas melhorias.",
+      result: "Evolução priorizada.",
     },
   ],
 } as const;

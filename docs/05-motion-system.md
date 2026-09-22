@@ -97,6 +97,12 @@ SVG com `pathLength 0 → 1`. Uso em:
 
 Máximo de duas linhas AZ na Home: Processo e CTA. A Hero deixou de usar line-draw; a mídia 3D ocupa esse momento. O Service Story é um painel de leitura, não uma terceira linha AZ. Deve ser decorativa e `aria-hidden`.
 
+A `ProcessSection` é uma esteira Server: um único `<ol>` com quatro estações. No desktop (`≥1024px`) a narrativa é o PNG oficial (`/media/process/process-narrative.png`, 2172×724, via `next/image`); o trilho e os nós em 12,5% / 37,5% / 62,5% / 87,5% alinham-se aos quatro quartos da imagem. Uma camada-base cinza e uma camada vermelha idêntica (trilho + quatro nós) compartilham a mesma geometria; só a vermelha é revelada por `clip-path` horizontal na View Timeline nomeada (`--process-progress`, faixa `contain 42%` → `exit 52%`). Números e títulos mudam de cor depois do nó correspondente, com os mesmos percentuais da faixa. A imagem permanece estática. Sem listener novo, sem Motion em `src/components/home` e sem animações independentes de nó.
+
+No mobile e no tablet (`<1024px`) o mesmo PNG é recortado por overflow para mostrar um quarto por etapa. O trilho vertical usa duas camadas geométricas idênticas (linha + quatro nós): a cinza permanece visível; a vermelha é revelada de cima para baixo por um único `clip-path: inset(...)` na View Timeline `--process-progress-mobile` (eixo `block`, subject `[data-process-mobile-set]`, faixa `entry 45%` → `cover 66%`). Um nó só fica vermelho quando o preenchimento alcança a posição dele. Sem carousel, sem rolagem horizontal e sem segunda ilha Client.
+
+Sem JavaScript ou com `prefers-reduced-motion: reduce`, o conteúdo textual permanece visível, o trilho e a composição ficam no estado final/estático e não há translação.
+
 ### 5.4 Service Story
 
 Desktop:

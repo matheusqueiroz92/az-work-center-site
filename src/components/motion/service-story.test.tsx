@@ -289,13 +289,21 @@ describe("Service Story observer", () => {
 });
 
 describe("ProcessLine", () => {
-  it("fica no trilho superior e não usa top-10", () => {
+  it("fica na base da narrativa, com quatro nós, e não usa top-10", () => {
     const { container } = render(<ProcessLine />);
+    const track = container.querySelector("[data-process-track]");
     const line = container.querySelector('[data-editorial-line="process"]');
 
-    expect(line?.getAttribute("class") ?? "").toContain("top-0");
-    expect(line?.getAttribute("class") ?? "").toContain("-translate-y-1/2");
-    expect(line?.getAttribute("class") ?? "").not.toContain("top-10");
+    expect(track?.getAttribute("class") ?? "").toContain("bottom-0");
+    expect(track?.getAttribute("class") ?? "").toContain("translate-y-1/2");
+    expect(track?.getAttribute("class") ?? "").not.toContain("top-10");
+    expect(line).toBeTruthy();
+    expect(
+      container.querySelectorAll(
+        "[data-process-progress-fill] [data-process-node]",
+      ),
+    ).toHaveLength(4);
+    expect(track?.getAttribute("aria-hidden")).toBe("true");
   });
 });
 

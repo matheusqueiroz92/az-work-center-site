@@ -64,9 +64,12 @@ describe("ProblemSection", () => {
     expect(
       getByRole("heading", { level: 2, name: homeProblems.title }),
     ).toBeTruthy();
+    expect(container.querySelector("[data-problem-index]")).toBeNull();
+    expect(problemSectionSource).not.toMatch(/data-problem-index/);
+    expect(section?.textContent).not.toMatch(/\b0[1-5]\b/);
 
     for (const [index, item] of homeProblems.items.entries()) {
-      expect(summaries[index]?.textContent).toContain(
+      expect(summaries[index]?.textContent).not.toContain(
         String(index + 1).padStart(2, "0"),
       );
       expect(summaries[index]?.textContent).toContain(item.title);
