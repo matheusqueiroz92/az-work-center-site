@@ -174,13 +174,20 @@ Checklist global:
 ## 8. Segurança e privacidade
 
 - formulário validado no servidor;
-- rate limit/honeypot;
+- honeypot, tempo mínimo de preenchimento, identificador opaco de submissão e frequência best-effort por instância na Fatia B; rate limit distribuído ainda externo (Vercel Firewall, se o plano e o endpoint da Server Action permitirem — não aplicado nesta passagem);
+- o tempo mínimo é heurística, não proteção suficiente contra abuso: token ausente ou inválido não bloqueia POST direta;
+- a UI de `/contato` trata provider desabilitado, misconfigured, timeout ou erro do Resend como `unavailable`; `success` só após entrega `ok` do provider, com identificador opaco (nunca o id bruto do Resend);
+- com JavaScript, validação/`blocked`/`unavailable`/exceção do provider preservam os valores no estado local da instância montada; o formulário só é limpo após `{ ok: true }` mapeado para `status: "success"`; desmontar descarta o rascunho;
+- sem JavaScript, a Server Action continua sendo o destino da mutação e não devolve PII no estado serializado; o HTML de erro não recoloca campos (limitação objetiva do fallback sem JS, sem PII na URL); a hidratação da ilha Client é necessária para o POST progressivo completo nesta stack;
+- idempotência via `Idempotency-Key` do Resend (`contact-lead/<attemptId>`), janela de 24 h; timeout/`unavailable` conservam o identificador; sucesso emite `nextAttemptId` no servidor para a próxima tentativa na mesma montagem;
+- logs operacionais sem PII, sem payload completo e sem mensagem bruta do provider;
+- retenção operacional de até seis meses na caixa comercial para leads não convertidos, depois exclusão, salvo necessidade contratual/jurídica; o app não persiste o lead;
+- Preview e Production usam destinatários configurados nos respectivos escopos da Vercel; Preview não herda Production;
+- WhatsApp e e-mail permanecem fallback visível; sem SLA numérico; sem confirmação automática ao endereço do lead;
 - CSP validada sem quebrar integrações;
 - dependências auditadas;
 - secrets apenas no servidor;
-- logs sem texto livre completo;
 - consentimento e políticas acessíveis;
-- ambiente preview não dispara integrações reais;
 - tratamento de erro não expõe stack/segredo.
 
 ## 9. Testes automatizados
@@ -207,7 +214,7 @@ Checklist global:
 
 1. Navegar Home → solução → contato.
 2. Abrir/fechar menu somente por teclado.
-3. Enviar formulário válido e confirmar sucesso.
+3. Enviar formulário válido e confirmar o estado vigente (local/Development: `unavailable` com canais alternativos enquanto `CONTACT_PROVIDER=disabled`; `success` só com Resend configurado e entrega real).
 4. Enviar inválido e verificar mensagens/foco.
 5. Rejeitar cookies e confirmar que analytics não carrega.
 6. Aceitar analytics e confirmar evento sem PII.

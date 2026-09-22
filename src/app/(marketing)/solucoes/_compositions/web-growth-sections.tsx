@@ -38,7 +38,7 @@ export function WebGrowthSections({ solution }: { solution: SolutionPage }) {
   return (
     <>
       <InternalPageIntro
-        eyebrow="Web e Growth"
+        eyebrow="Web e vendas digitais"
         title={solution.intro.headline}
         description={solution.intro.text}
         current={solution.title}

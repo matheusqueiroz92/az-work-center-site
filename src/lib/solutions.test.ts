@@ -12,7 +12,16 @@ describe("solutions helpers", () => {
     expect(isSolutionSlug("web-growth")).toBe(true);
     expect(isSolutionSlug("nao-existe")).toBe(false);
     expect(getSolutionBySlug("nao-existe")).toBeUndefined();
-    expect(getSolutionBySlug("web-growth")?.title).toBe("Web e Growth");
+    expect(getSolutionBySlug("web-growth")?.title).toBe(
+      "Web e vendas digitais",
+    );
+    expect(getSolutionBySlug("produtos-digitais-mvp")?.title).toBe(
+      "Produtos digitais",
+    );
+    expect(getSolutionBySlug("web-growth")?.href).toBe("/solucoes/web-growth");
+    expect(getSolutionBySlug("produtos-digitais-mvp")?.href).toBe(
+      "/solucoes/produtos-digitais-mvp",
+    );
   });
 
   it("lista relações sem o slug atual", () => {

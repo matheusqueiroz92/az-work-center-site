@@ -112,10 +112,10 @@ Itens:
 
 1. Sistemas sob medida
 2. Automação e IA aplicada
-3. Produtos digitais e MVPs
-4. Web e Growth
+3. Produtos digitais
+4. Web e vendas digitais
 
-Cada item deve conter resultado, descrição curta, 3 capacidades e link. Pode usar accordion no mobile e painel visual sticky no desktop.
+Cada item deve conter um parágrafo unificado, 3 capacidades e link. Pode usar accordion no mobile e painel visual sticky no desktop.
 
 ### 3.5 Método
 
@@ -148,13 +148,13 @@ Quando publicados, ordem inicial sugerida:
 3. Dentyvo;
 4. Rebouças & Bulhões.
 
-### 3.7 Sobre/fundadores
+### 3.7 Fundadores na página Sobre
 
 Título:
 
 > Tecnologia com visão de negócio e gente responsável por cada entrega.
 
-Apresentar Matheus e Lucas com fotos reais, funções objetivas e trajetórias resumidas. A história de Gildásio e da formação familiar entra na página Sobre, sem sugerir atuação operacional diária onde ela não exista.
+Apresentar Matheus e Lucas em `/sobre#fundadores`, com funções objetivas e trajetórias resumidas. As fotos reais entram quando os dois retratos estiverem aprovados (P-009), sem placeholder. A Home não tem seção de fundadores; mantém apenas a menção à condução direta como argumento de confiança. A história de Gildásio e da formação familiar também fica em Sobre, sem sugerir atuação operacional diária onde ela não exista.
 
 ### 3.8 Prova e confiança
 
@@ -324,4 +324,3 @@ Mapa inicial a confirmar por crawl antes da migração:
 | `/marketing-digital` | `/solucoes/web-growth` |
 
 Todos os redirects devem ser 301/308 e testados. Não redirecionar todas as URLs indiscriminadamente para a Home.
-

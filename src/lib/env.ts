@@ -1,10 +1,20 @@
 import { z } from "zod";
 
+import type { ContactEnvSource } from "@/lib/contact-env";
+
 export type EnvSource = {
   SITE_URL?: string | undefined;
   ALLOW_INDEXING?: string | undefined;
   VERCEL_ENV?: string | undefined;
-};
+} & ContactEnvSource;
+
+export {
+  parseContactDeliveryEnv,
+  readContactEnvSource,
+  type ContactDeliveryEnv,
+  type ContactDeliveryProvider,
+  type ContactEnvSource,
+} from "@/lib/contact-env";
 
 function emptyToUndefined(value: unknown) {
   if (typeof value === "string" && value.trim() === "") {
@@ -64,13 +74,19 @@ export function resolveSiteUrl(input: {
   return new URL("http://localhost:3000");
 }
 
-export function parseEnv(
-  source: EnvSource = {
+function readProcessEnv(): EnvSource {
+  return {
     SITE_URL: process.env.SITE_URL,
     ALLOW_INDEXING: process.env.ALLOW_INDEXING,
     VERCEL_ENV: process.env.VERCEL_ENV,
-  },
-): ParsedEnv {
+    CONTACT_PROVIDER: process.env.CONTACT_PROVIDER,
+    CONTACT_TO_EMAIL: process.env.CONTACT_TO_EMAIL,
+    CONTACT_FROM_EMAIL: process.env.CONTACT_FROM_EMAIL,
+    RESEND_API_KEY: process.env.RESEND_API_KEY,
+  };
+}
+
+export function parseEnv(source: EnvSource = readProcessEnv()): ParsedEnv {
   const parsed = envSchema.parse({
     SITE_URL: source.SITE_URL,
     ALLOW_INDEXING: source.ALLOW_INDEXING,
@@ -88,11 +104,7 @@ export function parseEnv(
 }
 
 export function resolveSiteUrlFromEnv(
-  source: EnvSource = {
-    SITE_URL: process.env.SITE_URL,
-    ALLOW_INDEXING: process.env.ALLOW_INDEXING,
-    VERCEL_ENV: process.env.VERCEL_ENV,
-  },
+  source: EnvSource = readProcessEnv(),
 ): URL {
   return parseEnv(source).siteUrl;
 }

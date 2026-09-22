@@ -65,4 +65,45 @@ describe("institutional pages", () => {
     expect(container.querySelector("img")).toBeNull();
     expect(text).not.toMatch(/currículo|especialista número/i);
   });
+
+  it("reúne a apresentação dos dois fundadores em Sobre, sem repetição", () => {
+    const { container, getByRole } = render(<AboutPage />);
+    const section = container.querySelector("#fundadores");
+
+    expect(section).toBeTruthy();
+    expect(
+      getByRole("heading", { level: 2, name: about.foundersSection.title }),
+    ).toBeTruthy();
+    expect(section?.querySelectorAll("article")).toHaveLength(2);
+
+    for (const founder of about.founders) {
+      expect(
+        getByRole("heading", { level: 3, name: founder.name }),
+      ).toBeTruthy();
+      expect(section?.textContent).toContain(founder.role);
+      expect(section?.textContent).toContain(founder.bio);
+    }
+
+    expect(
+      container.textContent?.split(about.foundersSection.note),
+    ).toHaveLength(2);
+    expect(section?.querySelector("img")).toBeNull();
+  });
+
+  it("não ativa o Header overlay nas páginas internas", () => {
+    const about = render(<AboutPage />);
+    const howWeWorkPage = render(<HowWeWorkPage />);
+
+    expect(about.container.querySelector("main")?.id).toBe("conteudo");
+    expect(
+      about.container
+        .querySelector("main")
+        ?.hasAttribute("data-header-overlay"),
+    ).toBe(false);
+    expect(
+      howWeWorkPage.container
+        .querySelector("main")
+        ?.hasAttribute("data-header-overlay"),
+    ).toBe(false);
+  });
 });

@@ -1,0 +1,6 @@
+public/media/logo/
+.agents/
+agent-prompts/
+AGENTS.md
+skills-lock.json
+*.tsbuildinfo

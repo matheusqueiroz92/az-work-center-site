@@ -7,7 +7,7 @@ export const automacaoInteligenciaArtificial = {
   href: "/solucoes/automacao-inteligencia-artificial",
   preview: {
     outcome:
-      "Reduzir tarefas repetitivas e acelerar atendimento, análise e decisão.",
+      "Automatizamos tarefas repetitivas e aceleramos atendimento, análise e decisão com IA aplicada e validação humana — para liberar tempo, não substituir a equipe.",
     summary:
       "Automações e inteligência artificial com validação humana — para liberar tempo, não para substituir a equipe.",
     capabilities: [

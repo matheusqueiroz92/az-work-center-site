@@ -1,10 +1,14 @@
+import { connection } from "next/server";
+
 import { ContactChannels } from "@/app/(marketing)/contato/_components/contact-channels";
+import { ContactForm } from "@/app/(marketing)/contato/_components/contact-form";
 import { EditorialList } from "@/components/internal/editorial-list";
 import { InternalPageIntro } from "@/components/internal/internal-page-intro";
 import { Container } from "@/components/layout/container";
 import { Section } from "@/components/layout/section";
 import { SectionHeading } from "@/components/layout/section-heading";
 import { contact } from "@/content/contact";
+import { createContactAttemptId } from "@/lib/contact-fields";
 import { createPageMetadata } from "@/lib/metadata";
 
 const ancestors = [{ label: "Início", href: "/" }] as const;
@@ -14,7 +18,17 @@ export const metadata = createPageMetadata(
   contact.seo.description,
 );
 
-export default function ContactPage() {
+async function readContactFormTokens() {
+  await connection();
+  return {
+    startedAt: String(Date.now()),
+    attemptId: createContactAttemptId(),
+  };
+}
+
+export default async function ContactPage() {
+  const { startedAt, attemptId } = await readContactFormTokens();
+
   return (
     <main id="conteudo" tabIndex={-1}>
       <InternalPageIntro
@@ -25,6 +39,23 @@ export default function ContactPage() {
         ancestors={ancestors}
         titleId="contato-titulo"
       />
+
+      <Section
+        surface="light"
+        spacing="default"
+        aria-labelledby="formulario-titulo"
+      >
+        <Container width="editorial">
+          <SectionHeading
+            id="formulario-titulo"
+            as="h2"
+            size="h2"
+            title={contact.form.title}
+            description={contact.form.text}
+          />
+          <ContactForm startedAt={startedAt} attemptId={attemptId} />
+        </Container>
+      </Section>
 
       <Section
         surface="light"

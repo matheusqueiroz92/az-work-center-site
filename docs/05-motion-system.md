@@ -45,7 +45,7 @@ Springs:
 
 ## 4. Regras globais
 
-- Provider global: `MotionConfig reducedMotion="user"`.
+- Sem provider Motion nos layouts. `MotionConfig reducedMotion="user"` fica só no painel do Service Story.
 - Carregar recursos avançados com `LazyMotion` quando houver benefício real.
 - Um observer compartilhado ou recursos internos da Motion; não criar listener de scroll por componente.
 - Animar `transform` e `opacity`.
@@ -56,52 +56,72 @@ Springs:
 
 ## 5. Catálogo
 
+Estado vigente do Épico 5 na Home:
+
+- Hero 3D (poster Server + vídeo condicionado + halo CSS);
+- duas linhas editoriais AZ: Processo e CTA;
+- Service Story como painel de leitura no desktop, não como terceira linha AZ;
+- microinterações CSS já existentes de Button/ButtonLink, TextLink, navegação, Accordion e Sheet.
+
+Não entram nesta entrega: Section Reveal (5.2), Case Preview (5.5), Metric Transition (5.6) e Page Transition (5.10).
+
 ### 5.1 Hero Assembly
 
-Objetivo: mostrar módulos dispersos formando uma solução.
+Entregue no Épico 5 e corrigido depois: mídia 3D Full HD no fundo da Hero, câmera estática. O texto aprovado permanece HTML centralizado. Sem stagger de H1, sem fade de seções e sem Motion no First Load. Sem scale, rotação, translate ou parallax da mídia.
 
-Sequência desktop:
+O poster entra no HTML inicial via `<picture>`:
 
-1. eyebrow aparece em 240 ms;
-2. H1 revela por linhas, não caracteres, com 50–70 ms de stagger;
-3. texto e CTAs entram juntos;
-4. linha AZ percorre o diagrama;
-5. módulos/interface estabilizam.
+- celular (`max-width: 767px`) ou retrato: WebP 4:5 (`/media/hero/az-hero-transformacao-mobile-poster.webp`, 1080×1350), `object-position: center center`;
+- paisagem a partir de 768 px: poster desktop 16:9 (`/media/hero/az-hero-transformacao-loop-poster.webp`).
 
-Duração total: 900–1200 ms.  
-Reduced motion: todos visíveis; fade único de até 160 ms.
+O vídeo é melhoria progressiva (`HeroVideoEnhancement`) e só monta com as três condições ao mesmo tempo:
+
+- `min-width: 768px`;
+- `orientation: landscape`;
+- `prefers-reduced-motion: no-preference`.
+
+Nesse caso monta `<video>` com WebM VP9 e MP4 H.264 (`/media/hero/az-hero-transformacao-loop-fullhd.*`), 1920×1080, 7,5 s, 24 fps, loop com saída ordenada à direita, `object-position: center bottom`. Mobile, retrato, reduced motion, sem JavaScript ou falha de carga permanecem no poster correspondente. O vídeo só fica visível depois de `loadeddata`/`canplay`; pause fora do viewport ou com a aba oculta. Em retrato a partir de 768 px a Hero usa `min-height: min(calc(100svh - var(--header-height)), 55rem)`. Em telas estreitas a mídia é decorativa e pode ficar parcialmente atrás do conteúdo; esse recorte é compromisso aceito, não pendência do Épico 5.
+
+A iluminação vermelha continua como um único halo CSS (`HeroInteractiveGlow`). O acompanhamento do ponteiro só existe com `(hover: hover) and (pointer: fine)` e movimento permitido. Sem JavaScript, em touch ou com reduced motion, o halo fica estático no centro. O halo é a única interação de ponteiro da Hero.
 
 ### 5.2 Section Reveal
 
-Opacity `0 → 1`, Y `24 → 0`, 420 ms, uma vez.  
-Stagger máximo: 60 ms por item, até 6 itens.
-
-Não aplicar a cada parágrafo.
+Não implementado (D-019). O catálogo original previa opacity/Y de 420 ms; a Home não usa fade-up nem stagger de listas.
 
 ### 5.3 AZ Line Draw
 
 SVG com `pathLength 0 → 1`. Uso em:
 
-- conexão do hero;
 - método;
 - transição para CTA final.
 
-Máximo de três ocorrências na Home. Deve ser decorativa e `aria-hidden`.
+Máximo de duas linhas AZ na Home: Processo e CTA. A Hero deixou de usar line-draw; a mídia 3D ocupa esse momento. O Service Story é um painel de leitura, não uma terceira linha AZ. Deve ser decorativa e `aria-hidden`.
+
+A `ProcessSection` é uma esteira Server: um único `<ol>` com quatro estações. No desktop (`≥1024px`) a narrativa é o PNG oficial (`/media/process/process-narrative.png`, 2172×724, via `next/image`); o trilho e os nós em 12,5% / 37,5% / 62,5% / 87,5% alinham-se aos quatro quartos da imagem. Uma camada-base cinza e uma camada vermelha idêntica (trilho + quatro nós) compartilham a mesma geometria; só a vermelha é revelada por `clip-path` horizontal na View Timeline nomeada (`--process-progress`, faixa `contain 42%` → `exit 52%`). Números e títulos mudam de cor depois do nó correspondente, com os mesmos percentuais da faixa. A imagem permanece estática. Sem listener novo, sem Motion em `src/components/home` e sem animações independentes de nó.
+
+No mobile e no tablet (`<1024px`) o mesmo PNG é recortado por overflow para mostrar um quarto por etapa. O trilho vertical usa duas camadas geométricas idênticas (linha + quatro nós): a cinza permanece visível; a vermelha é revelada de cima para baixo por um único `clip-path: inset(...)` na View Timeline `--process-progress-mobile` (eixo `block`, subject `[data-process-mobile-set]`, faixa `entry 45%` → `cover 66%`). Um nó só fica vermelho quando o preenchimento alcança a posição dele. Sem carousel, sem rolagem horizontal e sem segunda ilha Client.
+
+Sem JavaScript ou com `prefers-reduced-motion: reduce`, o conteúdo textual permanece visível, o trilho e a composição ficam no estado final/estático e não há translação.
 
 ### 5.4 Service Story
 
 Desktop:
 
-- títulos/descrições rolam normalmente;
-- painel visual usa `position: sticky`;
-- mudança de serviço faz crossfade e pequeno deslocamento de 12–20 px;
-- barra/progresso discreto acompanha a seção.
+- títulos/descrições rolam normalmente e permanecem no HTML Server;
+- o diagrama estático de Sistemas permanece no painel sticky como fallback Server;
+- a melhoria Motion só carrega perto do viewport, fora do First Load;
+- mudança de serviço faz crossfade e deslocamento de 12–20 px, spring 220/28/1;
+- quatro ilustrações de produto ocupam o painel: sistemas (shell operacional com sidebar, módulos e atividade), automação (orquestração com validação humana), produtos (fidelidade crescente até a primeira versão) e web/vendas digitais (canais, funil, análise e ciclo); não há barra de progresso nem métricas inventadas.
+- as ilustrações usam quatro níveis de superfície/borda (`shell`, `surface`, `inset`/`chrome` e `guide`) para criar profundidade sem repetir o mesmo contorno branco; o vermelho fica só em estado, progresso ou validação.
+- ao ativar um serviço, a ilustração correspondente executa uma animação curta (400–700 ms) uma vez: sincronização dos módulos, sinal no pipeline, avanço do roadmap ou desenho da conversão. Sem loop, parallax ou listener de scroll.
+- a lista marca o item ativo com filete vermelho do título ao parágrafo unificado, usando o observer compartilhado da ilha já existente; reduced motion mantém o estado final visível, sem transições decorativas e sem importar Motion. Sem índices 01–04.
 
 Mobile:
 
-- conteúdo linear/accordion;
+- disclosure nativo exclusivo (`details[name="solucoes-home"]`); o primeiro item começa aberto, abrir outro fecha o anterior e o atual pode ser fechado;
+- sem pinning e sem Motion; o conteúdo permanece no HTML Server;
 - nenhuma rolagem horizontal forçada;
-- sem pinning.
+- o chunk do painel não carrega enquanto o frame estiver `display: none`.
 
 ### 5.5 Case Preview
 
@@ -116,15 +136,15 @@ Somente para métricas aprovadas. Número pode contar uma vez, mas o valor final
 
 ### 5.7 Header Behavior
 
-- fundo transita em 240 ms;
-- esconder ao descer somente após 120 px de scroll;
-- reaparecer imediatamente ao subir;
-- não ocultar enquanto foco estiver dentro do header;
-- compensar âncoras com `scroll-padding-top`.
+Header sticky Server, sem hide-on-scroll (D-018). Chrome externo transparente, sem borda inferior nem sombra. A moldura interna usa tinta escura sutil, `backdrop-filter` moderado e borda de baixa opacidade (D-049). Na Home, o Header fica `fixed` sobre a Hero via `data-header-overlay` (D-050); nas páginas internas permanece sticky no fluxo. Em `prefers-reduced-motion`, o blur some e o fundo fica mais opaco. Âncoras continuam compensadas com `scroll-padding-top`.
 
 ### 5.8 Accordion
 
 240–320 ms. Ícone gira 90/180 graus. Conteúdo usa clip/grid rows ou biblioteca acessível. Reduced motion: instantâneo.
+
+A `ProblemSection` da Home usa disclosure nativo exclusivo (`details[name="problemas-home"]`): o primeiro item começa aberto, abrir outro fecha o anterior e o usuário pode deixar todos fechados. Animação CSS-only, 240 ms em `opacity`/`transform`, sem ilha Client nem JavaScript de accordion.
+
+A `ServicesSection` reusa o mesmo padrão só abaixo de 1024 px (`details[name="solucoes-home"]`). No desktop a lista permanece linear, o corpo fica visível por CSS e o painel sticky/Motion não muda. O FAQ continua no Accordion acessível existente.
 
 ### 5.9 Button
 
@@ -136,7 +156,7 @@ Somente para métricas aprovadas. Número pode contar uma vez, mas o valor final
 
 ### 5.10 Page Transition
 
-Opcional após MVP. Preferir transição curta por opacity/clip, preservando foco e posição esperada. A View Transition API pode ser avaliada progressivamente, mas não deve comprometer navegação, anúncio de leitores de tela ou compatibilidade.
+Não implementado no Épico 5: não há `template.tsx`, View Transitions nem `AnimatePresence` de rota. Continua opcional após o MVP. Preferir transição curta por opacity/clip, preservando foco e posição esperada. A View Transition API pode ser avaliada progressivamente, mas não deve comprometer navegação, anúncio de leitores de tela ou compatibilidade.
 
 ## 6. Efeitos proibidos
 
@@ -151,14 +171,14 @@ Opcional após MVP. Preferir transição curta por opacity/clip, preservando foc
 - loading intro que bloqueia a página;
 - animação de todas as palavras/caracteres;
 - partículas seguindo o mouse;
-- 3D pesado no hero antes de comprovar orçamento de performance.
+- 3D em runtime (Three/WebGL) no hero; a mídia aprovada é vídeo renderizado com câmera estática, não uma cena interativa.
 
 ## 7. Reduced motion
 
 Regras obrigatórias:
 
-- usar `MotionConfig reducedMotion="user"`;
-- usar `useReducedMotion()` para casos condicionais;
+- `MotionConfig reducedMotion="user"` somente no painel do Service Story;
+- o loader não baixa Motion quando `prefers-reduced-motion: reduce`;
 - substituir transformações grandes por opacity;
 - desativar parallax e autoplay;
 - mostrar estado final de linhas, diagramas e counters;
@@ -171,7 +191,7 @@ Regras obrigatórias:
 - Evitar mais de 12 elementos animando simultaneamente.
 - Não manter loops offscreen.
 - Pausar animação quando `document.hidden`.
-- Testar em dispositivo Android intermediário ou em CPU throttling.
+- Testar em dispositivo Android intermediário ou em CPU throttling quando a ferramenta de auditoria oferecer esses controles. O agent-browser desta consolidação não emula zoom nativo do Chromium nem CPU 4×; esses cenários não devem ser declarados como medidos.
 - Efeitos avançados abaixo da dobra devem ser carregados dinamicamente.
 
 ## 9. Ferramenta: Motion ou GSAP?

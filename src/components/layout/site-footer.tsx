@@ -1,5 +1,7 @@
+import Image from "next/image";
+import Link from "next/link";
+
 import { Container } from "@/components/layout/container";
-import { SiteWordmark } from "@/components/layout/site-wordmark";
 import { TextLink } from "@/components/ui/text-link";
 import { company } from "@/content/company";
 import { navigation, type NavItem } from "@/content/navigation";
@@ -41,11 +43,23 @@ export function SiteFooter() {
       <Container className="py-16 md:py-20">
         <div className="grid gap-12 lg:grid-cols-[minmax(0,1.4fr)_minmax(0,0.8fr)_minmax(0,0.8fr)] lg:items-start lg:gap-16">
           <div className="max-w-text">
-            <SiteWordmark />
+            <Link
+              href="/"
+              aria-label={`${company.name} — Soluções que Transformam`}
+              className="focus-visible:ring-ring inline-flex min-h-11 max-w-full rounded-sm focus-visible:ring-2 focus-visible:ring-offset-2"
+            >
+              <Image
+                src="/media/brand/az-wordmark-slogan-on-dark.png"
+                alt=""
+                width={1992}
+                height={791}
+                sizes="(max-width: 640px) 256px, 288px"
+                className="h-auto w-64 max-w-full md:w-72"
+              />
+            </Link>
             <p className="text-muted-foreground text-small mt-3">
               {company.descriptor}
             </p>
-            <p className="font-editorial text-lead mt-6">{company.tagline}</p>
             <p className="text-muted-foreground text-body mt-6">
               {company.regionLabel}
             </p>

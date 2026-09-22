@@ -1,5 +1,6 @@
 import { Container } from "@/components/layout/container";
 import { Section } from "@/components/layout/section";
+import { CtaLine } from "@/components/motion/cta-line";
 import { ButtonLink } from "@/components/ui/button-link";
 import { homeCta } from "@/content/home";
 
@@ -12,6 +13,7 @@ export function FinalCtaSection() {
       aria-labelledby="diagnostico-titulo"
     >
       <Container>
+        <CtaLine />
         <div className="grid items-end gap-10 lg:grid-cols-12">
           <div className="min-w-0 lg:col-span-8">
             <h2

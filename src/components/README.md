@@ -119,7 +119,7 @@ Todos os componentes deste diretório são universais: sem `"use client"`, sem e
 
 **Finalidade:** ação que dispara um evento, envio ou comando. Renderiza `<button>`.
 
-**Variantes:** `primary`, `secondary`, `ghost`, `text`, `destructive`.
+**Variantes:** `primary`, `secondary`, `outline`, `ghost`, `text`, `destructive`. `outline` é o CTA secundário da Hero: borda `border-foreground` sobre fundo transparente.
 
 **Tamanhos:** `sm`, `md`, `lg`, `icon`.
 
@@ -199,11 +199,11 @@ Todos os componentes deste diretório são universais: sem `"use client"`, sem e
 
 ## SiteWordmark
 
-**Finalidade:** assinatura textual temporária até o lockup vetorial (P-001).
+**Finalidade:** assinatura horizontal oficial, sem slogan, no Header escuro. Usa somente a cópia curada em `public/media/brand/`; os arquivos originais em `public/media/logo/` são preservados.
 
-**Semântica:** `next/link` para `/`. O nome visível é o nome acessível.
+**Semântica:** `next/link` para `/`, com nome acessível “AZ Work Center”. Imagem com dimensões reservadas e sem texto duplicado para leitores de tela.
 
-**Proibido:** desenhar símbolo novo, usar imagem falsa ou o logo atual sem arquivo fornecido.
+**Proibido:** desenhar símbolo novo, usar imagem falsa ou trocar o lockup sem aprovação visual.
 
 ## SiteHeader / DesktopNav / MobileNav
 
@@ -221,7 +221,7 @@ Todos os componentes deste diretório são universais: sem `"use client"`, sem e
 
 **Finalidade:** rodapé institucional com dados aprovados.
 
-**Conteúdo:** nome, descritor, tagline, cidade/UF, grupos Atuação/Empresa/Legal sem destinos repetidos e copyright do ano no servidor. Preferências de cookies não aparecem enquanto P-008 estiver pendente.
+**Conteúdo:** prévia do lockup com “Soluções que Transformam”, descritor, cidade/UF, grupos Atuação/Empresa/Legal sem destinos repetidos e copyright do ano no servidor. A tagline longa permanece em `company.ts`, mas não é repetida junto ao slogan nesta composição em avaliação. Preferências de cookies não aparecem enquanto P-008 estiver pendente.
 
 **Proibido:** CNPJ, telefone, e-mail, endereço, redes, selos ou clientes não confirmados.
 
@@ -251,6 +251,6 @@ Rota `/dev/design-system`. `noindex, nofollow`. Em `VERCEL_ENV=production` respo
 
 ## Home (`src/components/home`)
 
-Seções da Home estrutural. Todas são Server Components. A única ilha cliente da página é o `AccordionList` já existente, usado no FAQ.
+Seções da Home estrutural. Todas são Server Components. As ilhas cliente da página ficam fora desta pasta: `AccordionList` no FAQ, `ServiceStoryLoader` em `src/components/motion`, o halo `HeroInteractiveGlow` e o vídeo `HeroVideoEnhancement` na mesma pasta de motion.
 
-Não adicionar `"use client"`, Motion, listeners de scroll ou tabs nesta pasta. O SVG do hero é o estado final previsto para o Épico 5. A Home renderiza `EngagementSection` incondicionalmente em `#capacidades` até o Épico 9; não cria `#projetos`.
+Não adicionar `"use client"`, Motion, listeners de scroll ou tabs nesta pasta. A Hero usa `<picture>` Server (`HeroMedia`) com poster 4:5 em retrato/celular e poster 16:9 em paisagem a partir de 768 px; o vídeo Full HD entra só como melhoria progressiva em paisagem com movimento permitido. O halo CSS é a única resposta ao ponteiro. O mapa estático de Soluções permanece Server; o Service Story entra só como melhoria progressiva. A Home renderiza `EngagementSection` incondicionalmente em `#capacidades` até o Épico 9; não cria `#projetos`.

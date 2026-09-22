@@ -9,8 +9,8 @@ function ContactChannelItem({
   variant: "primary" | "secondary";
 }) {
   return (
-    <li className="flex flex-col gap-6 py-8 first:pt-0 last:pb-0 md:px-8 md:py-0 md:first:pl-0 md:last:pr-0">
-      <p className="text-h3 text-foreground font-semibold">
+    <li className="flex min-w-0 flex-col gap-6 py-8 first:pt-0 last:pb-0 md:px-8 md:py-0 md:first:pl-0 md:last:pr-0">
+      <p className="text-h3 text-foreground font-semibold break-words">
         {channel.displayValue}
       </p>
       <ButtonLink
@@ -18,7 +18,7 @@ function ContactChannelItem({
         variant={variant}
         size="lg"
         openInNewTab={channel.openInNewTab}
-        className="w-full md:w-auto"
+        className="w-full max-w-full md:w-auto"
       >
         {channel.actionLabel}
       </ButtonLink>
@@ -30,7 +30,7 @@ export function ContactChannels() {
   const [whatsapp, email] = contact.channels.items;
 
   return (
-    <ul className="border-border divide-border mt-12 grid divide-y border-y md:grid-cols-2 md:divide-x md:divide-y-0 md:py-10">
+    <ul className="border-border divide-border mt-12 grid min-w-0 divide-y border-y md:grid-cols-2 md:divide-x md:divide-y-0 md:py-10">
       <ContactChannelItem channel={whatsapp} variant="primary" />
       <ContactChannelItem channel={email} variant="secondary" />
     </ul>

@@ -29,6 +29,7 @@ export default function AboutPage() {
       <AboutNarrative />
 
       <Section
+        id="fundadores"
         surface="light"
         spacing="default"
         aria-labelledby="fundadores-titulo"
@@ -39,26 +40,27 @@ export default function AboutPage() {
             as="h2"
             size="h2"
             maxWidth="editorial"
-            title="Papéis atuais"
+            eyebrow={about.foundersSection.eyebrow}
+            title={about.foundersSection.title}
           />
-          <div className="mt-12 grid gap-12 lg:grid-cols-2">
+          <div className="border-border mt-12 grid gap-12 border-t pt-12 lg:grid-cols-2 lg:gap-16">
             {about.founders.map((founder) => (
-              <article
-                key={founder.name}
-                className="border-border border-t pt-6"
-              >
-                <h3 className="text-h3 text-foreground font-semibold">
+              <article key={founder.name} className="min-w-0">
+                <h3 className="font-editorial text-h2 text-foreground">
                   {founder.name}
                 </h3>
-                <p className="text-body-lg text-foreground mt-4">
+                <p className="text-body-lg text-foreground max-w-text mt-4">
                   {founder.role}
                 </p>
-                <p className="text-body text-muted-foreground mt-3">
+                <p className="text-body text-muted-foreground max-w-text mt-4">
                   {founder.bio}
                 </p>
               </article>
             ))}
           </div>
+          <p className="text-body text-muted-foreground max-w-text mt-12">
+            {about.foundersSection.note}
+          </p>
         </Container>
       </Section>
 

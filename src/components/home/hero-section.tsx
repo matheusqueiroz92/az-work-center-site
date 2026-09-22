@@ -1,50 +1,62 @@
-import { HeroDiagram } from "@/components/home/hero-diagram";
+import { HeroMedia } from "@/components/home/hero-media";
 import { Container } from "@/components/layout/container";
 import { Section } from "@/components/layout/section";
 import { SectionHeading } from "@/components/layout/section-heading";
+import { HeroInteractiveGlow } from "@/components/motion/hero-interactive-glow";
 import { ButtonLink } from "@/components/ui/button-link";
 import { homeHero } from "@/content/home";
 
 export function HeroSection() {
   return (
-    <Section surface="dark" spacing="narrative" aria-labelledby="hero-titulo">
-      <Container>
-        <div className="grid items-start gap-12 lg:grid-cols-12 lg:gap-16">
-          <div className="flex min-w-0 flex-col gap-8 lg:col-span-7">
-            <SectionHeading
-              id="hero-titulo"
-              as="h1"
-              size="display-lg"
-              maxWidth="none"
-              eyebrow={homeHero.eyebrow}
-              title={homeHero.title}
-            />
-            <p className="text-lead text-muted-foreground max-w-text">
-              {homeHero.text}
-            </p>
-            <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap">
-              <ButtonLink
-                href={homeHero.primaryCta.href}
-                size="lg"
-                className="w-full sm:w-auto"
-              >
-                {homeHero.primaryCta.label}
-              </ButtonLink>
-              <ButtonLink
-                href={homeHero.secondaryCta.href}
-                variant="secondary"
-                size="lg"
-                className="w-full sm:w-auto"
-              >
-                {homeHero.secondaryCta.label}
-              </ButtonLink>
-            </div>
-            <p className="font-editorial text-lead text-foreground max-w-text">
-              {homeHero.proof}
-            </p>
-          </div>
-          <div className="min-w-0 lg:col-span-5 lg:pt-8">
-            <HeroDiagram />
+    <Section
+      surface="dark"
+      spacing="compact"
+      aria-labelledby="hero-titulo"
+      data-hero=""
+      className="relative isolate flex min-h-0 items-center py-0"
+    >
+      <div
+        data-hero-stage=""
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 overflow-clip"
+      >
+        <HeroMedia />
+        <div data-hero-scrim="" className="absolute inset-0" />
+        <HeroInteractiveGlow />
+      </div>
+      <Container className="relative z-10">
+        <div
+          data-hero-content=""
+          className="mx-auto flex w-full flex-col items-center text-center"
+        >
+          <SectionHeading
+            id="hero-titulo"
+            as="h1"
+            size="h1"
+            align="center"
+            maxWidth="none"
+            eyebrow={homeHero.eyebrow}
+            title={homeHero.title}
+          />
+          <p className="text-lead text-muted-foreground max-w-text text-pretty">
+            {homeHero.text}
+          </p>
+          <div className="flex w-full flex-col items-stretch justify-center gap-3 sm:w-auto sm:flex-row sm:items-center">
+            <ButtonLink
+              href={homeHero.primaryCta.href}
+              size="lg"
+              className="w-full sm:w-auto"
+            >
+              {homeHero.primaryCta.label}
+            </ButtonLink>
+            <ButtonLink
+              href={homeHero.secondaryCta.href}
+              variant="outline"
+              size="lg"
+              className="w-full sm:w-auto"
+            >
+              {homeHero.secondaryCta.label}
+            </ButtonLink>
           </div>
         </div>
       </Container>

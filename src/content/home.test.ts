@@ -18,7 +18,6 @@ describe("home copy", () => {
       "solucoes",
       "metodo",
       "capacidades",
-      "equipe",
       "faq",
       "diagnostico",
     ]);
@@ -33,6 +32,26 @@ describe("home copy", () => {
     expect(homeHero.secondaryCta.href).toBe("/solucoes");
     expect(homeProblems.items).toHaveLength(5);
     expect(homeMethod.steps).toHaveLength(4);
+    expect(homeMethod.description).toBe(
+      "Organizamos cada projeto em quatro movimentos, adaptando prioridades, escopo e ritmo ao contexto de cada negócio.",
+    );
+    expect(homeMethod.resultLabel).toBe("Resultado");
+    expect(homeMethod.cta).toEqual({
+      label: "Conhecer nosso método",
+      href: "/como-trabalhamos",
+    });
+    expect(homeMethod.steps.map((step) => step.title)).toEqual([
+      "Entender",
+      "Definir",
+      "Construir",
+      "Evoluir",
+    ]);
+    expect(homeMethod.steps.map((step) => step.result)).toEqual([
+      "Diagnóstico compartilhado.",
+      "Plano de execução.",
+      "Entregas validadas.",
+      "Evolução priorizada.",
+    ]);
     expect(homeEngagement.modes).toHaveLength(4);
     expect(homeTrust.items).toHaveLength(6);
     expect(homeCta.action.href).toBe("/contato");

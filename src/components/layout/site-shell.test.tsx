@@ -43,7 +43,9 @@ describe("SiteHeader", () => {
     const wordmark = getByRole("link", { name: company.name });
 
     expect(wordmark.getAttribute("href")).toBe("/");
-    expect(wordmark.textContent).toBe(company.name);
+    expect(
+      wordmark.querySelector('img[src*="az-wordmark-on-dark"]'),
+    ).toBeTruthy();
   });
 
   it("aponta o CTA para o diagnóstico", () => {
@@ -58,9 +60,40 @@ describe("SiteHeader", () => {
     const className = getByRole("banner").className;
 
     expect(className).toContain("sticky");
-    expect(className).toContain("border-b");
     expect(className).toContain("mt-8");
+    expect(className).toContain("bg-transparent");
+    expect(className).not.toContain("border-b");
     expect(className).not.toContain("shadow");
+    expect(className).not.toContain("bg-background");
+    expect(className).not.toContain("fixed");
+    expect(getByRole("banner").hasAttribute("data-site-header")).toBe(true);
+    expect(getByRole("banner").hasAttribute("data-header-overlay")).toBe(false);
+  });
+
+  it("mantém o CTA, a moldura única e o menu mobile", () => {
+    const { getByRole, container } = render(<SiteHeader />);
+    const cta = getByRole("link", { name: "Solicitar diagnóstico" });
+    const frame = container.querySelector("[data-header-frame]");
+    const wordmark = getByRole("link", { name: company.name });
+    const desktopNav = container.querySelector("[data-desktop-nav]");
+    const header = getByRole("banner");
+
+    expect(cta.getAttribute("href")).toBe("/contato");
+    expect(cta.hasAttribute("data-nav-cta")).toBe(true);
+    expect(cta.className).toContain("hover:bg-primary");
+    expect(frame).toBeTruthy();
+    expect(frame?.className).toContain("rounded-md");
+    expect(frame?.className).toContain("border");
+    expect(frame?.contains(wordmark)).toBe(true);
+    expect(frame?.contains(desktopNav)).toBe(true);
+    expect(frame?.contains(cta)).toBe(true);
+    expect(header.contains(frame)).toBe(true);
+    expect(header.className).not.toContain("border-b");
+    expect(desktopNav?.className).not.toContain("rounded-md");
+    expect(desktopNav?.className).not.toMatch(/(?:^|\s)border(?:\s|$)/);
+    expect(container.querySelector("[data-header-desktop]")).toBeTruthy();
+    expect(container.querySelector("[data-header-mobile]")).toBeTruthy();
+    expect(getByRole("button", { name: "Abrir menu" })).toBeTruthy();
   });
 });
 
@@ -79,16 +112,30 @@ describe("DesktopNav", () => {
       "/contato",
     ]);
     expect(container.querySelector('a[href="#"]')).toBeNull();
+    expect(nav.hasAttribute("data-desktop-nav")).toBe(true);
+    expect(nav.className).not.toContain("rounded-md");
+    expect(nav.className).not.toMatch(/(?:^|\s)border(?:\s|$)/);
+    expect(nav.querySelectorAll("[data-nav-link]")).toHaveLength(3);
+    expect(nav.querySelector("[data-nav-cta]")).toBeTruthy();
+    expect(nav.querySelector("[data-nav-cta]")?.className).toContain(
+      "hover:bg-primary",
+    );
   });
 });
 
 describe("SiteFooter", () => {
-  it("mostra somente informações aprovadas", () => {
+  it("mostra assinatura oficial e informações aprovadas", () => {
     const { getByRole, getByText } = render(<SiteFooter />);
 
     expect(getByRole("contentinfo")).toBeTruthy();
+    const brand = getByRole("link", {
+      name: `${company.name} — Soluções que Transformam`,
+    });
+    expect(brand.getAttribute("href")).toBe("/");
+    expect(
+      brand.querySelector('img[src*="az-wordmark-slogan-on-dark"]'),
+    ).toBeTruthy();
     expect(getByText(company.descriptor)).toBeTruthy();
-    expect(getByText(company.tagline)).toBeTruthy();
     expect(getByText(company.regionLabel)).toBeTruthy();
     expect(
       getByText(new RegExp(`© ${new Date().getFullYear()} ${company.name}`)),

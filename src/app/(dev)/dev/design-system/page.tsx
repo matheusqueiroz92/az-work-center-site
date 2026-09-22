@@ -347,7 +347,10 @@ export default function DesignSystemPage() {
             title="Navegação mobile"
             description="O disparador abre um Sheet lateral. Escape fecha, o foco retorna ao botão e o overlay impede interação com o conteúdo atrás."
           />
-          <div className="border-border mt-8 flex items-center justify-between gap-4 border p-4">
+          <div
+            data-surface="dark"
+            className="bg-background text-foreground border-border mt-8 flex items-center justify-between gap-4 border p-4"
+          >
             <SiteWordmark />
             <MobileNav items={navigation.primary} cta={navigation.cta} />
           </div>

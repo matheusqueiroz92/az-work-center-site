@@ -1,4 +1,5 @@
 import type { ComponentPropsWithoutRef } from "react";
+import Image from "next/image";
 import Link from "next/link";
 
 import { company } from "@/content/company";
@@ -19,13 +20,19 @@ export function SiteWordmark({
   return (
     <Link
       href={href}
-      className={cn(
-        "min-h-touch min-w-touch text-body inline-flex shrink-0 items-center font-sans font-semibold tracking-tight whitespace-nowrap",
-        className,
-      )}
+      className={cn("min-h-touch inline-flex shrink-0 items-center", className)}
+      aria-label={company.name}
       {...props}
     >
-      {company.name}
+      <Image
+        src="/media/brand/az-wordmark-on-dark.png"
+        alt=""
+        width={1988}
+        height={616}
+        sizes="(max-width: 640px) 142px, 158px"
+        className="h-11 w-auto sm:h-12"
+        priority
+      />
     </Link>
   );
 }

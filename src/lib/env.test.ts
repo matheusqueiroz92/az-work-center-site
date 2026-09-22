@@ -58,4 +58,15 @@ describe("parseEnv", () => {
     expect(parsed.siteUrl.toString()).toBe("http://localhost:3000/");
     expect(parsed.vercelEnv).toBeUndefined();
   });
+
+  it("ignora variáveis de contato no parsing do site", () => {
+    const parsed = parseEnv({
+      CONTACT_PROVIDER: "resend",
+      CONTACT_TO_EMAIL: "inbox@example.com",
+      RESEND_API_KEY: "re_testkey_not_real",
+    });
+
+    expect(parsed.siteUrl.toString()).toBe("http://localhost:3000/");
+    expect(JSON.stringify(parsed)).not.toContain("re_testkey_not_real");
+  });
 });

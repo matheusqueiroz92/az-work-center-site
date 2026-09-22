@@ -33,6 +33,7 @@ export function Button({
   disabled = false,
   className,
   children,
+  "aria-busy": ariaBusy,
   ...props
 }: ButtonProps) {
   const isDisabled = disabled || loading;
@@ -43,7 +44,7 @@ export function Button({
       className={buttonClassName({ variant, size, className })}
       {...props}
       disabled={isDisabled}
-      aria-busy={loading || undefined}
+      aria-busy={loading || ariaBusy || undefined}
     >
       <span
         className={cn("inline-flex items-center gap-2", loading && "invisible")}

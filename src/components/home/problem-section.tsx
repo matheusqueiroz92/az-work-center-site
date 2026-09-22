@@ -3,6 +3,30 @@ import { Section } from "@/components/layout/section";
 import { SectionHeading } from "@/components/layout/section-heading";
 import { homeProblems } from "@/content/home";
 
+const problemGroupName = "problemas-home";
+
+function ProblemMarker() {
+  return (
+    <span
+      data-problem-marker
+      aria-hidden="true"
+      className="text-muted-foreground inline-flex size-4 shrink-0 items-center justify-center"
+    >
+      <svg
+        viewBox="0 0 16 16"
+        className="size-4"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        aria-hidden="true"
+        focusable="false"
+      >
+        <path d="M4 6l4 4 4-4" />
+      </svg>
+    </span>
+  );
+}
+
 export function ProblemSection() {
   return (
     <Section
@@ -12,7 +36,7 @@ export function ProblemSection() {
       aria-labelledby="problemas-titulo"
     >
       <Container>
-        <div className="grid gap-12 lg:grid-cols-12 lg:gap-16">
+        <div className="grid gap-12 lg:grid-cols-12 lg:items-start lg:gap-16">
           <div className="min-w-0 lg:col-span-5">
             <SectionHeading
               id="problemas-titulo"
@@ -24,20 +48,37 @@ export function ProblemSection() {
               description={homeProblems.description}
             />
           </div>
-          <ol className="border-border min-w-0 border-l lg:col-span-7">
-            {homeProblems.items.map((item) => (
-              <li
-                key={item.title}
-                className="border-border min-h-0 border-b px-5 py-6 first:border-t sm:px-8"
-              >
-                <h3 className="text-h3 text-foreground font-semibold">
-                  {item.title}
-                </h3>
-                <p className="text-body text-muted-foreground max-w-text mt-3">
-                  {item.description}
-                </p>
-              </li>
-            ))}
+          <ol
+            data-problem-list
+            className="border-border min-w-0 border-t lg:col-span-7"
+          >
+            {homeProblems.items.map((item, index) => {
+              return (
+                <li key={item.title} className="border-border min-w-0 border-b">
+                  <details
+                    data-problem-item
+                    name={problemGroupName}
+                    open={index === 0 || undefined}
+                  >
+                    <summary data-problem-summary>
+                      <span
+                        role="heading"
+                        aria-level={3}
+                        className="text-h3 text-foreground min-w-0 flex-1 font-semibold wrap-break-word"
+                      >
+                        {item.title}
+                      </span>
+                      <ProblemMarker />
+                    </summary>
+                    <div data-problem-body>
+                      <p className="text-body text-muted-foreground max-w-text">
+                        {item.description}
+                      </p>
+                    </div>
+                  </details>
+                </li>
+              );
+            })}
           </ol>
         </div>
       </Container>

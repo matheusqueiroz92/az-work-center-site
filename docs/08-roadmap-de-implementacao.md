@@ -4,6 +4,10 @@
 
 Agentes podem trabalhar em paralelo apenas quando seus arquivos e decisões não se sobrepõem. O agente integrador mantém o design system, resolve conflitos e valida o build completo.
 
+### Ativos de marca disponíveis
+
+Nove rasters oficiais da logomarca estão em `public/media/logo/` e foram classificados em [`docs/03-manual-da-marca.md`](./03-manual-da-marca.md). Ainda não têm consumidores no produto e permanecem fora do Git até inventário e seleção das variantes canônicas. A futura integração no Header/Footer é trabalho de marca, não reabre o Épico 5.
+
 ## Épico 0 — Descoberta técnica
 
 ### Tarefas
@@ -72,7 +76,7 @@ Agentes podem trabalhar em paralelo apenas quando seus arquivos e decisões não
 - soluções;
 - método;
 - bloco provisório no lugar dos cases;
-- fundadores;
+- apresentação dos fundadores em `/sobre`, fora da Home (D-047);
 - confiança;
 - FAQ;
 - CTA final;
@@ -152,11 +156,13 @@ Primeiro entregar sem motion avançado. A narrativa e responsividade devem ser a
 
 ### Aceite
 
-- lead real de teste recebido;
-- lead duplicado/spam tratado;
+- lead real de teste recebido (ainda depende da configuração externa da Fatia B);
+- lead duplicado/spam tratado (idempotência e anti-spam locais no código; Firewall distribuído pendente);
 - evento só dispara após sucesso;
 - rejeitar cookies impede analytics não essencial;
 - nenhum dado pessoal em evento/URL.
+
+A Fatia B entrega o adapter Resend e o contrato de ambiente no código. O aceite de “lead real recebido” permanece pendente do checklist em `docs/14-checklist-configuracao-resend.md`. Analytics, cookies e política seguem na Fatia C.
 
 ## Épico 7 — SEO e migração
 
@@ -209,6 +215,12 @@ Todos os itens de `07-qualidade-acessibilidade-performance.md` atendidos ou exce
 - publicar um por vez;
 - atualizar Home e links internos.
 
+## Evolução pós-lançamento
+
+Depois do Launch gate (Épicos 6–8) e do Épico 9 conforme conteúdo aprovado, a evolução operacional e comercial da AZ — operação comercial, chatbot, funil assistido, área interna `estrutura.azworkcenter.com.br`, harness de projetos e esteira de subsistemas — está descrita em [`docs/15-plano-pos-lancamento.md`](./15-plano-pos-lancamento.md).
+
+Essas frentes são **planejamento estratégico aprovado para discussão**, não escopo do lançamento do site. Não entram nos Épicos 6–8, não reabrem épicos encerrados e não autorizam implementação, instalação de dependências de agentes nem configuração externa nesta fase. Pendências abertas do tema: **P-021–P-032** em [`docs/11-decisoes-e-pendencias.md`](./11-decisoes-e-pendencias.md) (distintas de P-009 fotos e P-010 DNS/WordPress).
+
 ## Sugestão de agentes
 
 | Agente | Responsabilidade | Pode paralelizar com |
@@ -239,4 +251,3 @@ Não usar vários agentes para editar `globals.css`, `layout.tsx` ou os mesmos c
 4. **Motion gate:** performance e reduced motion aprovados.
 5. **Content gate:** textos, fotos e dados aprovados.
 6. **Launch gate:** QA, migração e rollback prontos.
-

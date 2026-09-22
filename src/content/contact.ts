@@ -27,13 +27,101 @@ export const contactChannels = [
   },
 ] as const satisfies readonly ContactChannel[];
 
+export const contactNeedOptions = [
+  {
+    kind: "organizar-integrar-processos",
+    label: "Organizar ou integrar processos",
+  },
+  {
+    kind: "desenvolver-sistema",
+    label: "Desenvolver um sistema",
+  },
+  {
+    kind: "automatizar-tarefas-ia",
+    label: "Automatizar tarefas com IA",
+  },
+  {
+    kind: "criar-validar-produto",
+    label: "Criar ou validar um produto digital",
+  },
+  {
+    kind: "melhorar-presenca-digital",
+    label: "Melhorar site, e-commerce ou aquisição",
+  },
+  {
+    kind: "ainda-nao-sei",
+    label: "Ainda não sei definir",
+  },
+] as const;
+
+export const contactNeedKinds = [
+  contactNeedOptions[0].kind,
+  contactNeedOptions[1].kind,
+  contactNeedOptions[2].kind,
+  contactNeedOptions[3].kind,
+  contactNeedOptions[4].kind,
+  contactNeedOptions[5].kind,
+] as const;
+
+export type ContactNeedKind = (typeof contactNeedKinds)[number];
+
 export const contact = {
   eyebrow: "Contato",
   title: "Vamos organizar o próximo passo.",
-  text: "Conte o contexto pelo WhatsApp ou por e-mail. Antes da conversa, algumas informações ajudam a tornar o diagnóstico mais objetivo.",
+  text: "Envie o contexto por este formulário, pelo WhatsApp ou por e-mail. Antes da conversa, algumas informações ajudam a tornar o diagnóstico mais objetivo.",
+  form: {
+    title: "Envie o contexto",
+    text: "Descreva a operação e o gargalo. WhatsApp e e-mail continuam disponíveis se preferir outro canal.",
+    notice:
+      "WhatsApp e e-mail continuam disponíveis se preferir outro canal ou se o envio pelo formulário não concluir.",
+    dataUse:
+      "Os dados deste pedido servem apenas para responder ao diagnóstico. Não há cadastro de newsletter.",
+    submitLabel: "Enviar mensagem",
+    pendingLabel: "Enviando…",
+    errorSummaryTitle: "Revise os campos indicados.",
+    unavailableTitle: "O formulário ainda não enviou.",
+    unavailableText:
+      "Fale pelo WhatsApp ou por e-mail para continuar o diagnóstico.",
+    blockedTitle: "Não foi possível concluir o envio.",
+    blockedText:
+      "Fale pelo WhatsApp ou por e-mail para continuar o diagnóstico.",
+    successTitle: "Mensagem enviada.",
+    successText:
+      "Recebemos o contexto. A equipe retorna pelo e-mail informado.",
+    successCloseLabel: "Fechar aviso",
+    fields: {
+      name: {
+        label: "Nome",
+        placeholder: "Maria Santos",
+      },
+      company: {
+        label: "Empresa",
+        placeholder: "Nome da empresa",
+      },
+      email: {
+        label: "E-mail",
+        placeholder: "nome@empresa.com.br",
+      },
+      phone: {
+        label: "Telefone ou WhatsApp",
+        hint: "Opcional.",
+        placeholder: "(77) 98833-4370",
+      },
+      need: {
+        label: "Tipo de necessidade",
+        placeholder: "Selecione o tipo de necessidade",
+      },
+      message: {
+        label: "Contexto",
+        hint: "Em poucas frases: o que hoje é manual, ferramentas em uso e o que pressiona o prazo.",
+        placeholder:
+          "Controlamos pedidos em planilha e o estoque em outro sistema.",
+      },
+    },
+  },
   channels: {
-    title: "Escolha como prefere conversar.",
-    text: "Envie uma visão inicial do problema. Não é necessário chegar com a solução definida.",
+    title: "WhatsApp e e-mail continuam disponíveis.",
+    text: "Se o formulário não enviar, ou se preferir outro canal, fale por aqui. Não é necessário chegar com a solução definida.",
     items: contactChannels,
   },
   expectation: {
@@ -70,32 +158,32 @@ export const contact = {
     description: "Estes tipos ajudam a nomear o problema antes da conversa.",
     items: [
       {
-        title: "Organizar ou integrar processos",
+        title: contactNeedOptions[0].label,
         description:
           "A operação cresceu e a informação não acompanha no mesmo fluxo.",
       },
       {
-        title: "Desenvolver um sistema",
+        title: contactNeedOptions[1].label,
         description:
           "Há um controle que já não cabe em planilha ou no sistema atual.",
       },
       {
-        title: "Automatizar tarefas com IA",
+        title: contactNeedOptions[2].label,
         description:
           "Há rotina repetitiva — e pontos em que gente ainda precisa validar.",
       },
       {
-        title: "Criar ou validar um produto digital",
+        title: contactNeedOptions[3].label,
         description:
           "A ideia precisa de um recorte, não do produto inteiro no primeiro ciclo.",
       },
       {
-        title: "Melhorar site, e-commerce ou aquisição",
+        title: contactNeedOptions[4].label,
         description:
           "A presença existe, mas ainda não conduz, mede ou sustenta demanda.",
       },
       {
-        title: "Ainda não sei definir",
+        title: contactNeedOptions[5].label,
         description:
           "O diagnóstico também serve para nomear o problema antes de escolher a oferta.",
       },
@@ -108,6 +196,6 @@ export const contact = {
   seo: {
     title: "Contato",
     description:
-      "Fale com a AZ Work Center pelo WhatsApp ou por e-mail e prepare o diagnóstico inicial.",
+      "Fale com a AZ Work Center pelo formulário, WhatsApp ou e-mail e prepare o diagnóstico inicial.",
   },
 } as const;
